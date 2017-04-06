@@ -8,6 +8,7 @@
     public sealed class Kernel : IDisposable
     {
         private readonly ConcurrentDictionary<Type, object> map = new ConcurrentDictionary<Type, object>();
+        private bool disposed;
 
         public T Get<T>()
             where T : class
@@ -17,7 +18,24 @@
 
         public object Get(Type type)
         {
+            this.ThrowIfDisposed();
             return this.map.GetOrAdd(type, this.Create);
+        }
+
+        public void Dispose()
+        {
+            if (this.disposed)
+            {
+                return;
+            }
+
+            this.disposed = true;
+            foreach (var kvp in this.map)
+            {
+                (kvp.Value as IDisposable)?.Dispose();
+            }
+
+            this.map.Clear();
         }
 
         private object Create(Type type)
@@ -50,9 +68,12 @@
             return ctor.Invoke(parameters);
         }
 
-        public void Dispose()
+        private void ThrowIfDisposed()
         {
-            this.map.Clear();
+            if (this.disposed)
+            {
+                throw new ObjectDisposedException(this.GetType().FullName);
+            }
         }
     }
 }
