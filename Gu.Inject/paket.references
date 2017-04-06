@@ -1,7 +1,3 @@
 group Analyzers
   StyleCop.Analyzers
   Gu.Analyzers
-
-group Test
-  Moq
-  NUnit

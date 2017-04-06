@@ -1,3 +1,13 @@
-source C:\Git\Guget
 source https://www.nuget.org/api/v2/
-source C:\Git\Gu.Units\publish
+
+group Analyzers
+  source http://nuget.org/api/v2
+  nuget StyleCop.Analyzers
+  nuget Gu.Analyzers
+
+group Test
+  source http://nuget.org/api/v2
+  framework: >= net45
+  nuget Moq
+  nuget NUnit
+
