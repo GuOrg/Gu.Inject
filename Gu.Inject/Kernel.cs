@@ -14,6 +14,7 @@
         public event EventHandler<Type> Resolving;
 
         public void Bind<TInterface, TConcrete>()
+            where TConcrete : TInterface
         {
             if (this.map.Count != 0)
             {
@@ -27,6 +28,7 @@
         }
 
         public void ReBind<TInterface, TConcrete>()
+            where TConcrete : TInterface
         {
             if (this.map.Count != 0)
             {

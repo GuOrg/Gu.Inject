@@ -36,6 +36,17 @@
             }
         }
 
+        [Test]
+        public void Loop()
+        {
+            using (var kernel = new Kernel())
+            {
+                Assert.Fail("Throw ninject style exception.");
+                var actual = kernel.Get<A>();
+                Assert.AreSame(actual.B.A, actual);
+            }
+        }
+
         [TestCase(typeof(IWith))]
         public void Throws(Type type)
         {
