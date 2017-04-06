@@ -8,9 +8,23 @@
     public sealed class Kernel : IDisposable
     {
         private readonly ConcurrentDictionary<Type, object> map = new ConcurrentDictionary<Type, object>();
+        private readonly ConcurrentDictionary<Type, Type> bindings = new ConcurrentDictionary<Type, Type>();
         private bool disposed;
 
         public event EventHandler<Type> Resolving;
+
+        public void Bind<TInterface, TConcrete>()
+        {
+            if (this.map.Count != 0)
+            {
+                throw new InvalidOperationException("Bind not allowed after Get.");
+            }
+
+            this.bindings.AddOrUpdate(
+                typeof(TInterface),
+                t => typeof(TConcrete),
+                (t1, t2) => throw new InvalidOperationException($"{t1.PrettyName()} already has a binding to {t2.PrettyName()}"));
+        }
 
         public T Get<T>()
             where T : class
@@ -52,6 +66,11 @@
 
         private object Create(Type type)
         {
+            if (this.bindings.TryGetValue(type, out Type bound))
+            {
+                return this.map.GetOrAdd(bound, this.Create);
+            }
+
             if (type.IsInterface ||
                 type.IsAbstract)
             {

@@ -54,9 +54,34 @@
         [Test]
         public void Bind()
         {
-            Assert.Fail("Reminder.");
-            Assert.Fail("Throw if has resolved.");
-            Assert.Fail("Throw if there is already a binding, require rebind.");
+            using (var kernel = new Kernel())
+            {
+                kernel.Bind<IWith, With<DefaultCtor>>();
+                var actual = kernel.Get<IWith>();
+                Assert.AreSame(actual, kernel.Get<With<DefaultCtor>>());
+            }
+        }
+
+        [Test]
+        public void BindThrowsIfHasResolved()
+        {
+            using (var kernel = new Kernel())
+            {
+                var defaultCtor = kernel.Get<DefaultCtor>();
+                var exception = Assert.Throws<InvalidOperationException>(() => kernel.Bind<IWith, With<DefaultCtor>>());
+                Assert.AreEqual("Bind not allowed after Get.", exception.Message);
+            }
+        }
+
+        [Test]
+        public void BindThrowsIfHasBinding()
+        {
+            using (var kernel = new Kernel())
+            {
+                kernel.Bind<IWith, With<DefaultCtor>>();
+                var exception = Assert.Throws<InvalidOperationException>(() => kernel.Bind<IWith, With<DefaultCtor>>());
+                Assert.AreEqual("IWith already has a binding to With<DefaultCtor>", exception.Message);
+            }
         }
 
         [Test]
