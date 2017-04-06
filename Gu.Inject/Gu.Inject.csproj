@@ -35,7 +35,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Kernel.cs" />
-    <Compile Include="DefaultTypeMap.cs" />
+    <Compile Include="TypeMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TypeExt.cs" />
   </ItemGroup>

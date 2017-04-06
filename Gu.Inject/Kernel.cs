@@ -13,12 +13,22 @@
         public T Get<T>()
             where T : class
         {
+            if (!TypeMap.IsInitialized)
+            {
+                TypeMap.Initialize(Assembly.GetCallingAssembly());
+            }
+
             return (T)this.Get(typeof(T));
         }
 
         public object Get(Type type)
         {
             this.ThrowIfDisposed();
+            if (!TypeMap.IsInitialized)
+            {
+                TypeMap.Initialize(Assembly.GetCallingAssembly());
+            }
+
             return this.map.GetOrAdd(type, this.Create);
         }
 
@@ -43,13 +53,18 @@
             if (type.IsInterface ||
                 type.IsAbstract)
             {
-                var mapped = DefaultTypeMap.GetMapped(type);
+                var mapped = TypeMap.GetMapped(type);
                 if (mapped.Count == 0)
                 {
                     throw new InvalidOperationException($"Type {type.PrettyName()} has no bindings.");
                 }
 
                 if (mapped.Count > 1)
+                {
+                    throw new InvalidOperationException($"Type {type.PrettyName()} has more than one binding {string.Join(",", mapped.Select(t => t.PrettyName()))}.");
+                }
+
+                if (mapped[0].IsGenericType && !type.IsGenericType)
                 {
                     throw new InvalidOperationException($"Type {type.PrettyName()} has more than one binding {string.Join(",", mapped.Select(t => t.PrettyName()))}.");
                 }
