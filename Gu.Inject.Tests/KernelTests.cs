@@ -87,9 +87,35 @@
         [Test]
         public void ReBind()
         {
-            Assert.Fail("Reminder.");
-            Assert.Fail("Throw if has resolved.");
-            Assert.Fail("Throw if there is no binding, require rebind.");
+            using (var kernel = new Kernel())
+            {
+                kernel.Bind<IWith, With<DefaultCtor>>();
+                kernel.ReBind<IWith, With<With<DefaultCtor>>>();
+                var actual = kernel.Get<IWith>();
+                Assert.AreSame(actual, kernel.Get<With<With<DefaultCtor>>>());
+            }
+        }
+
+        [Test]
+        public void ReBindThrowsIfHasResolved()
+        {
+            using (var kernel = new Kernel())
+            {
+                kernel.Bind<IWith, With<DefaultCtor>>();
+                var defaultCtor = kernel.Get<DefaultCtor>();
+                var exception = Assert.Throws<InvalidOperationException>(() => kernel.ReBind<IWith, With<With<DefaultCtor>>>());
+                Assert.AreEqual("ReBind not allowed after Get.", exception.Message);
+            }
+        }
+
+        [Test]
+        public void ReBindThrowsIfNoBinding()
+        {
+            using (var kernel = new Kernel())
+            {
+                var exception = Assert.Throws<InvalidOperationException>(() => kernel.ReBind<IWith, With<With<DefaultCtor>>>());
+                Assert.AreEqual("IWith does not have a binding.", exception.Message);
+            }
         }
     }
 }

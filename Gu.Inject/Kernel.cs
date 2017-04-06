@@ -26,6 +26,19 @@
                 (t1, t2) => throw new InvalidOperationException($"{t1.PrettyName()} already has a binding to {t2.PrettyName()}"));
         }
 
+        public void ReBind<TInterface, TConcrete>()
+        {
+            if (this.map.Count != 0)
+            {
+                throw new InvalidOperationException("ReBind not allowed after Get.");
+            }
+
+            this.bindings.AddOrUpdate(
+                typeof(TInterface),
+                t => throw new InvalidOperationException($"{t.PrettyName()} does not have a binding."),
+                (t1, t2) => typeof(TConcrete));
+        }
+
         public T Get<T>()
             where T : class
         {
