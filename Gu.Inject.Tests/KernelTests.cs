@@ -119,7 +119,6 @@
         {
             using (var kernel = new Kernel())
             {
-                kernel.Bind<IWith, With<DefaultCtor>>();
                 var defaultCtor = kernel.Get<DefaultCtor>();
                 var exception = Assert.Throws<InvalidOperationException>(() => kernel.ReBind<IWith, With<With<DefaultCtor>>>());
                 Assert.AreEqual("ReBind not allowed after Get.", exception.Message);
