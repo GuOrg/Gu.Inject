@@ -10,13 +10,25 @@
         [TestCase(typeof(IDefaultCtor), typeof(DefaultCtor))]
         [TestCase(typeof(With<DefaultCtor>), typeof(With<DefaultCtor>))]
         [TestCase(typeof(IWith<DefaultCtor>), typeof(With<DefaultCtor>))]
-        public void GetDefaultCtor(Type t1, Type t2)
+        [TestCase(typeof(WithTwo<DefaultCtor, DefaultCtor>), typeof(WithTwo<DefaultCtor, DefaultCtor>))]
+        [TestCase(typeof(WithTwo<DefaultCtor, With<DefaultCtor>>), typeof(WithTwo<DefaultCtor, With<DefaultCtor>>))]
+        public void Get(Type t1, Type t2)
         {
             using (var kernel = new Kernel())
             {
                 var actual = kernel.Get(t1);
                 Assert.AreEqual(t2, actual.GetType());
                 Assert.AreSame(actual, kernel.Get(t2));
+            }
+        }
+
+        [Test]
+        public void InjectsSingletons()
+        {
+            using (var kernel = new Kernel())
+            {
+                var actual = kernel.Get<WithTwo<DefaultCtor, DefaultCtor>>();
+                Assert.AreSame(actual.Value1, actual.Value2);
             }
         }
 

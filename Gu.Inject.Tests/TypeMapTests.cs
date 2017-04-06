@@ -1,8 +1,6 @@
 ﻿namespace Gu.Inject.Tests
 {
     using System;
-    using System.Linq;
-    using System.Reflection;
     using Gu.Inject.Tests.Types;
     using NUnit.Framework;
 
