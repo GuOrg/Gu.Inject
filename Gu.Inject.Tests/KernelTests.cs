@@ -12,6 +12,10 @@
         [TestCase(typeof(IWith<DefaultCtor>), typeof(With<DefaultCtor>))]
         [TestCase(typeof(WithTwo<DefaultCtor, DefaultCtor>), typeof(WithTwo<DefaultCtor, DefaultCtor>))]
         [TestCase(typeof(WithTwo<DefaultCtor, With<DefaultCtor>>), typeof(WithTwo<DefaultCtor, With<DefaultCtor>>))]
+        [TestCase(typeof(Concrete), typeof(Concrete))]
+        [TestCase(typeof(Abstract), typeof(Concrete))]
+        [TestCase(typeof(Generic<DefaultCtor>), typeof(Generic<DefaultCtor>))]
+        [TestCase(typeof(GenericOfDefaultCtor), typeof(GenericOfDefaultCtor))]
         public void Get(Type t1, Type t2)
         {
             using (var kernel = new Kernel())

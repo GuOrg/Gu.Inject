@@ -78,6 +78,12 @@
                     {
                         MapInterface(type, @interface, map);
                     }
+
+                    var baseType = type.BaseType;
+                    if (baseType?.IsAbstract == true)
+                    {
+                        MapInterface(type, baseType, map);
+                    }
                 }
             }
 
