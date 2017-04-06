@@ -10,6 +10,8 @@
         private readonly ConcurrentDictionary<Type, object> map = new ConcurrentDictionary<Type, object>();
         private bool disposed;
 
+        public event EventHandler<Type> Resolving;
+
         public T Get<T>()
             where T : class
         {
@@ -80,6 +82,7 @@
 
             var ctor = ctors[0];
             var parameters = ctor.GetParameters().Select(p => this.map.GetOrAdd(p.ParameterType, this.Create)).ToArray();
+            this.Resolving?.Invoke(this, type);
             return ctor.Invoke(parameters);
         }
 
