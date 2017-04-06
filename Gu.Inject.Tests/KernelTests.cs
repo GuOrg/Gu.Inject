@@ -20,5 +20,27 @@
                 Assert.AreSame(actual, kernel.Get(t2));
             }
         }
+
+        [Test]
+        public void DisposesCreated()
+        {
+            Assert.Fail("Reminder.");
+        }
+
+        [Test]
+        public void Bind()
+        {
+            Assert.Fail("Reminder.");
+            Assert.Fail("Throw if has resolved.");
+            Assert.Fail("Throw if there is already a binding, require rebind.");
+        }
+
+        [Test]
+        public void ReBind()
+        {
+            Assert.Fail("Reminder.");
+            Assert.Fail("Throw if has resolved.");
+            Assert.Fail("Throw if there is no binding, require rebind.");
+        }
     }
 }
