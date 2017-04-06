@@ -46,6 +46,7 @@
     <Compile Include="Types\Abstract.cs" />
     <Compile Include="Types\Concrete.cs" />
     <Compile Include="Types\DefaultCtor.cs" />
+    <Compile Include="Types\Disposable.cs" />
     <Compile Include="Types\GenericOfDefaultCtor.cs" />
     <Compile Include="Types\IDefaultCtor.cs" />
     <Compile Include="Types\IWith.cs" />

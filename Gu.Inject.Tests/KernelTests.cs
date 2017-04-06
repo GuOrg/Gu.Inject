@@ -48,7 +48,14 @@
         [Test]
         public void DisposesCreated()
         {
-            Assert.Fail("Reminder.");
+            Disposable actual;
+            using (var kernel = new Kernel())
+            {
+                actual = kernel.Get<Disposable>();
+                Assert.AreEqual(0, actual.Disposed);
+            }
+
+            Assert.AreEqual(1, actual.Disposed);
         }
 
         [Test]
