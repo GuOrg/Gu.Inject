@@ -36,9 +36,9 @@
             }
         }
 
-        [TestCase(typeof(A))]
-        [TestCase(typeof(Circular.A))]
-        public void Loop(Type t)
+        [TestCase(typeof(A), "Circular dependency detected A -> B -> A")]
+        [TestCase(typeof(Circular.A), "Circular dependency detected A -> E -> G -> A")]
+        public void Loop(Type t, string message)
         {
             using (var kernel = new Kernel())
             {
@@ -46,7 +46,7 @@
                 {
                     var actual = kernel.Get(t);
                 });
-                Console.WriteLine(exception.Message);
+                Assert.AreEqual(message, exception.Message);
             }
         }
 
