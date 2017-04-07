@@ -97,7 +97,7 @@
                 }
 
                 if (type.IsInterface ||
-                   type.IsAbstract)
+                    type.IsAbstract)
                 {
                     var mapped = TypeMap.GetMapped(type);
                     if (mapped.Count == 0)

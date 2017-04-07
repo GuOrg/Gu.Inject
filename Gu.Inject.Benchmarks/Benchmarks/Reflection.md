@@ -12,8 +12,8 @@ Type=Reflection  Mode=Throughput
 ```
                        Method |      Median |     StdDev |  Gen 0 | Gen 1 | Gen 2 | Bytes Allocated/Op |
 ----------------------------- |------------ |----------- |------- |------ |------ |------------------- |
-              GetConstructors |  70.8315 ns | 12.9323 ns | 158,49 |     - |     - |               6,78 |
- GetConstructorsGetParameters |  80.9529 ns |  8.4346 ns | 158,49 |     - |     - |               6,78 |
-                   InvokeCtor | 219.9244 ns | 15.4387 ns | 133,53 |     - |     - |               5,75 |
-      ActivatorCreateInstance |  93.8095 ns | 18.2889 ns | 121,81 |     - |     - |               5,22 |
-         GetConstructorInvoke | 289.2068 ns | 16.4432 ns | 277,00 |     - |     - |              11,97 |
+              GetConstructors |  70.6069 ns |  1.3113 ns | 138,84 |     - |     - |               6,20 |
+ GetConstructorsGetParameters |  76.6192 ns | 13.9754 ns | 147,02 |     - |     - |               6,57 |
+                   InvokeCtor | 215.0034 ns | 18.1995 ns | 118,00 |     - |     - |               5,37 |
+      ActivatorCreateInstance |  92.8205 ns |  6.2437 ns | 113,94 |     - |     - |               5,13 |
+         GetConstructorInvoke | 288.6917 ns | 11.8423 ns | 263,00 |     - |     - |              11,87 |
