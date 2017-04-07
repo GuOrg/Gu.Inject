@@ -46,6 +46,7 @@
     <Compile Include="Types\A.cs" />
     <Compile Include="Types\Abstract.cs" />
     <Compile Include="Types\B.cs" />
+    <Compile Include="Types\Circular.cs" />
     <Compile Include="Types\Concrete.cs" />
     <Compile Include="Types\DefaultCtor.cs" />
     <Compile Include="Types\Disposable.cs" />

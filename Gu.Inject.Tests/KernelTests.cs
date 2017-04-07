@@ -36,14 +36,17 @@
             }
         }
 
-        [Test]
-        public void Loop()
+        [TestCase(typeof(A))]
+        [TestCase(typeof(Circular.A))]
+        public void Loop(Type t)
         {
             using (var kernel = new Kernel())
             {
-                Assert.Fail("Throw ninject style exception.");
-                var actual = kernel.Get<A>();
-                Assert.AreSame(actual.B.A, actual);
+                var exception = Assert.Throws<InvalidOperationException>(() =>
+                {
+                    var actual = kernel.Get(t);
+                });
+                Console.WriteLine(exception.Message);
             }
         }
 
