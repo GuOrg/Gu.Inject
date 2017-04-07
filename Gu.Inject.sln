@@ -5,6 +5,7 @@ VisualStudioVersion = 15.0.26403.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{8DE2AA93-DC3E-4F23-B520-810A1E041E1F}"
 	ProjectSection(SolutionItems) = preProject
+		appveyor.yml = appveyor.yml
 		paket.dependencies = paket.dependencies
 		.paket\Readme.paket.md = .paket\Readme.paket.md
 	EndProjectSection
