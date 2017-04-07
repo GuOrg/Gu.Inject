@@ -11,3 +11,10 @@ group Test
   nuget Moq
   nuget NUnit
 
+group Benchmarks
+  source http://www.nuget.org/api/v2/
+  framework: auto-detect
+  nuget BenchmarkDotNet
+  nuget BenchmarkDotNet.Diagnostics.Windows
+  nuget System.Reflection.Metadata = 1.2.0
+

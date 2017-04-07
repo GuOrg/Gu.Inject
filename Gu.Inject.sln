@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.Inject", "Gu.Inject\Gu.I
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.Inject.Tests", "Gu.Inject.Tests\Gu.Inject.Tests.csproj", "{C30669FC-D159-488F-8FF8-BDCD4622C325}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.Inject.Benchmarks", "Gu.Inject.Benchmarks\Gu.Inject.Benchmarks.csproj", "{A92D6209-5247-4ADC-84B8-46F44F66BF42}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{C30669FC-D159-488F-8FF8-BDCD4622C325}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C30669FC-D159-488F-8FF8-BDCD4622C325}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C30669FC-D159-488F-8FF8-BDCD4622C325}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A92D6209-5247-4ADC-84B8-46F44F66BF42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A92D6209-5247-4ADC-84B8-46F44F66BF42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A92D6209-5247-4ADC-84B8-46F44F66BF42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A92D6209-5247-4ADC-84B8-46F44F66BF42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

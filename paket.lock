@@ -6,6 +6,19 @@ NUGET
     Gu.Analyzers (0.1.11.16-dev)
     StyleCop.Analyzers (1.0)
 
+GROUP Benchmarks
+FRAMEWORK: NET452, NET461
+NUGET
+  remote: http://www.nuget.org/api/v2
+    BenchmarkDotNet (0.9.7)
+    BenchmarkDotNet.Diagnostics.Windows (0.9.7)
+      BenchmarkDotNet (>= 0.9.7)
+      Microsoft.Diagnostics.Tracing.TraceEvent (>= 1.0.41)
+    Microsoft.Diagnostics.Tracing.TraceEvent (1.0.41)
+    System.Collections.Immutable (1.3.1)
+    System.Reflection.Metadata (1.2)
+      System.Collections.Immutable (>= 1.1.37)
+
 GROUP Test
 FRAMEWORK: >= NET45
 NUGET

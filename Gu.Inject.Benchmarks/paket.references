@@ -1,0 +1,8 @@
+group Analyzers
+  StyleCop.Analyzers
+  Gu.Analyzers
+
+group Benchmarks
+  BenchmarkDotNet
+  BenchmarkDotNet.Diagnostics.Windows
+  System.Reflection.Metadata
