@@ -15,6 +15,7 @@ NUGET
       BenchmarkDotNet (>= 0.9.7)
       Microsoft.Diagnostics.Tracing.TraceEvent (>= 1.0.41)
     Microsoft.Diagnostics.Tracing.TraceEvent (1.0.41)
+    Ninject (3.2.2)
     System.Collections.Immutable (1.3.1)
     System.Reflection.Metadata (1.2)
       System.Collections.Immutable (>= 1.1.37)
