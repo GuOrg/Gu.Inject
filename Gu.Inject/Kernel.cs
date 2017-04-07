@@ -82,19 +82,17 @@
 
         private object Resolve(Type type)
         {
-            return this.Resolve(type, new HashSet<Type>(), new Stack<Type>());
+            return this.Resolve(type, new CycleDetector<Type>());
         }
 
-        private object Resolve(Type type, HashSet<Type> alreadyVisited, Stack<Type> explicitStack)
+        private object Resolve(Type type, CycleDetector<Type> cycleDetector)
         {
-            explicitStack.Push(type);
+            cycleDetector.Add(type);
             try
             {
-                alreadyVisited.Add(type);
-
                 if (this.bindings.TryGetValue(type, out Type bound))
                 {
-                    return this.map.GetOrAdd(bound, t => this.Resolve(t, alreadyVisited, explicitStack));
+                    return this.map.GetOrAdd(bound, t => this.Resolve(t, cycleDetector));
                 }
 
                 if (type.IsInterface ||
@@ -118,7 +116,7 @@
                             $"Type {type.PrettyName()} has more than one binding {string.Join(",", mapped.Select(t => t.PrettyName()))}.");
                     }
 
-                    return this.map.GetOrAdd(mapped[0], t => this.Resolve(t, alreadyVisited, explicitStack));
+                    return this.map.GetOrAdd(mapped[0], t => this.Resolve(t, cycleDetector));
                 }
 
                 var info = Ctor.GetInfo(type);
@@ -131,23 +129,27 @@
                 var args = new object[info.ParameterTypes.Count];
                 for (var i = 0; i < info.ParameterTypes.Count; i++)
                 {
-                    if (alreadyVisited.Contains(info.ParameterTypes[i]))
+                    cycleDetector.Add(info.ParameterTypes[i]);
+                    if (cycleDetector.HasCycle)
                     {
-                        explicitStack.Push(info.ParameterTypes[i]);
                         throw new InvalidOperationException(
-                            $"Circular dependency detected {string.Join(" -> ", explicitStack.Reverse().Select(t => t.PrettyName()))}");
+                            $"Circular dependency detected {string.Join(" -> ", cycleDetector.GetElements().Select(t => t.PrettyName()))}");
+                    }
+                    else
+                    {
+                        cycleDetector.RemoveLast();
                     }
 
                     args[i] = this.map.GetOrAdd(
                         info.ParameterTypes[i],
-                        t => this.Resolve(t, alreadyVisited, explicitStack));
+                        t => this.Resolve(t, cycleDetector));
                 }
 
                 return info.Ctor.Invoke(args);
             }
             finally
             {
-                explicitStack.Pop();
+                cycleDetector.RemoveLast();
             }
         }
 
