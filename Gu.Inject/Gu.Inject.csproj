@@ -34,7 +34,6 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ContextManager.cs" />
     <Compile Include="Internals\Ctor.cs" />
     <Compile Include="Kernel.cs" />
     <Compile Include="Internals\TypeMap.cs" />
