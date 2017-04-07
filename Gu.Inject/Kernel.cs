@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
 
@@ -81,47 +82,68 @@
 
         private object Resolve(Type type)
         {
-            if (this.bindings.TryGetValue(type, out Type bound))
-            {
-                return this.map.GetOrAdd(bound, this.Resolve);
-            }
+            return this.Resolve(type, new HashSet<Type>(), new Stack<Type>());
+        }
 
-            if (type.IsInterface ||
-                type.IsAbstract)
+        private object Resolve(Type type, HashSet<Type> alreadyVisited, Stack<Type> explicitStack)
+        {
+            using (var ctx = new ContextManager(() => explicitStack.Push(type), () => explicitStack.Pop()))
             {
-                var mapped = TypeMap.GetMapped(type);
-                if (mapped.Count == 0)
+                alreadyVisited.Add(type);
+
+                if (this.bindings.TryGetValue(type, out Type bound))
                 {
-                    throw new InvalidOperationException($"Type {type.PrettyName()} has no bindings.");
+                    return this.map.GetOrAdd(bound, t => this.Resolve(t, alreadyVisited, explicitStack));
                 }
 
-                if (mapped.Count > 1)
+                if (type.IsInterface ||
+                   type.IsAbstract)
                 {
-                    throw new InvalidOperationException($"Type {type.PrettyName()} has more than one binding {string.Join(",", mapped.Select(t => t.PrettyName()))}.");
+                    var mapped = TypeMap.GetMapped(type);
+                    if (mapped.Count == 0)
+                    {
+                        throw new InvalidOperationException($"Type {type.PrettyName()} has no bindings.");
+                    }
+
+                    if (mapped.Count > 1)
+                    {
+                        throw new InvalidOperationException(
+                            $"Type {type.PrettyName()} has more than one binding {string.Join(",", mapped.Select(t => t.PrettyName()))}.");
+                    }
+
+                    if (mapped[0].IsGenericType && !type.IsGenericType)
+                    {
+                        throw new InvalidOperationException(
+                            $"Type {type.PrettyName()} has more than one binding {string.Join(",", mapped.Select(t => t.PrettyName()))}.");
+                    }
+
+                    return this.map.GetOrAdd(mapped[0], t => this.Resolve(t, alreadyVisited, explicitStack));
                 }
 
-                if (mapped[0].IsGenericType && !type.IsGenericType)
+                var info = Ctor.GetInfo(type);
+                this.Resolving?.Invoke(this, type);
+                if (info.ParameterTypes.Count == 0)
                 {
-                    throw new InvalidOperationException($"Type {type.PrettyName()} has more than one binding {string.Join(",", mapped.Select(t => t.PrettyName()))}.");
+                    return info.Ctor.Invoke(null);
                 }
 
-                return this.map.GetOrAdd(mapped[0], this.Resolve);
-            }
+                var args = new object[info.ParameterTypes.Count];
+                for (var i = 0; i < info.ParameterTypes.Count; i++)
+                {
+                    if (alreadyVisited.Contains(info.ParameterTypes[i]))
+                    {
+                        explicitStack.Push(info.ParameterTypes[i]);
+                        throw new InvalidOperationException(
+                            $"Circular dependency detected {string.Join(" -> ", explicitStack.Reverse().Select(t => t.PrettyName()))}");
+                    }
 
-            var info = Ctor.GetInfo(type);
-            this.Resolving?.Invoke(this, type);
-            if (info.ParameterTypes.Count == 0)
-            {
-                return info.Ctor.Invoke(null);
-            }
+                    args[i] = this.map.GetOrAdd(
+                        info.ParameterTypes[i],
+                        t => this.Resolve(t, alreadyVisited, explicitStack));
+                }
 
-            var args = new object[info.ParameterTypes.Count];
-            for (var i = 0; i < info.ParameterTypes.Count; i++)
-            {
-                args[i] = this.map.GetOrAdd(info.ParameterTypes[i], this.Resolve);
+                return info.Ctor.Invoke(args);
             }
-
-            return info.Ctor.Invoke(args);
         }
 
         private void ThrowIfDisposed()
