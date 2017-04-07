@@ -43,6 +43,9 @@
     <Compile Include="Benchmarks\Get.cs" />
     <Compile Include="Benchmarks\NewAndGet.cs" />
     <Compile Include="Types\Foo.cs" />
+    <Content Include="_TraceEventProgrammersGuide.docx">
+      <Paket>True</Paket>
+    </Content>
     <Content Include="TraceEvent.ReadMe.txt">
       <Paket>True</Paket>
     </Content>
@@ -73,6 +76,12 @@
     </When>
   </Choose>
   <ItemGroup>
+    <ProjectReference Include="..\Gu.Inject\Gu.Inject.csproj">
+      <Project>{8953C8E1-0819-4EB8-B10C-5286DEB0E079}</Project>
+      <Name>Gu.Inject</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <Analyzer Include="..\packages\analyzers\Gu.Analyzers\analyzers\dotnet\cs\Gu.Analyzers.Analyzers.dll">
       <Paket>True</Paket>
     </Analyzer>
@@ -90,12 +99,6 @@
     <Analyzer Include="..\packages\analyzers\StyleCop.Analyzers\analyzers\dotnet\cs\StyleCop.Analyzers.dll">
       <Paket>True</Paket>
     </Analyzer>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Gu.Inject\Gu.Inject.csproj">
-      <Project>{8953C8E1-0819-4EB8-B10C-5286DEB0E079}</Project>
-      <Name>Gu.Inject</Name>
-    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.6.1')">
@@ -138,6 +141,17 @@
       <ItemGroup>
         <Reference Include="Ninject">
           <HintPath>..\packages\benchmarks\Ninject\lib\net45-full\Ninject.dll</HintPath>
+          <Private>True</Private>
+          <Paket>True</Paket>
+        </Reference>
+      </ItemGroup>
+    </When>
+  </Choose>
+  <Choose>
+    <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.6.1')">
+      <ItemGroup>
+        <Reference Include="SimpleInjector">
+          <HintPath>..\packages\benchmarks\SimpleInjector\lib\net45\SimpleInjector.dll</HintPath>
           <Private>True</Private>
           <Paket>True</Paket>
         </Reference>

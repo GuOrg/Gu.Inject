@@ -7,3 +7,4 @@ group Benchmarks
   BenchmarkDotNet.Diagnostics.Windows
   System.Reflection.Metadata
   Ninject
+  SimpleInjector

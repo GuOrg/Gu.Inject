@@ -18,4 +18,5 @@ group Benchmarks
   nuget BenchmarkDotNet.Diagnostics.Windows
   nuget System.Reflection.Metadata = 1.2.0
   nuget Ninject
+  nuget SimpleInjector
 
