@@ -87,7 +87,8 @@
 
         private object Resolve(Type type, HashSet<Type> alreadyVisited, Stack<Type> explicitStack)
         {
-            using (var ctx = new ContextManager(() => explicitStack.Push(type), () => explicitStack.Pop()))
+            explicitStack.Push(type);
+            try
             {
                 alreadyVisited.Add(type);
 
@@ -143,6 +144,10 @@
                 }
 
                 return info.Ctor.Invoke(args);
+            }
+            finally
+            {
+                explicitStack.Pop();
             }
         }
 
