@@ -1,4 +1,5 @@
-﻿namespace Gu.Inject.Tests.Types
+﻿// ReSharper disable UnusedParameter.Local
+namespace Gu.Inject.Tests.Types
 {
     internal class Circular
     {

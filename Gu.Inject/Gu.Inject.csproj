@@ -34,7 +34,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CycleDetector.cs" />
+    <Compile Include="Internals\CycleDetector.cs" />
     <Compile Include="Internals\Ctor.cs" />
     <Compile Include="Kernel.cs" />
     <Compile Include="Internals\TypeMap.cs" />
