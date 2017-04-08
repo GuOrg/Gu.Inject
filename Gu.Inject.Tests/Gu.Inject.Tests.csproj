@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="KernelTests.Bind.cs" />
     <Compile Include="KernelTests.Rebind.cs" />
+    <Compile Include="KernelTests.Throws.cs" />
     <Compile Include="TypeMapTests.cs" />
     <Compile Include="KernelTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -198,7 +198,9 @@
             if (this.bindings != null &&
                 this.bindings.TryGetValue(type, out Type bound))
             {
-                return this.GetCore(bound, visited);
+                return type == bound
+                    ? this.created.GetOrAdd(type, t => this.Create(t, visited))
+                    : this.GetCore(bound, visited);
             }
 
             if (type.IsInterface || type.IsAbstract)
@@ -220,6 +222,14 @@
                 }
 
                 return this.GetCore(mapped[0], visited);
+            }
+            else
+            {
+                var mapped = TypeMap.GetMapped(type);
+                if (mapped.Count != 0)
+                {
+                    throw new AmbiguousBindingException(type, mapped);
+                }
             }
 
             return this.created.GetOrAdd(type, t => this.Create(t, visited));

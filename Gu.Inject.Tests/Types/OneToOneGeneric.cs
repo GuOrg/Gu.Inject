@@ -2,9 +2,9 @@ namespace Gu.Inject.Tests.Types
 {
     public static class OneToOneGeneric
     {
-        public class Generic<T>
+        public abstract class AbstractGeneric<T>
         {
-            public Generic(T value)
+            public AbstractGeneric(T value)
             {
                 this.Value = value;
             }
@@ -12,7 +12,7 @@ namespace Gu.Inject.Tests.Types
             public T Value { get; }
         }
 
-        public class GenericOfDefaultCtor : Generic<DefaultCtor>
+        public class GenericOfDefaultCtor : AbstractGeneric<DefaultCtor>
         {
             public GenericOfDefaultCtor(DefaultCtor value)
                 : base(value)

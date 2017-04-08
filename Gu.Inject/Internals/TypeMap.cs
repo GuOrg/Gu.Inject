@@ -30,17 +30,23 @@
                 var typeDefinition = type.GetGenericTypeDefinition();
                 if (cache.TryGetValue(typeDefinition, out mapped))
                 {
-                    mapped = mapped.Select(t => t.MakeGenericType(type.GenericTypeArguments))
-                                   .ToList();
-                    cache.TryAdd(type, mapped);
-                    return mapped;
+                    var mappedTypes = new List<Type>(mapped.Count);
+                    foreach (var type1 in mapped)
+                    {
+                        mappedTypes.Add(type1.IsGenericTypeDefinition
+                            ? type1.MakeGenericType(type.GenericTypeArguments)
+                            : type1);
+                    }
+
+                    cache.TryAdd(type, mappedTypes);
+                    return mappedTypes;
                 }
             }
 
             return Empty;
         }
 
-        internal static void Initialize(Assembly root)
+        internal static void Initialize(Assembly root, bool recursive = true)
         {
             if (cache != null)
             {
@@ -54,14 +60,16 @@
                     return;
                 }
 
-                cache = Create(root);
+                cache = Create(root, recursive);
             }
         }
 
-        private static ConcurrentDictionary<Type, List<Type>> Create(Assembly root)
+        private static ConcurrentDictionary<Type, List<Type>> Create(Assembly root, bool recursive)
         {
             var map = new Dictionary<Type, List<Type>>();
-            var assemblies = RecursiveAssemblies(root);
+            var assemblies = recursive
+                ? RecursiveAssemblies(root)
+                : (IEnumerable<Assembly>)new[] { root };
             foreach (var assembly in assemblies)
             {
                 foreach (var type in assembly.GetTypes())
@@ -76,13 +84,15 @@
                     var info = type.GetTypeInfo();
                     foreach (var @interface in info.ImplementedInterfaces)
                     {
-                        MapInterface(type, @interface, map);
+                        MapInterfaceOrBase(type, @interface, map);
                     }
 
                     var baseType = type.BaseType;
-                    if (baseType?.IsAbstract == true)
+                    while (baseType != null &&
+                        baseType != typeof(object))
                     {
-                        MapInterface(type, baseType, map);
+                        MapInterfaceOrBase(type, baseType, map);
+                        baseType = baseType.BaseType;
                     }
                 }
             }
@@ -90,21 +100,21 @@
             return new ConcurrentDictionary<Type, List<Type>>(map);
         }
 
-        private static void MapInterface(Type type, Type @interface, Dictionary<Type, List<Type>> map)
+        private static void MapInterfaceOrBase(Type type, Type interfaceOrBase, Dictionary<Type, List<Type>> map)
         {
             if (type.IsAbstract)
             {
                 return;
             }
 
-            if (@interface.IsGenericType)
+            if (interfaceOrBase.IsGenericType)
             {
-                @interface = @interface.GetGenericTypeDefinition();
+                interfaceOrBase = interfaceOrBase.GetGenericTypeDefinition();
             }
 
-            if (!map.TryGetValue(@interface, out List<Type> types))
+            if (!map.TryGetValue(interfaceOrBase, out List<Type> types))
             {
-                map[@interface] = types = new List<Type>();
+                map[interfaceOrBase] = types = new List<Type>();
             }
 
             types.Add(type);
