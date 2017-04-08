@@ -38,13 +38,14 @@
             }
         }
 
-        [TestCase(typeof(Circular1.A), "Circular dependency detected A -> B -> A")]
-        [TestCase(typeof(Circular2.A), "Circular dependency detected A -> E -> G -> A")]
+        [TestCase(typeof(Circular1.A), "A(\r\n  B(\r\n    A( Circular dependency detected.\r\n")]
+        [TestCase(typeof(Circular2.A), "A(\r\n  E(\r\n    G(\r\n      A( Circular dependency detected.\r\n")]
         public void Loop(Type type, string message)
         {
             using (var kernel = new Kernel())
             {
-                var exception = Assert.Throws<InvalidOperationException>(() => kernel.Get(type));
+                var exception = Assert.Throws<ResolveException>(() => kernel.Get(type));
+                Console.WriteLine(exception.Message);
                 Assert.AreEqual(message, exception.Message);
             }
         }
@@ -54,9 +55,9 @@
         {
             using (var kernel = new Kernel())
             {
-                var exception = Assert.Throws<InvalidOperationException>(() => kernel.Get(type));
+                var exception = Assert.Throws<AmbiguousGenericBindingException>(() => kernel.Get(type));
                 var expected = "Type IWith has binding to a generic type: With<>.\r\n" +
-                               "Add a bining specifying what type argument to use.";
+                               "Add a binding specifying what type argument to use.";
                 Assert.AreEqual(expected, exception.Message);
             }
         }
@@ -68,7 +69,7 @@
         {
             using (var kernel = new Kernel())
             {
-                var exception = Assert.Throws<InvalidOperationException>(() => kernel.Get(type));
+                var exception = Assert.Throws<AmbiguousBindingException>(() => kernel.Get(type));
                 Assert.AreEqual(expected, exception.Message);
             }
         }

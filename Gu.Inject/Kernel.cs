@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Linq;
+    using System.Collections.Generic;
     using System.Reflection;
 
     /// <summary>
@@ -12,6 +12,8 @@
     {
         private readonly ConcurrentDictionary<Type, object> map = new ConcurrentDictionary<Type, object>();
         private readonly ConcurrentDictionary<Type, Type> bindings = new ConcurrentDictionary<Type, Type>();
+        private readonly HashSet<Type> resolved = new HashSet<Type>();
+
         private bool disposed;
 
         /// <summary>
@@ -141,46 +143,41 @@
 
         private object Resolve(Type type)
         {
-            return this.Resolve(type, new CycleDetector<Type>());
-        }
+            if (this.bindings.TryGetValue(type, out Type bound))
+            {
+                return this.map.GetOrAdd(bound, this.Resolve);
+            }
 
-        private object Resolve(Type type, CycleDetector<Type> cycleDetector)
-        {
-            cycleDetector.Add(type);
+            if (type.IsInterface || type.IsAbstract)
+            {
+                var mapped = TypeMap.GetMapped(type);
+                if (mapped.Count == 0)
+                {
+                    throw new NoBindingException(type, mapped);
+                }
+
+                if (mapped.Count > 1)
+                {
+                    throw new AmbiguousBindingException(type, mapped);
+                }
+
+                if (mapped[0].IsGenericType && !type.IsGenericType)
+                {
+                    throw new AmbiguousGenericBindingException(type, mapped);
+                }
+
+                return this.map.GetOrAdd(mapped[0], this.Resolve);
+            }
+
+            if (!this.resolved.Add(type))
+            {
+                throw new CircularDependencyException(type);
+            }
+
+            var info = Ctor.GetInfo(type);
+            this.Resolving?.Invoke(this, type);
             try
             {
-                if (this.bindings.TryGetValue(type, out Type bound))
-                {
-                    return this.map.GetOrAdd(bound, t => this.Resolve(t, cycleDetector));
-                }
-
-                if (type.IsInterface ||
-                    type.IsAbstract)
-                {
-                    var mapped = TypeMap.GetMapped(type);
-                    if (mapped.Count == 0)
-                    {
-                        throw new InvalidOperationException($"Type {type.PrettyName()} has no bindings.");
-                    }
-
-                    if (mapped.Count > 1)
-                    {
-                        throw new InvalidOperationException(
-                            $"Type {type.PrettyName()} has more than one binding: {string.Join(", ", mapped.Select(t => t.PrettyName()))}.");
-                    }
-
-                    if (mapped[0].IsGenericType && !type.IsGenericType)
-                    {
-                        throw new InvalidOperationException(
-                            $"Type {type.PrettyName()} has binding to a generic type: {mapped[0].PrettyName()}.\r\n" +
-                            $"Add a bining specifying what type argument to use.");
-                    }
-
-                    return this.map.GetOrAdd(mapped[0], t => this.Resolve(t, cycleDetector));
-                }
-
-                var info = Ctor.GetInfo(type);
-                this.Resolving?.Invoke(this, type);
                 if (info.ParameterTypes.Count == 0)
                 {
                     return info.Ctor.Invoke(null);
@@ -189,27 +186,14 @@
                 var args = new object[info.ParameterTypes.Count];
                 for (var i = 0; i < info.ParameterTypes.Count; i++)
                 {
-                    cycleDetector.Add(info.ParameterTypes[i]);
-                    if (cycleDetector.HasCycle)
-                    {
-                        throw new InvalidOperationException(
-                            $"Circular dependency detected {string.Join(" -> ", cycleDetector.GetElements().Select(t => t.PrettyName()))}");
-                    }
-                    else
-                    {
-                        cycleDetector.RemoveLast();
-                    }
-
-                    args[i] = this.map.GetOrAdd(
-                        info.ParameterTypes[i],
-                        t => this.Resolve(t, cycleDetector));
+                    args[i] = this.map.GetOrAdd(info.ParameterTypes[i], this.Resolve);
                 }
 
                 return info.Ctor.Invoke(args);
             }
-            finally
+            catch (ResolveException e)
             {
-                cycleDetector.RemoveLast();
+                throw new ResolveException(type, e);
             }
         }
 
