@@ -6,11 +6,11 @@
         {
         }
 
-        public abstract class Abstract : IAbstract
+        public interface IConcrete
         {
         }
 
-        public interface IConcrete
+        public abstract class Abstract : IAbstract
         {
         }
 

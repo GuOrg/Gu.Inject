@@ -9,9 +9,9 @@
     internal static class TypeMap
     {
         private static readonly IReadOnlyList<Type> Empty = new Type[0];
-        private static ConcurrentDictionary<Type, List<Type>> Map;
+        private static ConcurrentDictionary<Type, List<Type>> cache;
 
-        internal static bool IsInitialized => Map != null;
+        internal static bool IsInitialized => cache != null;
 
         internal static IReadOnlyList<Type> GetMapped(Type type)
         {
@@ -20,7 +20,7 @@
                 return Empty;
             }
 
-            if (Map.TryGetValue(type, out List<Type> mapped))
+            if (cache.TryGetValue(type, out List<Type> mapped))
             {
                 return mapped;
             }
@@ -28,11 +28,11 @@
             if (type.IsGenericType)
             {
                 var typeDefinition = type.GetGenericTypeDefinition();
-                if (Map.TryGetValue(typeDefinition, out mapped))
+                if (cache.TryGetValue(typeDefinition, out mapped))
                 {
                     mapped = mapped.Select(t => t.MakeGenericType(type.GenericTypeArguments))
                                    .ToList();
-                    Map.TryAdd(type, mapped);
+                    cache.TryAdd(type, mapped);
                     return mapped;
                 }
             }
@@ -42,19 +42,19 @@
 
         internal static void Initialize(Assembly root)
         {
-            if (Map != null)
+            if (cache != null)
             {
                 return;
             }
 
             lock (Empty)
             {
-                if (Map != null)
+                if (cache != null)
                 {
                     return;
                 }
 
-                Map = Create(root);
+                cache = Create(root);
             }
         }
 
