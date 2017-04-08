@@ -92,6 +92,11 @@
 
         private static void MapInterface(Type type, Type @interface, Dictionary<Type, List<Type>> map)
         {
+            if (type.IsAbstract)
+            {
+                return;
+            }
+
             if (@interface.IsGenericType)
             {
                 @interface = @interface.GetGenericTypeDefinition();

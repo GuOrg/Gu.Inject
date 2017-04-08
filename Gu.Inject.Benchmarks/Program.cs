@@ -1,4 +1,7 @@
-﻿namespace Gu.Inject.Benchmarks
+﻿// ReSharper disable UnusedMember.Local
+// ReSharper disable UnusedParameter.Local
+// ReSharper disable PossibleNullReferenceException
+namespace Gu.Inject.Benchmarks
 {
     using System.Collections.Generic;
     using System.IO;

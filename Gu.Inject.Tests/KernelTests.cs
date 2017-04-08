@@ -4,7 +4,7 @@
     using Gu.Inject.Tests.Types;
     using NUnit.Framework;
 
-    public class KernelTests
+    public partial class KernelTests
     {
         [TestCase(typeof(DefaultCtor), typeof(DefaultCtor))]
         [TestCase(typeof(IDefaultCtor), typeof(DefaultCtor))]
@@ -12,17 +12,19 @@
         [TestCase(typeof(IWith<DefaultCtor>), typeof(With<DefaultCtor>))]
         [TestCase(typeof(WithTwo<DefaultCtor, DefaultCtor>), typeof(WithTwo<DefaultCtor, DefaultCtor>))]
         [TestCase(typeof(WithTwo<DefaultCtor, With<DefaultCtor>>), typeof(WithTwo<DefaultCtor, With<DefaultCtor>>))]
-        [TestCase(typeof(Concrete), typeof(Concrete))]
-        [TestCase(typeof(Abstract), typeof(Concrete))]
-        [TestCase(typeof(Generic<DefaultCtor>), typeof(Generic<DefaultCtor>))]
-        [TestCase(typeof(GenericOfDefaultCtor), typeof(GenericOfDefaultCtor))]
-        public void Get(Type t1, Type t2)
+        [TestCase(typeof(OneToOne.Concrete), typeof(OneToOne.Concrete))]
+        [TestCase(typeof(OneToOne.Abstract), typeof(OneToOne.Concrete))]
+        [TestCase(typeof(OneToOne.IAbstract), typeof(OneToOne.Concrete))]
+        [TestCase(typeof(OneToOne.IConcrete), typeof(OneToOne.Concrete))]
+        [TestCase(typeof(OneToOneGeneric.Generic<DefaultCtor>), typeof(OneToOneGeneric.Generic<DefaultCtor>))]
+        [TestCase(typeof(OneToOneGeneric.GenericOfDefaultCtor), typeof(OneToOneGeneric.GenericOfDefaultCtor))]
+        public void Get(Type type, Type expected)
         {
             using (var kernel = new Kernel())
             {
-                var actual = kernel.Get(t1);
-                Assert.AreEqual(t2, actual.GetType());
-                Assert.AreSame(actual, kernel.Get(t2));
+                var actual = kernel.Get(type);
+                Assert.AreEqual(expected, actual.GetType());
+                Assert.AreSame(actual, kernel.Get(expected));
             }
         }
 
@@ -36,26 +38,26 @@
             }
         }
 
-        [TestCase(typeof(A), "Circular dependency detected A -> B -> A")]
-        [TestCase(typeof(Circular.A), "Circular dependency detected A -> E -> G -> A")]
-        public void Loop(Type t, string message)
+        [TestCase(typeof(Circular1.A), "Circular dependency detected A -> B -> A")]
+        [TestCase(typeof(Circular2.A), "Circular dependency detected A -> E -> G -> A")]
+        public void Loop(Type type, string message)
         {
             using (var kernel = new Kernel())
             {
-                var exception = Assert.Throws<InvalidOperationException>(() =>
-                {
-                    var actual = kernel.Get(t);
-                });
+                var exception = Assert.Throws<InvalidOperationException>(() => kernel.Get(type));
                 Assert.AreEqual(message, exception.Message);
             }
         }
 
         [TestCase(typeof(IWith))]
-        public void Throws(Type type)
+        public void ThrowsWhenNoBinding(Type type)
         {
             using (var kernel = new Kernel())
             {
-                Assert.Throws<InvalidOperationException>(() => kernel.Get(type));
+                var exception = Assert.Throws<InvalidOperationException>(() => kernel.Get(type));
+                var expected = "Type IWith has binding to a generic type: With<>.\r\n" +
+                               "Add a bining specifying what type argument to use.";
+                Assert.AreEqual(expected, exception.Message);
             }
         }
 
@@ -70,72 +72,6 @@
             }
 
             Assert.AreEqual(1, actual.Disposed);
-        }
-
-        [Test]
-        public void Bind()
-        {
-            using (var kernel = new Kernel())
-            {
-                kernel.Bind<IWith, With<DefaultCtor>>();
-                var actual = kernel.Get<IWith>();
-                Assert.AreSame(actual, kernel.Get<With<DefaultCtor>>());
-            }
-        }
-
-        [Test]
-        public void BindThrowsIfHasResolved()
-        {
-            using (var kernel = new Kernel())
-            {
-                var defaultCtor = kernel.Get<DefaultCtor>();
-                var exception = Assert.Throws<InvalidOperationException>(() => kernel.Bind<IWith, With<DefaultCtor>>());
-                Assert.AreEqual("Bind not allowed after Get.", exception.Message);
-            }
-        }
-
-        [Test]
-        public void BindThrowsIfHasBinding()
-        {
-            using (var kernel = new Kernel())
-            {
-                kernel.Bind<IWith, With<DefaultCtor>>();
-                var exception = Assert.Throws<InvalidOperationException>(() => kernel.Bind<IWith, With<DefaultCtor>>());
-                Assert.AreEqual("IWith already has a binding to With<DefaultCtor>", exception.Message);
-            }
-        }
-
-        [Test]
-        public void ReBind()
-        {
-            using (var kernel = new Kernel())
-            {
-                kernel.Bind<IWith, With<DefaultCtor>>();
-                kernel.ReBind<IWith, With<With<DefaultCtor>>>();
-                var actual = kernel.Get<IWith>();
-                Assert.AreSame(actual, kernel.Get<With<With<DefaultCtor>>>());
-            }
-        }
-
-        [Test]
-        public void ReBindThrowsIfHasResolved()
-        {
-            using (var kernel = new Kernel())
-            {
-                var defaultCtor = kernel.Get<DefaultCtor>();
-                var exception = Assert.Throws<InvalidOperationException>(() => kernel.ReBind<IWith, With<With<DefaultCtor>>>());
-                Assert.AreEqual("ReBind not allowed after Get.", exception.Message);
-            }
-        }
-
-        [Test]
-        public void ReBindThrowsIfNoBinding()
-        {
-            using (var kernel = new Kernel())
-            {
-                var exception = Assert.Throws<InvalidOperationException>(() => kernel.ReBind<IWith, With<With<DefaultCtor>>>());
-                Assert.AreEqual("IWith does not have a binding.", exception.Message);
-            }
         }
     }
 }

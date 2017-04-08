@@ -22,7 +22,7 @@
 
         public void RemoveLast()
         {
-            var last = this.order.Pop();
+            this.order.Pop();
             if (this.order.Count > 0)
             {
                 this.visited.Remove(this.order.Peek());
