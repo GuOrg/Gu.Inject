@@ -31,6 +31,52 @@
             }
 
             [Test]
+            public void BindInstanceThenGet()
+            {
+                using (var kernel = new Kernel())
+                {
+                    var instance = new DefaultCtor();
+                    kernel.Bind(instance);
+                    var actual = kernel.Get<DefaultCtor>();
+                    Assert.AreSame(actual, instance);
+                }
+            }
+
+            [Test]
+            public void BindInstanceAndInterfaceThenGet()
+            {
+                var instance = new With<DefaultCtor>(new DefaultCtor());
+
+                using (var kernel = new Kernel())
+                {
+                    kernel.Bind(instance);
+                    kernel.Bind<IWith<DefaultCtor>, With<DefaultCtor>>();
+
+                    object actual = kernel.Get<With<DefaultCtor>>();
+                    Assert.AreSame(actual, instance);
+
+                    actual = kernel.Get<IWith<DefaultCtor>>();
+                    Assert.AreSame(actual, instance);
+                }
+            }
+
+            [Test]
+            public void BounInstanceIsNotDisposed()
+            {
+                using (var disposable = new Disposable())
+                {
+                    using (var kernel = new Kernel())
+                    {
+                        kernel.Bind(disposable);
+                        var actual = kernel.Get<Disposable>();
+                        Assert.AreSame(actual, disposable);
+                    }
+
+                    Assert.AreEqual(0, disposable.Disposed);
+                }
+            }
+
+            [Test]
             public void ThrowsIfHasResolved()
             {
                 using (var kernel = new Kernel())

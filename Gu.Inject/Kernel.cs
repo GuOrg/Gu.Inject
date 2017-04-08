@@ -3,14 +3,16 @@
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Reflection;
+    using System.Runtime.CompilerServices;
 
     /// <summary>
     /// A factory for resolving object graphs.
     /// </summary>
     public sealed class Kernel : IDisposable
     {
-        private readonly ConcurrentDictionary<Type, object> map = new ConcurrentDictionary<Type, object>();
+        private readonly ConcurrentDictionary<Type, InstanceRef> map = new ConcurrentDictionary<Type, InstanceRef>();
         private readonly ConcurrentDictionary<Type, Type> bindings = new ConcurrentDictionary<Type, Type>();
         private readonly HashSet<Type> resolved = new HashSet<Type>();
 
@@ -52,15 +54,30 @@
         /// <param name="to">The mapped type.</param>
         public void Bind(Type from, Type to)
         {
-            if (this.map.Count != 0)
-            {
-                throw new InvalidOperationException("Bind not allowed after Get.");
-            }
-
+            this.ThrowIfHasResolved();
             this.bindings.AddOrUpdate(
                 from,
                 t => to,
                 (t1, t2) => throw new InvalidOperationException($"{t1.PrettyName()} already has a binding to {t2.PrettyName()}"));
+        }
+
+        /// <summary>
+        /// Provide an override to the automatic mapping.
+        /// </summary>
+        /// <typeparam name="T">The mapped type.</typeparam>
+        public void Bind<T>(T instance)
+            where T : class
+        {
+            if (instance == null)
+            {
+                throw new ArgumentNullException(nameof(instance));
+            }
+
+            this.ThrowIfHasResolved();
+            this.map.AddOrUpdate(
+                typeof(T),
+                t => new Injected(instance),
+                (t1, t2) => throw new InvalidOperationException($"{t1.PrettyName()} already has a binding to {t2}"));
         }
 
         /// <summary>
@@ -81,10 +98,7 @@
         /// <param name="to">The mapped type.</param>
         public void ReBind(Type from, Type to)
         {
-            if (this.map.Count != 0)
-            {
-                throw new InvalidOperationException("ReBind not allowed after Get.");
-            }
+            this.ThrowIfHasResolved();
 
             this.bindings.AddOrUpdate(
                 from,
@@ -121,7 +135,7 @@
                 TypeMap.Initialize(Assembly.GetCallingAssembly());
             }
 
-            return this.map.GetOrAdd(type, this.Resolve);
+            return this.map.GetOrAdd(type, this.Resolve).Instance;
         }
 
         /// <inheritdoc/>
@@ -135,13 +149,13 @@
             this.disposed = true;
             foreach (var kvp in this.map)
             {
-                (kvp.Value as IDisposable)?.Dispose();
+                ((kvp.Value as Created)?.Instance as IDisposable)?.Dispose();
             }
 
             this.map.Clear();
         }
 
-        private object Resolve(Type type)
+        private InstanceRef Resolve(Type type)
         {
             if (this.bindings.TryGetValue(type, out Type bound))
             {
@@ -180,20 +194,34 @@
             {
                 if (info.ParameterTypes.Count == 0)
                 {
-                    return info.CreateInstance(null);
+                    return new Created(info.CreateInstance(null));
                 }
 
                 var args = new object[info.ParameterTypes.Count];
                 for (var i = 0; i < info.ParameterTypes.Count; i++)
                 {
-                    args[i] = this.map.GetOrAdd(info.ParameterTypes[i], this.Resolve);
+                    args[i] = this.map.GetOrAdd(info.ParameterTypes[i], this.Resolve).Instance;
                 }
 
-                return info.CreateInstance(args);
+                return new Created(info.CreateInstance(args));
             }
             catch (ResolveException e)
             {
                 throw new ResolveException(type, e);
+            }
+        }
+
+        private void ThrowIfHasResolved([CallerMemberName] string caller = null)
+        {
+            if (this.map.Count != 0)
+            {
+                foreach (var kvp in this.map)
+                {
+                    if (kvp.Value is Created)
+                    {
+                        throw new InvalidOperationException($"{caller} not allowed after Get.");
+                    }
+                }
             }
         }
 
@@ -202,6 +230,33 @@
             if (this.disposed)
             {
                 throw new ObjectDisposedException(this.GetType().FullName);
+            }
+        }
+
+        private abstract class InstanceRef
+        {
+            internal readonly object Instance;
+
+            protected InstanceRef(object instance)
+            {
+                Debug.Assert(!(instance is InstanceRef), "!(instance is InstanceRef)");
+                this.Instance = instance;
+            }
+        }
+
+        private class Injected : InstanceRef
+        {
+            public Injected(object instance)
+                : base(instance)
+            {
+            }
+        }
+
+        private class Created : InstanceRef
+        {
+            public Created(object instance)
+                : base(instance)
+            {
             }
         }
     }
