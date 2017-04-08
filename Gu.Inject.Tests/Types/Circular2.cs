@@ -19,16 +19,10 @@ namespace Gu.Inject.Tests.Types
 
         public class C
         {
-            public C()
-            {
-            }
         }
 
         public class D
         {
-            public D()
-            {
-            }
         }
 
         public class E
@@ -40,9 +34,6 @@ namespace Gu.Inject.Tests.Types
 
         public class F
         {
-            public F()
-            {
-            }
         }
 
         public class G
