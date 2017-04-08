@@ -117,7 +117,10 @@
                 map[interfaceOrBase] = types = new List<Type>();
             }
 
-            types.Add(type);
+            if (!types.Contains(type))
+            {
+                types.Add(type);
+            }
         }
 
         private static HashSet<Assembly> RecursiveAssemblies(Assembly assembly, HashSet<Assembly> assemblies = null)

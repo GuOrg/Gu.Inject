@@ -19,6 +19,18 @@
         [TestCase(typeof(OneToOneGeneric.AbstractGeneric<DefaultCtor>), typeof(OneToOneGeneric.GenericOfDefaultCtor))]
         [TestCase(typeof(OneToOneGeneric.GenericOfDefaultCtor), typeof(OneToOneGeneric.GenericOfDefaultCtor))]
         [TestCase(typeof(InheritNonAbstract.FooDerived), typeof(InheritNonAbstract.FooDerived))]
+        [TestCase(typeof(ManyToOne.Foo), typeof(ManyToOne.Foo))]
+        [TestCase(typeof(ManyToOne.FooBase), typeof(ManyToOne.Foo))]
+        [TestCase(typeof(ManyToOne.FooBaseBase), typeof(ManyToOne.Foo))]
+        [TestCase(typeof(ManyToOne.IFoo1), typeof(ManyToOne.Foo))]
+        [TestCase(typeof(ManyToOne.IFoo2), typeof(ManyToOne.Foo))]
+        [TestCase(typeof(ManyToOne.IFooBase1), typeof(ManyToOne.Foo))]
+        [TestCase(typeof(ManyToOne.IFooBase2), typeof(ManyToOne.Foo))]
+        [TestCase(typeof(ManyToOne.IGenericFoo1<int>), typeof(ManyToOne.Foo))]
+        [TestCase(typeof(ManyToOne.IGenericFoo1<double>), typeof(ManyToOne.Foo))]
+        [TestCase(typeof(ManyToOne.IGenericFoo2<int>), typeof(ManyToOne.Foo))]
+        [TestCase(typeof(ManyToOne.IFooFoo), typeof(ManyToOne.Foo))]
+        [TestCase(typeof(ManyToOne.IFoo), typeof(ManyToOne.Foo))]
         public void Get(Type type, Type expected)
         {
             using (var kernel = new Kernel())
