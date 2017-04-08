@@ -15,6 +15,11 @@
 
         internal static void Return(ConcurrentDictionary<TKey, TValue> dictionary)
         {
+            if (dictionary == null)
+            {
+                return;
+            }
+
             dictionary.Clear();
             Cache.Enqueue(dictionary);
         }

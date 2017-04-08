@@ -12,19 +12,12 @@
     /// </summary>
     public sealed class Kernel : IDisposable
     {
-        private readonly ConcurrentDictionary<Type, object> created;
-        private readonly ConcurrentDictionary<Type, object> injected;
-        private readonly ConcurrentDictionary<Type, Type> bindings;
+        private ConcurrentDictionary<Type, object> created = ConcurrentDictionaryPool<Type, object>.Borrow();
+        private ConcurrentDictionary<Type, object> injected;
+        private ConcurrentDictionary<Type, Type> bindings;
         private readonly HashSet<Type> resolved = new HashSet<Type>();
 
         private bool disposed;
-
-        public Kernel()
-        {
-            this.created = ConcurrentDictionaryPool<Type, object>.Borrow();
-            this.injected = ConcurrentDictionaryPool<Type, object>.Borrow();
-            this.bindings = ConcurrentDictionaryPool<Type, Type>.Borrow();
-        }
 
         /// <summary>
         /// This notifies before creating an instance of a type.
@@ -64,6 +57,17 @@
         {
             this.ThrowIfDisposed();
             this.ThrowIfHasResolved();
+            if (this.bindings == null)
+            {
+                lock (this.created)
+                {
+                    if (this.bindings == null)
+                    {
+                        this.bindings = ConcurrentDictionaryPool<Type, Type>.Borrow();
+                    }
+                }
+            }
+
             this.bindings.AddOrUpdate(
                 from,
                 t => to,
@@ -87,6 +91,17 @@
 
             this.ThrowIfDisposed();
             this.ThrowIfHasResolved();
+            if (this.injected == null)
+            {
+                lock (this.created)
+                {
+                    if (this.injected == null)
+                    {
+                        this.injected = ConcurrentDictionaryPool<Type, object>.Borrow();
+                    }
+                }
+            }
+
             this.injected.AddOrUpdate(
                 typeof(T),
                 t => instance,
@@ -113,6 +128,11 @@
         {
             this.ThrowIfDisposed();
             this.ThrowIfHasResolved();
+            if (this.bindings == null)
+            {
+                throw new InvalidOperationException($"{from.PrettyName()} does not have a binding.");
+            }
+
             this.bindings.AddOrUpdate(
                 from,
                 t => throw new InvalidOperationException($"{t.PrettyName()} does not have a binding."),
@@ -172,18 +192,23 @@
 
         private object GetCore(Type type)
         {
-            return this.injected.TryGetValue(type, out object instance)
-                ? instance
-                : this.created.GetOrAdd(type, this.Resolve);
-        }
+            if (this.injected != null &&
+                this.injected.TryGetValue(type, out object instance))
+            {
+                return instance;
+            }
 
-        private object Resolve(Type type)
-        {
-            if (this.bindings.TryGetValue(type, out Type bound))
+            if (this.bindings != null &&
+                this.bindings.TryGetValue(type, out Type bound))
             {
                 return this.GetCore(bound);
             }
 
+            return this.created.GetOrAdd(type, this.Resolve);
+        }
+
+        private object Resolve(Type type)
+        {
             if (type.IsInterface || type.IsAbstract)
             {
                 var mapped = TypeMap.GetMapped(type);
