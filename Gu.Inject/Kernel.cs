@@ -4,6 +4,7 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
 
@@ -192,6 +193,13 @@
             }
 
             var info = Ctor.GetInfo(type);
+            if (info.ParameterTypes.Any(p => p.IsArray))
+            {
+                var message = $"Type {type.PrettyName()} has params argument which is not supported.\r\n" +
+                              "Add a binding specifying which how to create an instance.";
+                throw new ResolveException(type, message);
+            }
+
             this.Resolving?.Invoke(this, type);
             try
             {

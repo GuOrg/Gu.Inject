@@ -38,8 +38,8 @@
             }
         }
 
-        [TestCase(typeof(Circular1.A), "A(\r\n  B(\r\n    A( Circular dependency detected.\r\n")]
-        [TestCase(typeof(Circular2.A), "A(\r\n  E(\r\n    G(\r\n      A( Circular dependency detected.\r\n")]
+        [TestCase(typeof(Circular1.A), "Circular1.A(\r\n  Circular1.B(\r\n    Circular1.A( Circular dependency detected.\r\n")]
+        [TestCase(typeof(Circular2.A), "Circular2.A(\r\n  Circular2.E(\r\n    Circular2.G(\r\n      Circular2.A( Circular dependency detected.\r\n")]
         public void Loop(Type type, string message)
         {
             using (var kernel = new Kernel())
@@ -62,9 +62,33 @@
             }
         }
 
-        [TestCase(typeof(OneToMany.Abstract), "Type Abstract has more than one binding: Concrete1, Concrete2.")]
-        [TestCase(typeof(OneToMany.IAbstract), "Type IAbstract has more than one binding: Concrete1, Concrete2.")]
-        [TestCase(typeof(OneToMany.IConcrete), "Type IConcrete has more than one binding: Concrete1, Concrete2.")]
+        [Test]
+        public void ThrowsWhenTwoCtors()
+        {
+            using (var kernel = new Kernel())
+            {
+                var exception = Assert.Throws<ResolveException>(() => kernel.Get<Error.TwoCtors>());
+                var expected = "Type Error.TwoCtors has more than one constructor.\r\n" +
+                               "Add a binding specifying which constructor to use.";
+                Assert.AreEqual(expected, exception.Message);
+            }
+        }
+
+        [Test]
+        public void ThrowsWhenParamsCtor()
+        {
+            using (var kernel = new Kernel())
+            {
+                var exception = Assert.Throws<ResolveException>(() => kernel.Get<Error.ParamsCtor>());
+                var expected = $"Type Error.ParamsCtor has params argument which is not supported.\r\n" +
+                              "Add a binding specifying which how to create an instance.";
+                Assert.AreEqual(expected, exception.Message);
+            }
+        }
+
+        [TestCase(typeof(OneToMany.Abstract), "Type OneToMany.Abstract has more than one binding: OneToMany.Concrete1, OneToMany.Concrete2.")]
+        [TestCase(typeof(OneToMany.IAbstract), "Type OneToMany.IAbstract has more than one binding: OneToMany.Concrete1, OneToMany.Concrete2.")]
+        [TestCase(typeof(OneToMany.IConcrete), "Type OneToMany.IConcrete has more than one binding: OneToMany.Concrete1, OneToMany.Concrete2.")]
         public void ThrowsWhenAmbiguous(Type type, string expected)
         {
             using (var kernel = new Kernel())

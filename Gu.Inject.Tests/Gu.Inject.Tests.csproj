@@ -51,6 +51,7 @@
     <Compile Include="Types\Circular2.cs" />
     <Compile Include="Types\DefaultCtor.cs" />
     <Compile Include="Types\Disposable.cs" />
+    <Compile Include="Types\Error.cs" />
     <Compile Include="Types\IDefaultCtor.cs" />
     <Compile Include="Types\IWith.cs" />
     <Compile Include="Types\IWithTwo{T1, T2}.cs" />

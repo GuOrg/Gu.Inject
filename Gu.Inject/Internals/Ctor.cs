@@ -15,12 +15,14 @@
             return Ctors.GetOrAdd(type, Create);
         }
 
-        internal static Info Create(Type type)
+        private static Info Create(Type type)
         {
             var ctors = type.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             if (ctors.Length > 1)
             {
-                throw new InvalidOperationException($"Injectable type can only have one constructor. Type {type.PrettyName()} has {ctors.Length}");
+                var message = $"Type {type.PrettyName()} has more than one constructor.\r\n" +
+                              "Add a binding specifying which constructor to use.";
+                throw new ResolveException(type, message);
             }
 
             var ctor = ctors[0];

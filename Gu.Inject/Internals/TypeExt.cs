@@ -41,7 +41,18 @@
             if (type.IsGenericType)
             {
                 var arguments = string.Join(", ", type.GenericTypeArguments.Select(PrettyName));
+
+                if (type.DeclaringType != null)
+                {
+                    return $"{type.DeclaringType.PrettyName()}.{type.Name.Split('`').First()}<{arguments}>";
+                }
+
                 return $"{type.Name.Split('`').First()}<{arguments}>";
+            }
+
+            if (type.DeclaringType != null)
+            {
+                return $"{type.DeclaringType.PrettyName()}.{type.Name}";
             }
 
             return type.Name;
