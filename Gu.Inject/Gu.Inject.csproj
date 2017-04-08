@@ -44,6 +44,7 @@
     <Compile Include="Exceptions\NoBindingException.cs" />
     <Compile Include="Internals\Ctor.cs" />
     <Compile Include="Internals\ConcurrentDictionaryPool.cs" />
+    <Compile Include="Internals\SetPool.cs" />
     <Compile Include="Kernel.cs" />
     <Compile Include="Internals\TypeMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

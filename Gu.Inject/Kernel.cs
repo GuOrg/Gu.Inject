@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
@@ -12,8 +11,6 @@
     /// </summary>
     public sealed class Kernel : IDisposable
     {
-        private readonly HashSet<Type> resolved = new HashSet<Type>();
-
         private ConcurrentDictionary<Type, object> created = ConcurrentDictionaryPool<Type, object>.Borrow();
         private ConcurrentDictionary<Type, object> injected;
         private ConcurrentDictionary<Type, Type> bindings;
@@ -190,7 +187,7 @@
             ConcurrentDictionaryPool<Type, Type>.Return(this.bindings);
         }
 
-        private object GetCore(Type type)
+        private object GetCore(Type type, Node visited = null)
         {
             if (this.injected != null &&
                 this.injected.TryGetValue(type, out object instance))
@@ -201,7 +198,7 @@
             if (this.bindings != null &&
                 this.bindings.TryGetValue(type, out Type bound))
             {
-                return this.GetCore(bound);
+                return this.GetCore(bound, visited);
             }
 
             if (type.IsInterface || type.IsAbstract)
@@ -222,19 +219,14 @@
                     throw new AmbiguousGenericBindingException(type, mapped);
                 }
 
-                return this.GetCore(mapped[0]);
+                return this.GetCore(mapped[0], visited);
             }
 
-            return this.created.GetOrAdd(type, this.Create);
+            return this.created.GetOrAdd(type, t => this.Create(t, visited));
         }
 
-        private object Create(Type type)
+        private object Create(Type type, Node visited)
         {
-            if (!this.resolved.Add(type))
-            {
-                throw new CircularDependencyException(type);
-            }
-
             var info = Ctor.GetInfo(type);
             if (info.ParameterTypes.Any(p => p.IsArray))
             {
@@ -244,17 +236,31 @@
             }
 
             this.Resolving?.Invoke(this, type);
-            try
+            if (info.ParameterTypes.Count == 0)
             {
-                if (info.ParameterTypes.Count == 0)
+                return info.Create(null);
+            }
+
+            if (visited != null)
+            {
+                if (visited.Contains(type))
                 {
-                    return info.Create(null);
+                    throw new CircularDependencyException(type);
                 }
 
+                visited = visited.Next(type);
+            }
+            else
+            {
+                visited = new Node(type);
+            }
+
+            try
+            {
                 var args = new object[info.ParameterTypes.Count];
                 for (var i = 0; i < info.ParameterTypes.Count; i++)
                 {
-                    args[i] = this.GetCore(info.ParameterTypes[i]);
+                    args[i] = this.GetCore(info.ParameterTypes[i], visited);
                 }
 
                 return info.Create(args);
@@ -278,6 +284,35 @@
             if (this.created == null)
             {
                 throw new ObjectDisposedException(this.GetType().FullName);
+            }
+        }
+
+        private class Node
+        {
+            private readonly Type type;
+            private readonly Node previous;
+
+            public Node(Type type)
+                : this(type, null)
+            {
+            }
+
+            private Node(Type type, Node previous)
+            {
+                this.type = type;
+                this.previous = previous;
+            }
+
+            public Node Next(Type type) => new Node(type, this);
+
+            public bool Contains(Type type)
+            {
+                if (this.type == type)
+                {
+                    return true;
+                }
+
+                return this.previous?.Contains(type) == true;
             }
         }
     }
