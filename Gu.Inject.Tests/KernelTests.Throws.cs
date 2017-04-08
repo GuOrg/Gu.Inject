@@ -15,7 +15,6 @@
                 using (var kernel = new Kernel())
                 {
                     var exception = Assert.Throws<ResolveException>(() => kernel.Get(type));
-                    Console.WriteLine(exception.Message);
                     Assert.AreEqual(message, exception.Message);
                 }
             }
