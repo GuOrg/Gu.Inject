@@ -43,9 +43,6 @@
     <Compile Include="Benchmarks\Get.cs" />
     <Compile Include="Benchmarks\NewAndGet.cs" />
     <Compile Include="Types\Foo.cs" />
-    <Content Include="_TraceEventProgrammersGuide.docx">
-      <Paket>True</Paket>
-    </Content>
     <Content Include="TraceEvent.ReadMe.txt">
       <Paket>True</Paket>
     </Content>
