@@ -3,11 +3,13 @@
     using BenchmarkDotNet.Attributes;
     using Gu.Inject.Benchmarks.Types;
     using Ninject;
+    using Ninject.Modules;
+
     using SimpleInjector;
 
     public class Get
     {
-        private static readonly Ninject.StandardKernel StandardKernel = new Ninject.StandardKernel();
+        private static readonly Ninject.StandardKernel StandardKernel = new Ninject.StandardKernel(new Module());
         private static readonly Container Container = new Container();
         private static readonly Kernel Kernel = new Kernel();
 
@@ -27,6 +29,14 @@
         public object GuInject()
         {
             return Kernel.Get<Foo>();
+        }
+
+        private class Module : NinjectModule
+        {
+            public override void Load()
+            {
+                this.Bind<Foo>().ToSelf().InSingletonScope();
+            }
         }
     }
 }

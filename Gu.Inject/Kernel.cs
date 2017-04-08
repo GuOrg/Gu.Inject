@@ -180,7 +180,7 @@
             {
                 if (info.ParameterTypes.Count == 0)
                 {
-                    return info.Ctor.Invoke(null);
+                    return info.CreateInstance(null);
                 }
 
                 var args = new object[info.ParameterTypes.Count];
@@ -189,7 +189,7 @@
                     args[i] = this.map.GetOrAdd(info.ParameterTypes[i], this.Resolve);
                 }
 
-                return info.Ctor.Invoke(args);
+                return info.CreateInstance(args);
             }
             catch (ResolveException e)
             {

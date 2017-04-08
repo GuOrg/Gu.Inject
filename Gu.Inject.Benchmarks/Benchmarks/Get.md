@@ -10,8 +10,8 @@ JitModules=clrjit-v4.6.1590.0
 Type=Get  Mode=Throughput  
 
 ```
-         Method |         Median |      StdDev | Scaled | Gen 0 |  Gen 1 | Gen 2 | Bytes Allocated/Op |
---------------- |--------------- |------------ |------- |------ |------- |------ |------------------- |
-        Ninject | 11,925.0373 ns | 429.6402 ns | 246.40 | 20,00 | 117,00 |     - |           1 063,50 |
- SimpleInjector |     48.4830 ns |   1.1034 ns |   1.00 |  0,82 |      - |     - |               5,99 |
-       GuInject |     48.3980 ns |   2.1806 ns |   1.00 |  2,14 |      - |     - |              14,99 |
+         Method |        Median |      StdDev | Scaled |  Gen 0 | Gen 1 | Gen 2 | Bytes Allocated/Op |
+--------------- |-------------- |------------ |------- |------- |------ |------ |------------------- |
+        Ninject | 4,596.4139 ns | 140.9864 ns |  88.39 | 304,00 |     - |     - |             571,83 |
+ SimpleInjector |    50.8747 ns |   1.3655 ns |   0.98 |   2,41 |     - |     - |               4,76 |
+       GuInject |    52.0005 ns |   0.9497 ns |   1.00 |   6,84 |     - |     - |              12,89 |

@@ -29,13 +29,18 @@
 
         internal class Info
         {
-            internal readonly ConstructorInfo Ctor;
             internal readonly IReadOnlyList<Type> ParameterTypes;
+            private readonly ConstructorInfo ctor;
 
             public Info(ConstructorInfo ctor, IReadOnlyList<Type> parameterTypes)
             {
-                this.Ctor = ctor;
+                this.ctor = ctor;
                 this.ParameterTypes = parameterTypes;
+            }
+
+            public object CreateInstance(object[] args)
+            {
+                return this.ctor.Invoke(args);
             }
         }
     }
