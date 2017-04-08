@@ -1,19 +1,19 @@
 ```ini
 
 BenchmarkDotNet=v0.9.7.0
-OS=Microsoft Windows NT 6.2.9200.0
-Processor=Intel(R) Core(TM) i7-3667U CPU 2.00GHz, ProcessorCount=4
-Frequency=2435872 ticks, Resolution=410.5306 ns, Timer=TSC
+OS=Microsoft Windows NT 6.1.7601 Service Pack 1
+Processor=Intel(R) Xeon(R) CPU X5687 3.60GHz, ProcessorCount=8
+Frequency=3515820 ticks, Resolution=284.4287 ns, Timer=ACPI
 HostCLR=MS.NET 4.0.30319.42000, Arch=32-bit RELEASE
-JitModules=clrjit-v4.6.1637.0
+JitModules=clrjit-v4.6.1590.0
 
 Type=Reflection  Mode=Throughput  
 
 ```
-                       Method |      Median |     StdDev |  Gen 0 | Gen 1 | Gen 2 | Bytes Allocated/Op |
------------------------------ |------------ |----------- |------- |------ |------ |------------------- |
-              GetConstructors |  70.1901 ns |  1.6489 ns | 146,44 |     - |     - |               6,69 |
- GetConstructorsGetParameters |  74.3408 ns | 12.8826 ns | 146,44 |     - |     - |               6,69 |
-                   InvokeCtor | 211.2488 ns | 45.1777 ns | 100,00 |     - |     - |               4,67 |
-      ActivatorCreateInstance |  89.0034 ns |  4.2972 ns | 111,87 |     - |     - |               5,12 |
-         GetConstructorInvoke | 280.3673 ns |  5.8758 ns | 264,96 |     - |     - |              12,23 |
+                       Method |      Median |     StdDev | Gen 0 | Gen 1 | Gen 2 | Bytes Allocated/Op |
+----------------------------- |------------ |----------- |------ |------ |------ |------------------- |
+              GetConstructors |  61.9244 ns |  2.0229 ns | 55,53 |     - |     - |               7,13 |
+ GetConstructorsGetParameters |  66.2811 ns |  2.2967 ns | 46,11 |     - |     - |               5,93 |
+                   InvokeCtor | 206.5621 ns |  4.4459 ns | 37,73 |     - |     - |               5,53 |
+      ActivatorCreateInstance |  92.2340 ns |  8.7025 ns | 33,13 |     - |     - |               4,82 |
+         GetConstructorInvoke | 271.3738 ns | 14.0951 ns | 83,00 |     - |     - |              11,39 |

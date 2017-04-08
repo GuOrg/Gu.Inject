@@ -11,6 +11,9 @@ namespace Gu.Inject
             this.Mapped = mapped;
         }
 
+        /// <summary>
+        /// Gets the candidate types to resolve.
+        /// </summary>
         public IReadOnlyList<Type> Mapped { get; }
     }
 }
