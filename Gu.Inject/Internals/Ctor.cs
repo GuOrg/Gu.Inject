@@ -40,7 +40,7 @@
                 this.ParameterTypes = parameterTypes;
             }
 
-            public object CreateInstance(object[] args)
+            public object Create(object[] args)
             {
                 return this.ctor.Invoke(args);
             }

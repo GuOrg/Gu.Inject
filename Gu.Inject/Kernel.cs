@@ -12,12 +12,11 @@
     /// </summary>
     public sealed class Kernel : IDisposable
     {
+        private readonly HashSet<Type> resolved = new HashSet<Type>();
+
         private ConcurrentDictionary<Type, object> created = ConcurrentDictionaryPool<Type, object>.Borrow();
         private ConcurrentDictionary<Type, object> injected;
         private ConcurrentDictionary<Type, Type> bindings;
-        private readonly HashSet<Type> resolved = new HashSet<Type>();
-
-        private bool disposed;
 
         /// <summary>
         /// This notifies before creating an instance of a type.
@@ -174,18 +173,19 @@
         /// <inheritdoc/>
         public void Dispose()
         {
-            if (this.disposed)
+            if (this.created == null)
             {
                 return;
             }
 
-            this.disposed = true;
-            foreach (var kvp in this.created)
+            var local = this.created;
+            this.created = null;
+            foreach (var kvp in local)
             {
                 (kvp.Value as IDisposable)?.Dispose();
             }
 
-            ConcurrentDictionaryPool<Type, object>.Return(this.created);
+            ConcurrentDictionaryPool<Type, object>.Return(local);
             ConcurrentDictionaryPool<Type, object>.Return(this.injected);
             ConcurrentDictionaryPool<Type, Type>.Return(this.bindings);
         }
@@ -204,11 +204,6 @@
                 return this.GetCore(bound);
             }
 
-            return this.created.GetOrAdd(type, this.Resolve);
-        }
-
-        private object Resolve(Type type)
-        {
             if (type.IsInterface || type.IsAbstract)
             {
                 var mapped = TypeMap.GetMapped(type);
@@ -230,6 +225,11 @@
                 return this.GetCore(mapped[0]);
             }
 
+            return this.created.GetOrAdd(type, this.Create);
+        }
+
+        private object Create(Type type)
+        {
             if (!this.resolved.Add(type))
             {
                 throw new CircularDependencyException(type);
@@ -239,7 +239,7 @@
             if (info.ParameterTypes.Any(p => p.IsArray))
             {
                 var message = $"Type {type.PrettyName()} has params argument which is not supported.\r\n" +
-                              "Add a binding specifying which how to create an instance.";
+                               "Add a binding specifying which how to create an instance.";
                 throw new ResolveException(type, message);
             }
 
@@ -248,7 +248,7 @@
             {
                 if (info.ParameterTypes.Count == 0)
                 {
-                    return info.CreateInstance(null);
+                    return info.Create(null);
                 }
 
                 var args = new object[info.ParameterTypes.Count];
@@ -257,7 +257,7 @@
                     args[i] = this.GetCore(info.ParameterTypes[i]);
                 }
 
-                return info.CreateInstance(args);
+                return info.Create(args);
             }
             catch (ResolveException e)
             {
@@ -275,7 +275,7 @@
 
         private void ThrowIfDisposed()
         {
-            if (this.disposed)
+            if (this.created == null)
             {
                 throw new ObjectDisposedException(this.GetType().FullName);
             }
