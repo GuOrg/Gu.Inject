@@ -62,9 +62,12 @@
         }
 
         /// <summary>
-        /// Provide an override to the automatic mapping.
+        /// Provide an override for the automatic mapping.
+        /// The kernel will keep <paramref name="instance"/> alive until disposed.
+        /// <paramref name="instance"/> is not disposed by the kernel if disposable.
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
+        /// <param name="instance">The instance to bind.</param>
         public void Bind<T>(T instance)
             where T : class
         {
