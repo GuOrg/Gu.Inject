@@ -12,6 +12,7 @@
         [TestCase(typeof(IWith<DefaultCtor>), typeof(With<DefaultCtor>))]
         [TestCase(typeof(WithTwo<DefaultCtor, DefaultCtor>), typeof(WithTwo<DefaultCtor, DefaultCtor>))]
         [TestCase(typeof(WithTwo<DefaultCtor, With<DefaultCtor>>), typeof(WithTwo<DefaultCtor, With<DefaultCtor>>))]
+        [TestCase(typeof(WithTwo<WithTwo<ManyToOne.IFoo, ManyToOne.IFooBase1>, With<DefaultCtor>>), typeof(WithTwo<WithTwo<ManyToOne.IFoo, ManyToOne.IFooBase1>, With<DefaultCtor>>))]
         [TestCase(typeof(OneToOne.Concrete), typeof(OneToOne.Concrete))]
         [TestCase(typeof(OneToOne.Abstract), typeof(OneToOne.Concrete))]
         [TestCase(typeof(OneToOne.IAbstract), typeof(OneToOne.Concrete))]
@@ -36,13 +37,23 @@
             using (var kernel = new Kernel())
             {
                 var actual = kernel.Get(type);
-                Assert.AreEqual(expected, actual.GetType());
+                Assert.AreEqual(expected.PrettyName(), actual.GetType().PrettyName());
                 Assert.AreSame(actual, kernel.Get(expected));
             }
         }
 
         [Test]
-        public void InjectsSingletons()
+        public void InjectsSingletons2()
+        {
+            using (var kernel = new Kernel())
+            {
+                var actual = kernel.Get<WithTwo<WithTwo<ManyToOne.IFoo, ManyToOne.IFooBase1>, With<DefaultCtor>>>();
+                Assert.AreSame(actual.Value1.Value1, actual.Value1.Value2);
+            }
+        }
+
+        [Test]
+        public void InjectsSingletons1()
         {
             using (var kernel = new Kernel())
             {
