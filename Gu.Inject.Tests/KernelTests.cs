@@ -61,6 +61,18 @@
             }
         }
 
+        [TestCase(typeof(OneToMany.Abstract), "Type Abstract has more than one binding: Concrete1, Concrete2.")]
+        [TestCase(typeof(OneToMany.IAbstract), "Type IAbstract has more than one binding: Concrete1, Concrete2.")]
+        [TestCase(typeof(OneToMany.IConcrete), "Type IConcrete has more than one binding: Concrete1, Concrete2.")]
+        public void ThrowsWhenAmbiguous(Type type, string expected)
+        {
+            using (var kernel = new Kernel())
+            {
+                var exception = Assert.Throws<InvalidOperationException>(() => kernel.Get(type));
+                Assert.AreEqual(expected, exception.Message);
+            }
+        }
+
         [Test]
         public void DisposesCreated()
         {

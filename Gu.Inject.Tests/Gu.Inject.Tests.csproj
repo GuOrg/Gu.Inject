@@ -52,6 +52,7 @@
     <Compile Include="Types\IDefaultCtor.cs" />
     <Compile Include="Types\IWith.cs" />
     <Compile Include="Types\IWith{T}.cs" />
+    <Compile Include="Types\OneToMany.cs" />
     <Compile Include="Types\OneToOne.cs" />
     <Compile Include="Types\With.cs" />
     <Compile Include="Types\OneToOneGeneric.cs" />

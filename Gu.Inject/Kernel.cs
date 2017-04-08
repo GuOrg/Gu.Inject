@@ -106,13 +106,13 @@
                     if (mapped.Count > 1)
                     {
                         throw new InvalidOperationException(
-                            $"Type {type.PrettyName()} has more than one binding: {string.Join(",", mapped.Select(t => t.PrettyName()))}.");
+                            $"Type {type.PrettyName()} has more than one binding: {string.Join(", ", mapped.Select(t => t.PrettyName()))}.");
                     }
 
                     if (mapped[0].IsGenericType && !type.IsGenericType)
                     {
                         throw new InvalidOperationException(
-                            $"Type {type.PrettyName()} has binding to a generic type: {string.Join(",", mapped.Select(t => t.PrettyName()))}.\r\n" +
+                            $"Type {type.PrettyName()} has binding to a generic type: {mapped[0].PrettyName()}.\r\n" +
                             $"Add a bining specifying what type argument to use.");
                     }
 
