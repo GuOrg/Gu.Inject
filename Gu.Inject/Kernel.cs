@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
     using System.Runtime.CompilerServices;
@@ -13,7 +12,8 @@
     /// </summary>
     public sealed class Kernel : IDisposable
     {
-        private readonly ConcurrentDictionary<Type, InstanceRef> map;
+        private readonly ConcurrentDictionary<Type, object> created;
+        private readonly ConcurrentDictionary<Type, object> injected;
         private readonly ConcurrentDictionary<Type, Type> bindings;
         private readonly HashSet<Type> resolved = new HashSet<Type>();
 
@@ -21,7 +21,8 @@
 
         public Kernel()
         {
-            this.map = ConcurrentDictionaryPool<Type, InstanceRef>.Borrow();
+            this.created = ConcurrentDictionaryPool<Type, object>.Borrow();
+            this.injected = ConcurrentDictionaryPool<Type, object>.Borrow();
             this.bindings = ConcurrentDictionaryPool<Type, Type>.Borrow();
         }
 
@@ -86,9 +87,9 @@
 
             this.ThrowIfDisposed();
             this.ThrowIfHasResolved();
-            this.map.AddOrUpdate(
+            this.injected.AddOrUpdate(
                 typeof(T),
-                t => new Injected(instance),
+                t => instance,
                 (t1, t2) => throw new InvalidOperationException($"{t1.PrettyName()} already has a binding to {t2}"));
         }
 
@@ -147,7 +148,7 @@
                 TypeMap.Initialize(Assembly.GetCallingAssembly());
             }
 
-            return this.map.GetOrAdd(type, this.Resolve).Instance;
+            return this.GetCore(type);
         }
 
         /// <inheritdoc/>
@@ -159,20 +160,28 @@
             }
 
             this.disposed = true;
-            foreach (var kvp in this.map)
+            foreach (var kvp in this.created)
             {
-                ((kvp.Value as Created)?.Instance as IDisposable)?.Dispose();
+                (kvp.Value as IDisposable)?.Dispose();
             }
 
-            ConcurrentDictionaryPool<Type, InstanceRef>.Return(this.map);
+            ConcurrentDictionaryPool<Type, object>.Return(this.created);
+            ConcurrentDictionaryPool<Type, object>.Return(this.injected);
             ConcurrentDictionaryPool<Type, Type>.Return(this.bindings);
         }
 
-        private InstanceRef Resolve(Type type)
+        private object GetCore(Type type)
+        {
+            return this.injected.TryGetValue(type, out object instance)
+                ? instance
+                : this.created.GetOrAdd(type, this.Resolve);
+        }
+
+        private object Resolve(Type type)
         {
             if (this.bindings.TryGetValue(type, out Type bound))
             {
-                return this.map.GetOrAdd(bound, this.Resolve);
+                return this.GetCore(bound);
             }
 
             if (type.IsInterface || type.IsAbstract)
@@ -193,7 +202,7 @@
                     throw new AmbiguousGenericBindingException(type, mapped);
                 }
 
-                return this.map.GetOrAdd(mapped[0], this.Resolve);
+                return this.GetCore(mapped[0]);
             }
 
             if (!this.resolved.Add(type))
@@ -214,16 +223,16 @@
             {
                 if (info.ParameterTypes.Count == 0)
                 {
-                    return new Created(info.CreateInstance(null));
+                    return info.CreateInstance(null);
                 }
 
                 var args = new object[info.ParameterTypes.Count];
                 for (var i = 0; i < info.ParameterTypes.Count; i++)
                 {
-                    args[i] = this.map.GetOrAdd(info.ParameterTypes[i], this.Resolve).Instance;
+                    args[i] = this.GetCore(info.ParameterTypes[i]);
                 }
 
-                return new Created(info.CreateInstance(args));
+                return info.CreateInstance(args);
             }
             catch (ResolveException e)
             {
@@ -233,15 +242,9 @@
 
         private void ThrowIfHasResolved([CallerMemberName] string caller = null)
         {
-            if (this.map.Count != 0)
+            if (this.created.Count != 0)
             {
-                foreach (var kvp in this.map)
-                {
-                    if (kvp.Value is Created)
-                    {
-                        throw new InvalidOperationException($"{caller} not allowed after Get.");
-                    }
-                }
+                throw new InvalidOperationException($"{caller} not allowed after Get.");
             }
         }
 
@@ -250,33 +253,6 @@
             if (this.disposed)
             {
                 throw new ObjectDisposedException(this.GetType().FullName);
-            }
-        }
-
-        private abstract class InstanceRef
-        {
-            internal readonly object Instance;
-
-            protected InstanceRef(object instance)
-            {
-                Debug.Assert(!(instance is InstanceRef), "!(instance is InstanceRef)");
-                this.Instance = instance;
-            }
-        }
-
-        private class Injected : InstanceRef
-        {
-            public Injected(object instance)
-                : base(instance)
-            {
-            }
-        }
-
-        private class Created : InstanceRef
-        {
-            public Created(object instance)
-                : base(instance)
-            {
             }
         }
     }
