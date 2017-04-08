@@ -7,6 +7,7 @@ namespace Gu.Inject.Benchmarks
     using System.IO;
     using BenchmarkDotNet.Reports;
     using BenchmarkDotNet.Running;
+    using Gu.Inject.Benchmarks.Benchmarks;
 
     public class Program
     {
@@ -14,7 +15,7 @@ namespace Gu.Inject.Benchmarks
 
         public static void Main()
         {
-            foreach (var summary in RunAll())
+            foreach (var summary in RunSingle<NewAndGet>())
             {
                 CopyResult(summary.Title);
             }

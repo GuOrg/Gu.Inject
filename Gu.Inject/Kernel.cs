@@ -13,11 +13,17 @@
     /// </summary>
     public sealed class Kernel : IDisposable
     {
-        private readonly ConcurrentDictionary<Type, InstanceRef> map = new ConcurrentDictionary<Type, InstanceRef>();
-        private readonly ConcurrentDictionary<Type, Type> bindings = new ConcurrentDictionary<Type, Type>();
+        private readonly ConcurrentDictionary<Type, InstanceRef> map;
+        private readonly ConcurrentDictionary<Type, Type> bindings;
         private readonly HashSet<Type> resolved = new HashSet<Type>();
 
         private bool disposed;
+
+        public Kernel()
+        {
+            this.map = ConcurrentDictionaryPool<Type, InstanceRef>.Borrow();
+            this.bindings = ConcurrentDictionaryPool<Type, Type>.Borrow();
+        }
 
         /// <summary>
         /// This notifies before creating an instance of a type.
@@ -55,6 +61,7 @@
         /// <param name="to">The mapped type.</param>
         public void Bind(Type from, Type to)
         {
+            this.ThrowIfDisposed();
             this.ThrowIfHasResolved();
             this.bindings.AddOrUpdate(
                 from,
@@ -77,6 +84,7 @@
                 throw new ArgumentNullException(nameof(instance));
             }
 
+            this.ThrowIfDisposed();
             this.ThrowIfHasResolved();
             this.map.AddOrUpdate(
                 typeof(T),
@@ -102,8 +110,8 @@
         /// <param name="to">The mapped type.</param>
         public void ReBind(Type from, Type to)
         {
+            this.ThrowIfDisposed();
             this.ThrowIfHasResolved();
-
             this.bindings.AddOrUpdate(
                 from,
                 t => throw new InvalidOperationException($"{t.PrettyName()} does not have a binding."),
@@ -156,7 +164,8 @@
                 ((kvp.Value as Created)?.Instance as IDisposable)?.Dispose();
             }
 
-            this.map.Clear();
+            ConcurrentDictionaryPool<Type, InstanceRef>.Return(this.map);
+            ConcurrentDictionaryPool<Type, Type>.Return(this.bindings);
         }
 
         private InstanceRef Resolve(Type type)

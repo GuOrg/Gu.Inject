@@ -1,4 +1,5 @@
 ﻿// ReSharper disable UnusedParameter.Local
+// ReSharper disable UnusedMember.Global
 namespace Gu.Inject.Tests.Types
 {
    public static class Error
