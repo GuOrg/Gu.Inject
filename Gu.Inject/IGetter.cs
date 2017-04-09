@@ -1,6 +1,6 @@
 namespace Gu.Inject
 {
-    interface IGetter
+    public interface IGetter
     {
         /// <summary>
         /// Get the singleton instance of <typeparamref name="T"/>

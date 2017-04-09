@@ -110,6 +110,26 @@
         /// The kernel will keep <paramref name="create"/> alive until disposed.
         /// <paramref name="create"/> is disposed by the kernel if disposable.
         /// </summary>
+        /// <typeparam name="T">The mapped type.</typeparam>
+        /// <param name="create">The instance to bind.</param>
+        public void BindFactory<T>(Func<IGetter, T> create)
+            where T : class
+        {
+            if (create == null)
+            {
+                throw new ArgumentNullException(nameof(create));
+            }
+
+            this.ThrowIfDisposed();
+            this.ThrowIfHasResolved();
+            this.BindCore(typeof(T), new Factory<T>(() => create(this)));
+        }
+
+        /// <summary>
+        /// Provide an override for the automatic mapping.
+        /// The kernel will keep <paramref name="create"/> alive until disposed.
+        /// <paramref name="create"/> is disposed by the kernel if disposable.
+        /// </summary>
         /// <typeparam name="TArg">The type of the argument. The container will resolve the argument and inject it. </typeparam>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="create">The instance to bind.</param>

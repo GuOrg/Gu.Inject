@@ -112,6 +112,19 @@
                 {
                     kernel.BindFactory((DefaultCtor x) => new With<DefaultCtor>(x));
                     var actual = kernel.Get<With<DefaultCtor>>();
+                    Assert.AreSame(actual, kernel.Get<With<DefaultCtor>>());
+                    Assert.AreSame(actual.Value, kernel.Get<DefaultCtor>());
+                }
+            }
+
+            [Test]
+            public void BindFactoryWithGetter()
+            {
+                using (var kernel = new Kernel())
+                {
+                    kernel.BindFactory(x => new With<DefaultCtor>(x.Get<DefaultCtor>()));
+                    var actual = kernel.Get<With<DefaultCtor>>();
+                    Assert.AreSame(actual, kernel.Get<With<DefaultCtor>>());
                     Assert.AreSame(actual.Value, kernel.Get<DefaultCtor>());
                 }
             }
