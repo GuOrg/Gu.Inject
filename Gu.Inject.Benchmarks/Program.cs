@@ -7,8 +7,6 @@ namespace Gu.Inject.Benchmarks
     using System.IO;
     using BenchmarkDotNet.Reports;
     using BenchmarkDotNet.Running;
-    using Gu.Inject.Benchmarks.Benchmarks;
-    using Gu.Inject.Benchmarks.Types;
 
     public class Program
     {

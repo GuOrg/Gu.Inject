@@ -12,7 +12,7 @@
         [Benchmark]
         public object GetConstructors()
         {
-           return typeof(Foo).GetConstructors()[0];
+            return typeof(Foo).GetConstructors()[0];
         }
 
         [Benchmark]
