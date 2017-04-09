@@ -70,9 +70,11 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Benchmarks\Get.md" />
-    <None Include="Benchmarks\Get{Graph50.Node1}.md" />
+    <None Include="Benchmarks\Get{Graph500}.md" />
+    <None Include="Benchmarks\Get{Graph50}.md" />
     <None Include="Benchmarks\NewAndGet.md" />
-    <None Include="Benchmarks\NewAndGet{Graph50.Node1}.md" />
+    <None Include="Benchmarks\NewAndGet{Graph500}.md" />
+    <None Include="Benchmarks\NewAndGet{Graph50}.md" />
     <None Include="Benchmarks\Reflection.md" />
     <None Include="Gu.Inject.Benchmarks.ruleset" />
     <None Include="paket.references" />

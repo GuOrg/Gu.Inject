@@ -86,6 +86,26 @@
         }
 
         /// <summary>
+        /// Provide an override for the automatic mapping.
+        /// The kernel will keep <paramref name="create"/> alive until disposed.
+        /// <paramref name="create"/> is disposed by the kernel if disposable.
+        /// </summary>
+        /// <typeparam name="T">The mapped type.</typeparam>
+        /// <param name="create">The instance to bind.</param>
+        public void Bind<T>(Func<T> create)
+            where T : class
+        {
+            if (create == null)
+            {
+                throw new ArgumentNullException(nameof(create));
+            }
+
+            this.ThrowIfDisposed();
+            this.ThrowIfHasResolved();
+            this.BindCore(typeof(T), new Factory<T>(create));
+        }
+
+        /// <summary>
         /// Provide an override to a mapping.
         /// </summary>
         /// <typeparam name="TInterface">The type to map.</typeparam>
@@ -97,7 +117,7 @@
         }
 
         /// <summary>
-        /// Provide an override to a mapping.
+        /// Provide an override for a mapping.
         /// </summary>
         /// <param name="from">The type to map.</param>
         /// <param name="to">The mapped type.</param>
@@ -105,15 +125,47 @@
         {
             this.ThrowIfDisposed();
             this.ThrowIfHasResolved();
-            if (this.bindings == null)
+            this.RebindCore(@from, to);
+        }
+
+        /// <summary>
+        /// Provide an override for a automatic mapping.
+        /// The kernel will keep <paramref name="instance"/> alive until disposed.
+        /// <paramref name="instance"/> is not disposed by the kernel if disposable.
+        /// </summary>
+        /// <typeparam name="T">The mapped type.</typeparam>
+        /// <param name="instance">The instance to bind.</param>
+        public void ReBind<T>(T instance)
+            where T : class
+        {
+            if (instance == null)
             {
-                throw new InvalidOperationException($"{from.PrettyName()} does not have a binding.");
+                throw new ArgumentNullException(nameof(instance));
             }
 
-            this.bindings.AddOrUpdate(
-                from,
-                t => throw new InvalidOperationException($"{t.PrettyName()} does not have a binding."),
-                (t1, t2) => to);
+            this.ThrowIfDisposed();
+            this.ThrowIfHasResolved();
+            this.RebindCore(typeof(T), instance);
+        }
+
+        /// <summary>
+        /// Provide an override for a automatic mapping.
+        /// The kernel will keep <paramref name="create"/> alive until disposed.
+        /// <paramref name="create"/> is disposed by the kernel if disposable.
+        /// </summary>
+        /// <typeparam name="T">The mapped type.</typeparam>
+        /// <param name="create">The instance to bind.</param>
+        public void ReBind<T>(Func<T> create)
+            where T : class
+        {
+            if (create == null)
+            {
+                throw new ArgumentNullException(nameof(create));
+            }
+
+            this.ThrowIfDisposed();
+            this.ThrowIfHasResolved();
+            this.RebindCore(typeof(T), new Factory<T>(create));
         }
 
         /// <summary>
@@ -186,6 +238,19 @@
                 (type, o) => throw new InvalidOperationException($"{type.PrettyName()} already has a binding to {(o as Type)?.PrettyName() ?? o}"));
         }
 
+        private void RebindCore(Type key, object value)
+        {
+            if (this.bindings == null)
+            {
+                throw new InvalidOperationException($"{key.PrettyName()} does not have a binding.");
+            }
+
+            this.bindings.AddOrUpdate(
+                key,
+                t => throw new InvalidOperationException($"{t.PrettyName()} does not have a binding."),
+                (t1, t2) => value);
+        }
+
         private object GetCore(Type type, Node visited = null)
         {
             if (this.bindings != null &&
@@ -196,6 +261,11 @@
                     return type == boundType
                                ? this.created.GetOrAdd(type, t => this.Create(t, visited))
                                : this.GetCore(boundType, visited);
+                }
+
+                if (bound is IFactory factory)
+                {
+                    return this.created.GetOrAdd(type, t => factory.Create(null));
                 }
 
                 return bound;

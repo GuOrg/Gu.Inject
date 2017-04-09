@@ -38,6 +38,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Internals\Factory.cs" />
+    <Compile Include="Internals\IFactory.cs" />
     <Compile Include="Settings\AssemblySettings.cs" />
     <Compile Include="Settings\Constructor.cs" />
     <Compile Include="Exceptions\AmbiguousBindingException.cs" />

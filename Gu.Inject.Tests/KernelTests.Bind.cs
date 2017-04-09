@@ -3,7 +3,7 @@
     using System;
 
     using Gu.Inject.Tests.Types;
-
+    using Moq;
     using NUnit.Framework;
 
     public partial class KernelTests
@@ -77,6 +77,21 @@
 
                     Assert.AreEqual(0, disposable.Disposed);
                 }
+            }
+
+            [Test]
+            public void BoundFunc()
+            {
+                Mock<IDisposable> mock;
+                using (var kernel = new Kernel())
+                {
+                    kernel.Bind(Mock.Of<IDisposable>);
+                    var actual = kernel.Get<IDisposable>();
+                    mock = Mock.Get(actual);
+                    mock.Setup(x => x.Dispose());
+                }
+
+                mock.Verify(x => x.Dispose(), Times.Once);
             }
         }
     }
