@@ -11,12 +11,24 @@
         public class Rebind
         {
             [Test]
-            public void BindThenReBindThenGet()
+            public void BindThenReBindGenericThenGet()
             {
                 using (var kernel = new Kernel())
                 {
                     kernel.Bind<IWith, With<DefaultCtor>>();
                     kernel.ReBind<IWith, With<With<DefaultCtor>>>();
+                    var actual = kernel.Get<IWith>();
+                    Assert.AreSame(actual, kernel.Get<With<With<DefaultCtor>>>());
+                }
+            }
+
+            [Test]
+            public void BindThenReBindTypeThenGet()
+            {
+                using (var kernel = new Kernel())
+                {
+                    kernel.Bind<IWith, With<DefaultCtor>>();
+                    kernel.ReBind(typeof(IWith), typeof(With<With<DefaultCtor>>));
                     var actual = kernel.Get<IWith>();
                     Assert.AreSame(actual, kernel.Get<With<With<DefaultCtor>>>());
                 }
@@ -56,8 +68,8 @@
                 {
                     using (var instance = new Disposable())
                     {
-                        kernel.Bind(instance);
-                        kernel.Bind(Mock.Of<IDisposable>);
+                        kernel.BindConstant(instance);
+                        kernel.BindMethod(Mock.Of<IDisposable>);
                         var actual = kernel.Get<IDisposable>();
                         Assert.AreNotSame(actual, instance);
                         Assert.AreEqual(0, instance.Disposed);

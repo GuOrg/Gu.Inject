@@ -1,6 +1,7 @@
 ﻿namespace Gu.Inject.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Gu.Inject.Tests.Types;
     using NUnit.Framework;
@@ -73,7 +74,7 @@
                 Console.WriteLine($"Total count: {allChildren.Length}");
                 var distinct = allChildren.Distinct().ToArray();
                 Console.WriteLine($"Unique count: {distinct.Length}");
-                Assert.AreEqual(distinct.Length, allChildren.Select(x=>x.GetType()).Distinct().Count());
+                Assert.AreEqual(distinct.Length, allChildren.Select(x => x.GetType()).Distinct().Count());
             }
         }
 
@@ -88,6 +89,24 @@
             }
 
             Assert.AreEqual(1, actual.Disposed);
+        }
+
+        [Test]
+        public void NotifiesCreating()
+        {
+            using (var kernel = new Kernel())
+            {
+                var actual = new List<Type>();
+                kernel.Creating += (sender, type) => actual.Add(type);
+                kernel.BindMethod(() =>
+                {
+                    // check that we notify before creating.
+                    CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
+                    return new DefaultCtor();
+                });
+                kernel.Get<DefaultCtor>();
+                CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
+            }
         }
     }
 }

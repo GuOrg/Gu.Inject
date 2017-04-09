@@ -17,7 +17,7 @@
         /// <summary>
         /// This notifies before creating an instance of a type.
         /// </summary>
-        public event EventHandler<Type> Resolving;
+        public event EventHandler<Type> Creating;
 
         /// <summary>
         /// Provide an override to the automatic mapping.
@@ -72,7 +72,7 @@
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="instance">The instance to bind.</param>
-        public void Bind<T>(T instance)
+        public void BindConstant<T>(T instance)
             where T : class
         {
             if (instance == null)
@@ -92,7 +92,7 @@
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="create">The instance to bind.</param>
-        public void Bind<T>(Func<T> create)
+        public void BindMethod<T>(Func<T> create)
             where T : class
         {
             if (create == null)
@@ -265,6 +265,7 @@
 
                 if (bound is IFactory factory)
                 {
+                    this.Creating?.Invoke(this, type);
                     return this.created.GetOrAdd(type, t => factory.Create(null));
                 }
 
@@ -305,18 +306,18 @@
 
         private object Create(Type type, Node visited)
         {
-            var info = Ctor.GetInfo(type);
-            if (info.ParameterTypes.Any(p => p.IsArray))
+            var factory = Ctor.GetFactory(type);
+            if (factory.ParameterTypes.Any(p => p.IsArray))
             {
                 var message = $"Type {type.PrettyName()} has params argument which is not supported.\r\n" +
                                "Add a binding specifying which how to create an instance.";
                 throw new ResolveException(type, message);
             }
 
-            this.Resolving?.Invoke(this, type);
-            if (info.ParameterTypes.Count == 0)
+            this.Creating?.Invoke(this, type);
+            if (factory.ParameterTypes.Count == 0)
             {
-                return info.Create(null);
+                return factory.Create(null);
             }
 
             if (visited != null)
@@ -335,13 +336,13 @@
 
             try
             {
-                var args = new object[info.ParameterTypes.Count];
-                for (var i = 0; i < info.ParameterTypes.Count; i++)
+                var args = new object[factory.ParameterTypes.Count];
+                for (var i = 0; i < factory.ParameterTypes.Count; i++)
                 {
-                    args[i] = this.GetCore(info.ParameterTypes[i], visited);
+                    args[i] = this.GetCore(factory.ParameterTypes[i], visited);
                 }
 
-                return info.Create(args);
+                return factory.Create(args);
             }
             catch (ResolveException e)
             {
@@ -381,16 +382,16 @@
                 this.previous = previous;
             }
 
-            public Node Next(Type type) => new Node(type, this);
+            public Node Next(Type next) => new Node(next, this);
 
-            public bool Contains(Type type)
+            public bool Contains(Type next)
             {
-                if (this.type == type)
+                if (this.type == next)
                 {
                     return true;
                 }
 
-                return this.previous?.Contains(type) == true;
+                return this.previous?.Contains(next) == true;
             }
         }
     }

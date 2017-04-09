@@ -10,7 +10,7 @@
     {
         private static readonly ConcurrentDictionary<Type, Factory> Ctors = new ConcurrentDictionary<Type, Factory>();
 
-        internal static Factory GetInfo(Type type)
+        internal static Factory GetFactory(Type type)
         {
             return Ctors.GetOrAdd(type, Create);
         }

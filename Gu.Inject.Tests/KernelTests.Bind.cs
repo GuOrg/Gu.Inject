@@ -39,7 +39,7 @@
                 using (var kernel = new Kernel())
                 {
                     var instance = new DefaultCtor();
-                    kernel.Bind(instance);
+                    kernel.BindConstant(instance);
                     var actual = kernel.Get<DefaultCtor>();
                     Assert.AreSame(actual, instance);
                 }
@@ -52,7 +52,7 @@
 
                 using (var kernel = new Kernel())
                 {
-                    kernel.Bind(instance);
+                    kernel.BindConstant(instance);
                     kernel.Bind<IWith<DefaultCtor>, With<DefaultCtor>>();
 
                     object actual = kernel.Get<With<DefaultCtor>>();
@@ -81,7 +81,7 @@
                 {
                     using (var kernel = new Kernel())
                     {
-                        kernel.Bind(disposable);
+                        kernel.BindConstant(disposable);
                         var actual = kernel.Get<Disposable>();
                         Assert.AreSame(actual, disposable);
                     }
@@ -96,7 +96,7 @@
                 Mock<IDisposable> mock;
                 using (var kernel = new Kernel())
                 {
-                    kernel.Bind(Mock.Of<IDisposable>);
+                    kernel.BindMethod(Mock.Of<IDisposable>);
                     var actual = kernel.Get<IDisposable>();
                     mock = Mock.Get(actual);
                     mock.Setup(x => x.Dispose());
