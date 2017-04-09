@@ -13,10 +13,7 @@ group Test
 
 group Benchmarks
   source http://www.nuget.org/api/v2/
-  framework: auto-detect
-  nuget BenchmarkDotNet
+  framework: net461
   nuget BenchmarkDotNet.Diagnostics.Windows
-  nuget System.Reflection.Metadata = 1.2.0
   nuget Ninject
   nuget SimpleInjector
-
