@@ -3,7 +3,7 @@
     using System;
 
     using Gu.Inject.Tests.Types;
-
+    using Moq;
     using NUnit.Framework;
 
     public partial class KernelTests
@@ -23,24 +23,24 @@
             }
 
             [Test]
-            public void ThrowsIfHasResolved()
+            public void Func()
             {
+                Mock<IDisposable> mock;
                 using (var kernel = new Kernel())
                 {
-                    kernel.Get<DefaultCtor>();
-                    var exception = Assert.Throws<InvalidOperationException>(() => kernel.ReBind<IWith, With<With<DefaultCtor>>>());
-                    Assert.AreEqual("ReBind not allowed after Get.", exception.Message);
+                    using (var instance = new Disposable())
+                    {
+                        kernel.Bind(instance);
+                        kernel.Bind(Mock.Of<IDisposable>);
+                        var actual = kernel.Get<IDisposable>();
+                        Assert.AreNotSame(actual, instance);
+                        Assert.AreEqual(0, instance.Disposed);
+                        mock = Mock.Get(actual);
+                        mock.Setup(x => x.Dispose());
+                    }
                 }
-            }
 
-            [Test]
-            public void ThrowsIfNoBinding()
-            {
-                using (var kernel = new Kernel())
-                {
-                    var exception = Assert.Throws<InvalidOperationException>(() => kernel.ReBind<IWith, With<With<DefaultCtor>>>());
-                    Assert.AreEqual("IWith does not have a binding.", exception.Message);
-                }
+                mock.Verify(x => x.Dispose(), Times.Once);
             }
         }
     }

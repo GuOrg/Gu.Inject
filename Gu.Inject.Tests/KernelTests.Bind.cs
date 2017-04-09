@@ -80,7 +80,7 @@
             }
 
             [Test]
-            public void BoundFunc()
+            public void BindFunc()
             {
                 Mock<IDisposable> mock;
                 using (var kernel = new Kernel())
