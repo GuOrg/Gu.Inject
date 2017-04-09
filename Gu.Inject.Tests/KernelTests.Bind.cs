@@ -104,6 +104,17 @@
 
                 mock.Verify(x => x.Dispose(), Times.Once);
             }
+
+            [Test]
+            public void BindFuncWithArgument()
+            {
+                using (var kernel = new Kernel())
+                {
+                    kernel.BindFactory((DefaultCtor x) => new With<DefaultCtor>(x));
+                    var actual = kernel.Get<With<DefaultCtor>>();
+                    Assert.AreSame(actual.Value, kernel.Get<DefaultCtor>());
+                }
+            }
         }
     }
 }

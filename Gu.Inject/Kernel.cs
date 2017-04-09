@@ -106,6 +106,27 @@
         }
 
         /// <summary>
+        /// Provide an override for the automatic mapping.
+        /// The kernel will keep <paramref name="create"/> alive until disposed.
+        /// <paramref name="create"/> is disposed by the kernel if disposable.
+        /// </summary>
+        /// <typeparam name="TArg">The type of the argument. The container will resolve the argument and inject it. </typeparam>
+        /// <typeparam name="T">The mapped type.</typeparam>
+        /// <param name="create">The instance to bind.</param>
+        public void BindFactory<TArg, T>(Func<TArg, T> create)
+            where T : class
+        {
+            if (create == null)
+            {
+                throw new ArgumentNullException(nameof(create));
+            }
+
+            this.ThrowIfDisposed();
+            this.ThrowIfHasResolved();
+            this.BindCore(typeof(T), new Factory<TArg, T>(create));
+        }
+
+        /// <summary>
         /// Provide an override to a mapping.
         /// </summary>
         /// <typeparam name="TInterface">The type to map.</typeparam>
@@ -259,14 +280,13 @@
                 if (bound is Type boundType)
                 {
                     return type == boundType
-                               ? this.created.GetOrAdd(type, t => this.Create(t, visited))
+                               ? this.created.GetOrAdd(type, t => this.Create(t, Ctor.GetFactory(type), visited))
                                : this.GetCore(boundType, visited);
                 }
 
                 if (bound is IFactory factory)
                 {
-                    this.Creating?.Invoke(this, type);
-                    return this.created.GetOrAdd(type, t => factory.Create(null));
+                    return this.created.GetOrAdd(type, t => this.Create(t, factory, visited));
                 }
 
                 return bound;
@@ -301,12 +321,11 @@
                 }
             }
 
-            return this.created.GetOrAdd(type, t => this.Create(t, visited));
+            return this.created.GetOrAdd(type, t => this.Create(t, Ctor.GetFactory(type), visited));
         }
 
-        private object Create(Type type, Node visited)
+        private object Create(Type type, IFactory factory, Node visited)
         {
-            var factory = Ctor.GetFactory(type);
             if (factory.ParameterTypes.Any(p => p.IsArray))
             {
                 var message = $"Type {type.PrettyName()} has params argument which is not supported.\r\n" +

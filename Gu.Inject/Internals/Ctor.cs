@@ -31,7 +31,6 @@
 
         internal class Factory : IFactory
         {
-            internal readonly IReadOnlyList<Type> ParameterTypes;
             private readonly ConstructorInfo ctor;
 
             public Factory(ConstructorInfo ctor, IReadOnlyList<Type> parameterTypes)
@@ -39,6 +38,8 @@
                 this.ctor = ctor;
                 this.ParameterTypes = parameterTypes;
             }
+
+            public IReadOnlyList<Type> ParameterTypes { get; }
 
             public object Create(object[] args)
             {
