@@ -64,6 +64,17 @@
             }
 
             [Test]
+            public void BindTwoThenGet()
+            {
+                using (var kernel = new Kernel())
+                {
+                    kernel.Bind<IWith, IWith<DefaultCtor>, With<DefaultCtor>>();
+                    Assert.AreSame(kernel.Get<IWith<DefaultCtor>>(), kernel.Get<With<DefaultCtor>>());
+                    Assert.AreSame(kernel.Get<IWith>(), kernel.Get<With<DefaultCtor>>());
+                }
+            }
+
+            [Test]
             public void BoundInstanceIsNotDisposed()
             {
                 using (var disposable = new Disposable())
