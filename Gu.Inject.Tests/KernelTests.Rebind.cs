@@ -23,6 +23,20 @@
             }
 
             [Test]
+            public void BindThenReBindInstanceThenGet()
+            {
+                using (var kernel = new Kernel())
+                {
+                    kernel.Bind<IWith, With<DefaultCtor>>();
+                    var instance = new With<DefaultCtor>(new DefaultCtor());
+                    kernel.ReBind<IWith>(instance);
+                    var actual = kernel.Get<IWith>();
+                    Assert.AreSame(instance, actual);
+                    Assert.AreNotSame(instance.Value, kernel.Get<DefaultCtor>());
+                }
+            }
+
+            [Test]
             public void Func()
             {
                 Mock<IDisposable> mock;
