@@ -96,7 +96,7 @@
                 Mock<IDisposable> mock;
                 using (var kernel = new Kernel())
                 {
-                    kernel.BindMethod(Mock.Of<IDisposable>);
+                    kernel.BindFactory(Mock.Of<IDisposable>);
                     var actual = kernel.Get<IDisposable>();
                     mock = Mock.Get(actual);
                     mock.Setup(x => x.Dispose());

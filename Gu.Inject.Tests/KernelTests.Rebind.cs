@@ -54,7 +54,7 @@
                 using (var kernel = new Kernel())
                 {
                     kernel.Bind<IWith, With<DefaultCtor>>();
-                    kernel.ReBindMethod(Mock.Of<IWith>);
+                    kernel.ReBindFactory(Mock.Of<IWith>);
                     var actual = kernel.Get<IWith>();
                     Assert.NotNull(Mock.Get(actual));
                 }
@@ -69,7 +69,7 @@
                     using (var instance = new Disposable())
                     {
                         kernel.BindInstance(instance);
-                        kernel.BindMethod(Mock.Of<IDisposable>);
+                        kernel.BindFactory(Mock.Of<IDisposable>);
                         var actual = kernel.Get<IDisposable>();
                         Assert.AreNotSame(actual, instance);
                         Assert.AreEqual(0, instance.Disposed);

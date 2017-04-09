@@ -98,7 +98,7 @@
             {
                 var actual = new List<Type>();
                 kernel.Creating += (sender, type) => actual.Add(type);
-                kernel.BindMethod(() =>
+                kernel.BindFactory(() =>
                 {
                     // check that we notify before creating.
                     CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);

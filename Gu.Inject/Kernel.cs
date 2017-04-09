@@ -92,7 +92,7 @@
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="create">The instance to bind.</param>
-        public void BindMethod<T>(Func<T> create)
+        public void BindFactory<T>(Func<T> create)
             where T : class
         {
             if (create == null)
@@ -155,7 +155,7 @@
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="create">The instance to bind.</param>
-        public void ReBindMethod<T>(Func<T> create)
+        public void ReBindFactory<T>(Func<T> create)
             where T : class
         {
             if (create == null)
