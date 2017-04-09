@@ -91,7 +91,7 @@
             }
 
             [Test]
-            public void BindFunc()
+            public void BindFactory()
             {
                 Mock<IDisposable> mock;
                 using (var kernel = new Kernel())
@@ -106,7 +106,7 @@
             }
 
             [Test]
-            public void BindFuncWithArgument()
+            public void BindFactoryWithArgument()
             {
                 using (var kernel = new Kernel())
                 {
@@ -114,6 +114,20 @@
                     var actual = kernel.Get<With<DefaultCtor>>();
                     Assert.AreSame(actual.Value, kernel.Get<DefaultCtor>());
                 }
+            }
+
+            [Test]
+            public void BindFactoryWithArgumentDisposed()
+            {
+                DisposableWith<DefaultCtor> actual;
+                using (var kernel = new Kernel())
+                {
+                    kernel.BindFactory((DefaultCtor x) => new DisposableWith<DefaultCtor>(x));
+                    actual = kernel.Get<DisposableWith<DefaultCtor>>();
+                    Assert.AreSame(actual.Value, kernel.Get<DefaultCtor>());
+                }
+
+                Assert.AreEqual(1, actual.Disposed);
             }
         }
     }
