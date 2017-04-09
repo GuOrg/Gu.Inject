@@ -50,6 +50,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Types\Circular1.cs" />
     <Compile Include="Types\Circular2.cs" />
+    <Compile Include="Types\Graph50.cs" />
     <Compile Include="Types\DefaultCtor.cs" />
     <Compile Include="Types\Disposable.cs" />
     <Compile Include="Types\Error.cs" />

@@ -1,13 +1,20 @@
-// ReSharper disable UnusedParameter.Local
+﻿// ReSharper disable UnusedParameter.Local
 // ReSharper disable UnusedMember.Global
 // ReSharper disable EmptyConstructor
-namespace Gu.Inject.Benchmarks.Types
+namespace Gu.Inject.Tests.Types
 {
     using System.Collections.Generic;
     using System.Linq;
 
     public static class Graph50
     {
+        public interface INode
+        {
+            IReadOnlyList<INode> Children { get; }
+
+            IEnumerable<INode> AllChildren { get; }
+        }
+
         public class Node1 : INode
         {
             public Node1(

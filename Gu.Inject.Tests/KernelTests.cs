@@ -1,6 +1,7 @@
 ﻿namespace Gu.Inject.Tests
 {
     using System;
+    using System.Linq;
     using Gu.Inject.Tests.Types;
     using NUnit.Framework;
 
@@ -59,6 +60,20 @@
             {
                 var actual = kernel.Get<WithTwo<DefaultCtor, DefaultCtor>>();
                 Assert.AreSame(actual.Value1, actual.Value2);
+            }
+        }
+
+        [Test]
+        public void GetGraph50()
+        {
+            using (var kernel = new Kernel())
+            {
+                var root = kernel.Get<Graph50.Node1>();
+                var allChildren = root.AllChildren.ToArray();
+                Console.WriteLine($"Total count: {allChildren.Length}");
+                var distinct = allChildren.Distinct().ToArray();
+                Console.WriteLine($"Unique count: {distinct.Length}");
+                Assert.AreEqual(distinct.Length, allChildren.Select(x=>x.GetType()).Distinct().Count());
             }
         }
 

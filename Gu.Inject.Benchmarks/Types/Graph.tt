@@ -3,10 +3,18 @@
 <#@ assembly name="System.Core" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Linq" #>
-public static class Graph
+// ReSharper disable UnusedParameter.Local
+// ReSharper disable UnusedMember.Global
+// ReSharper disable EmptyConstructor
+namespace Gu.Inject.Benchmarks.Types
 {
-<#  var size = 500;
-    var rand = new Random();
+    using System.Collections.Generic;
+	using System.Linq;
+    
+<#  var size = 5; #>
+	public static class Graph<#= size #>
+    {
+<#    var rand = new Random();
     for (var i = 1; i < size; ++i)
     {
         if (i > 1)
@@ -15,19 +23,33 @@ public static class Graph
 <#      }
         var children = Children(i, size, rand).ToArray();
 #>
-    public class Node<#= i #>
-    {
-        public Node<#= i #>(<#= children.Length == 0 ? ")" : "" #>
+        public class Node<#= i #> : INode
+        {
+            public Node<#= i #>(<#= children.Length == 0 ? ")" : "" #>
 <#
         for (var j = 0; j < children.Length; j++)
         {
             var child = children[j]; #>
-            Node<#= child #> node<#= child #><#= j == children.Length - 1 ? ")" :"," #>
+                Node<#= child #> node<#= child #><#= j == children.Length - 1 ? ")" :"," #>
 <#      } #>
+            {
+                this.Children = new INode[]
+			    {
+				<#
+        for (var j = 0; j < children.Length; j++)
         {
+            var child = children[j]; #>
+                    node<#= child #><#= j == children.Length - 1 ? "" :"," #>
+<#      } #>
+			    };
+            }
+
+		    public IReadOnlyList<INode> Children { get; }
+
+			public IEnumerable<INode> AllChildren => this.Children.Concat(this.Children.SelectMany(c => c.AllChildren));
         }
-    }
 <#  } #>
+    }
 }
 <#+ 
 private static IEnumerable<int> Children(int i, int size, Random rand)

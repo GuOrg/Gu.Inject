@@ -295,3 +295,5 @@ __pycache__/
 ###### -- Custom Ignore Section, Make sure all files you add to the git repo are below this line  --  ######
 
 Gu.Inject.Benchmarks/_TraceEventProgrammersGuide.docx
+Gu.Inject.Benchmarks/Types/Graph.generated.txt
+Gu.Inject.Benchmarks/Types/Graph.generated.txt

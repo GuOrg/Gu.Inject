@@ -45,6 +45,7 @@
     <Compile Include="Types\Foo.cs" />
     <Compile Include="Types\Graph50.cs" />
     <Compile Include="Types\Graph500.cs" />
+    <Compile Include="Types\INode.cs" />
     <Content Include="TraceEvent.ReadMe.txt">
       <Paket>True</Paket>
     </Content>
