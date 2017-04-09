@@ -64,7 +64,7 @@
             }
 
             [Test]
-            public void BounInstanceIsNotDisposed()
+            public void BoundInstanceIsNotDisposed()
             {
                 using (var disposable = new Disposable())
                 {
@@ -76,28 +76,6 @@
                     }
 
                     Assert.AreEqual(0, disposable.Disposed);
-                }
-            }
-
-            [Test]
-            public void ThrowsIfHasResolved()
-            {
-                using (var kernel = new Kernel())
-                {
-                    kernel.Get<DefaultCtor>();
-                    var exception = Assert.Throws<InvalidOperationException>(() => kernel.Bind<IWith, With<DefaultCtor>>());
-                    Assert.AreEqual("Bind not allowed after Get.", exception.Message);
-                }
-            }
-
-            [Test]
-            public void ThrowsIfHasBinding()
-            {
-                using (var kernel = new Kernel())
-                {
-                    kernel.Bind<IWith, With<DefaultCtor>>();
-                    var exception = Assert.Throws<InvalidOperationException>(() => kernel.Bind<IWith, With<DefaultCtor>>());
-                    Assert.AreEqual("IWith already has a binding to With<DefaultCtor>", exception.Message);
                 }
             }
         }

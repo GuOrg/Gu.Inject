@@ -12,8 +12,7 @@
     public sealed class Kernel : IDisposable
     {
         private ConcurrentDictionary<Type, object> created = ConcurrentDictionaryPool<Type, object>.Borrow();
-        private ConcurrentDictionary<Type, object> injected;
-        private ConcurrentDictionary<Type, Type> bindings;
+        private ConcurrentDictionary<Type, object> bindings;
 
         /// <summary>
         /// This notifies before creating an instance of a type.
@@ -51,23 +50,19 @@
         /// <param name="to">The mapped type.</param>
         public void Bind(Type from, Type to)
         {
-            this.ThrowIfDisposed();
-            this.ThrowIfHasResolved();
-            if (this.bindings == null)
+            if (from == null)
             {
-                lock (this.created)
-                {
-                    if (this.bindings == null)
-                    {
-                        this.bindings = ConcurrentDictionaryPool<Type, Type>.Borrow();
-                    }
-                }
+                throw new ArgumentNullException(nameof(from));
             }
 
-            this.bindings.AddOrUpdate(
-                from,
-                t => to,
-                (t1, t2) => throw new InvalidOperationException($"{t1.PrettyName()} already has a binding to {t2.PrettyName()}"));
+            if (to == null)
+            {
+                throw new ArgumentNullException(nameof(to));
+            }
+
+            this.ThrowIfDisposed();
+            this.ThrowIfHasResolved();
+            this.BindCore(from, to);
         }
 
         /// <summary>
@@ -87,21 +82,7 @@
 
             this.ThrowIfDisposed();
             this.ThrowIfHasResolved();
-            if (this.injected == null)
-            {
-                lock (this.created)
-                {
-                    if (this.injected == null)
-                    {
-                        this.injected = ConcurrentDictionaryPool<Type, object>.Borrow();
-                    }
-                }
-            }
-
-            this.injected.AddOrUpdate(
-                typeof(T),
-                t => instance,
-                (t1, t2) => throw new InvalidOperationException($"{t1.PrettyName()} already has a binding to {t2}"));
+            this.BindCore(typeof(T), instance);
         }
 
         /// <summary>
@@ -183,24 +164,41 @@
             }
 
             ConcurrentDictionaryPool<Type, object>.Return(local);
-            ConcurrentDictionaryPool<Type, object>.Return(this.injected);
-            ConcurrentDictionaryPool<Type, Type>.Return(this.bindings);
+            ConcurrentDictionaryPool<Type, object>.Return(this.bindings);
+        }
+
+        private void BindCore(Type key, object value)
+        {
+            if (this.bindings == null)
+            {
+                lock (this.created)
+                {
+                    if (this.bindings == null)
+                    {
+                        this.bindings = ConcurrentDictionaryPool<Type, object>.Borrow();
+                    }
+                }
+            }
+
+            this.bindings.AddOrUpdate(
+                key,
+                t => value,
+                (type, o) => throw new InvalidOperationException($"{type.PrettyName()} already has a binding to {(o as Type)?.PrettyName() ?? o}"));
         }
 
         private object GetCore(Type type, Node visited = null)
         {
-            if (this.injected != null &&
-                this.injected.TryGetValue(type, out object instance))
-            {
-                return instance;
-            }
-
             if (this.bindings != null &&
-                this.bindings.TryGetValue(type, out Type bound))
+                this.bindings.TryGetValue(type, out object bound))
             {
-                return type == bound
-                    ? this.created.GetOrAdd(type, t => this.Create(t, visited))
-                    : this.GetCore(bound, visited);
+                if (bound is Type boundType)
+                {
+                    return type == boundType
+                               ? this.created.GetOrAdd(type, t => this.Create(t, visited))
+                               : this.GetCore(boundType, visited);
+                }
+
+                return bound;
             }
 
             if (type.IsInterface || type.IsAbstract)
