@@ -40,6 +40,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Benchmarks\Caching.cs" />
     <Compile Include="Benchmarks\Get.cs" />
     <Compile Include="Benchmarks\NewAndGet.cs" />
     <Compile Include="Types\Foo.cs" />
@@ -70,6 +71,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Benchmarks\Caching.md" />
     <None Include="Benchmarks\Get.md" />
     <None Include="Benchmarks\Get{Graph500}.md" />
     <None Include="Benchmarks\Get{Graph50}.md" />
