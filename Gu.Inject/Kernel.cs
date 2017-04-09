@@ -72,7 +72,7 @@
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="instance">The instance to bind.</param>
-        public void BindConstant<T>(T instance)
+        public void BindInstance<T>(T instance)
             where T : class
         {
             if (instance == null)
@@ -135,7 +135,7 @@
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="instance">The instance to bind.</param>
-        public void ReBind<T>(T instance)
+        public void ReBindInstance<T>(T instance)
             where T : class
         {
             if (instance == null)
@@ -155,7 +155,7 @@
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="create">The instance to bind.</param>
-        public void ReBind<T>(Func<T> create)
+        public void ReBindMethod<T>(Func<T> create)
             where T : class
         {
             if (create == null)

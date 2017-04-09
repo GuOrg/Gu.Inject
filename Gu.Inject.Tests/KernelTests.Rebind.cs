@@ -41,7 +41,7 @@
                 {
                     kernel.Bind<IWith, With<DefaultCtor>>();
                     var instance = new With<DefaultCtor>(new DefaultCtor());
-                    kernel.ReBind<IWith>(instance);
+                    kernel.ReBindInstance<IWith>(instance);
                     var actual = kernel.Get<IWith>();
                     Assert.AreSame(instance, actual);
                     Assert.AreNotSame(instance.Value, kernel.Get<DefaultCtor>());
@@ -54,7 +54,7 @@
                 using (var kernel = new Kernel())
                 {
                     kernel.Bind<IWith, With<DefaultCtor>>();
-                    kernel.ReBind(Mock.Of<IWith>);
+                    kernel.ReBindMethod(Mock.Of<IWith>);
                     var actual = kernel.Get<IWith>();
                     Assert.NotNull(Mock.Get(actual));
                 }
@@ -68,7 +68,7 @@
                 {
                     using (var instance = new Disposable())
                     {
-                        kernel.BindConstant(instance);
+                        kernel.BindInstance(instance);
                         kernel.BindMethod(Mock.Of<IDisposable>);
                         var actual = kernel.Get<IDisposable>();
                         Assert.AreNotSame(actual, instance);
