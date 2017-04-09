@@ -37,6 +37,18 @@
             }
 
             [Test]
+            public void BindThenReBindFuncThenGet()
+            {
+                using (var kernel = new Kernel())
+                {
+                    kernel.Bind<IWith, With<DefaultCtor>>();
+                    kernel.ReBind(Mock.Of<IWith>);
+                    var actual = kernel.Get<IWith>();
+                    Assert.NotNull(Mock.Get(actual));
+                }
+            }
+
+            [Test]
             public void Func()
             {
                 Mock<IDisposable> mock;
