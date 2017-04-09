@@ -6,7 +6,7 @@
         {
         }
 
-        public interface IFooFoo 
+        public interface IFooFoo
         {
         }
 

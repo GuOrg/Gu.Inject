@@ -8,7 +8,7 @@
 
     public class TypeMapTests
     {
-        private static TestCase[] TestCases = new[]
+        public static TestCase[] TestCases { get; } = new[]
         {
             new TestCase(typeof(DefaultCtor)),
             new TestCase(typeof(IDefaultCtor), typeof(DefaultCtor)),

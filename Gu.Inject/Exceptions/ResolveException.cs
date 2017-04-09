@@ -8,6 +8,11 @@
     /// </summary>
     public class ResolveException : Exception
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ResolveException"/> class.
+        /// </summary>
+        /// <param name="type">The type to resolve.</param>
+        /// <param name="inner">The inner exception.</param>
         public ResolveException(Type type, Exception inner)
             : base(CreateMessage(type, inner), inner)
         {
