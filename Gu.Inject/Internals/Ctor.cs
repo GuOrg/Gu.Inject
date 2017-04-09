@@ -8,14 +8,14 @@
 
     internal static class Ctor
     {
-        private static readonly ConcurrentDictionary<Type, Info> Ctors = new ConcurrentDictionary<Type, Info>();
+        private static readonly ConcurrentDictionary<Type, Factory> Ctors = new ConcurrentDictionary<Type, Factory>();
 
-        internal static Info GetInfo(Type type)
+        internal static Factory GetInfo(Type type)
         {
             return Ctors.GetOrAdd(type, Create);
         }
 
-        private static Info Create(Type type)
+        private static Factory Create(Type type)
         {
             var ctors = type.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             if (ctors.Length > 1)
@@ -26,15 +26,15 @@
             }
 
             var ctor = ctors[0];
-            return new Info(ctor, ctor.GetParameters().Select(x => x.ParameterType).ToArray());
+            return new Factory(ctor, ctor.GetParameters().Select(x => x.ParameterType).ToArray());
         }
 
-        internal class Info
+        internal class Factory : IFactory
         {
             internal readonly IReadOnlyList<Type> ParameterTypes;
             private readonly ConstructorInfo ctor;
 
-            public Info(ConstructorInfo ctor, IReadOnlyList<Type> parameterTypes)
+            public Factory(ConstructorInfo ctor, IReadOnlyList<Type> parameterTypes)
             {
                 this.ctor = ctor;
                 this.ParameterTypes = parameterTypes;
