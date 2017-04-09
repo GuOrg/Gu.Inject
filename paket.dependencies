@@ -7,7 +7,7 @@ group Analyzers
 
 group Test
   source http://nuget.org/api/v2
-  framework: >= net45
+  framework: net461
   nuget Moq
   nuget NUnit
 
