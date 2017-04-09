@@ -1,7 +1,7 @@
-﻿namespace Gu.Inject.Benchmarks.Benchmarks
+﻿// ReSharper disable UnusedMember.Global
+namespace Gu.Inject.Benchmarks.Benchmarks
 {
     using BenchmarkDotNet.Attributes;
-    using Gu.Inject.Benchmarks.Types;
     using Ninject;
     using SimpleInjector;
 

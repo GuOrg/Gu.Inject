@@ -70,6 +70,7 @@
     </None>
     <None Include="Benchmarks\Get.md" />
     <None Include="Benchmarks\NewAndGet.md" />
+    <None Include="Benchmarks\NewAndGet{Graph50.Node1}.md" />
     <None Include="Benchmarks\Reflection.md" />
     <None Include="Gu.Inject.Benchmarks.ruleset" />
     <None Include="paket.references" />
