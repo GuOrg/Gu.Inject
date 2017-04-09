@@ -1,0 +1,45 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".generated.txt" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+public static class Graph50
+{
+<#  var size = 50;
+    var rand = new Random();
+    for (var i = 1; i < size; ++i)
+    {
+        if (i > 1)
+        { #>
+
+<#      }
+        var children = Children(i, size, rand).ToArray();
+#>
+    public class Node<#= i #>
+    {
+        public Node<#= i #>(<#= children.Length == 0 ? ")" : "" #>
+<#
+        for (var j = 0; j < children.Length; j++)
+        {
+            var child = children[j]; #>
+            Node<#= child #> node<#= child #><#= j == children.Length - 1 ? ")" :"," #>
+<#      } #>
+        {
+        }
+    }
+<#  } #>
+}
+<#+ 
+private static IEnumerable<int> Children(int i, int size, Random rand)
+{
+    for (var j = 1; j < size; ++j)
+    {
+        if (i != j &&
+			j % i == 0 && 
+            rand.Next(0, 1000) < 200)
+        {
+            yield return j;
+        }
+    }
+}
+#>

@@ -7,7 +7,8 @@
 
     using SimpleInjector;
 
-    public class Get
+    public class Get<T>
+        where T : class 
     {
         private static readonly Ninject.StandardKernel StandardKernel = new Ninject.StandardKernel(new Module());
         private static readonly Container Container = new Container();
@@ -16,26 +17,26 @@
         [Benchmark]
         public object Ninject()
         {
-            return StandardKernel.Get<Foo>();
+            return StandardKernel.Get<T>();
         }
 
         [Benchmark]
         public object SimpleInjector()
         {
-            return Container.GetInstance<Foo>();
+            return Container.GetInstance<T>();
         }
 
         [Benchmark(Baseline = true)]
         public object GuInject()
         {
-            return Kernel.Get<Foo>();
+            return Kernel.Get<T>();
         }
 
         private class Module : NinjectModule
         {
             public override void Load()
             {
-                this.Bind<Foo>().ToSelf().InSingletonScope();
+                this.Bind<T>().ToSelf().InSingletonScope();
             }
         }
     }

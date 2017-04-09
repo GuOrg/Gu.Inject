@@ -43,6 +43,7 @@
     <Compile Include="Benchmarks\Get.cs" />
     <Compile Include="Benchmarks\NewAndGet.cs" />
     <Compile Include="Types\Foo.cs" />
+    <Compile Include="Types\Graph50.cs" />
     <Content Include="TraceEvent.ReadMe.txt">
       <Paket>True</Paket>
     </Content>
@@ -53,6 +54,15 @@
     <Compile Include="MemoryDiagnoserConfig.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="Types\Graph.generated.txt">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Graph.tt</DependentUpon>
+    </Content>
+    <Content Include="Types\Graph.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Graph.generated.txt</LastGenOutput>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
@@ -96,6 +106,9 @@
     <Analyzer Include="..\packages\analyzers\StyleCop.Analyzers\analyzers\dotnet\cs\StyleCop.Analyzers.dll">
       <Paket>True</Paket>
     </Analyzer>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Choose>
     <When Condition="$(TargetFrameworkIdentifier) == '.NETFramework' And ($(TargetFrameworkVersion) == 'v4.5.2' Or $(TargetFrameworkVersion) == 'v4.6.1')">

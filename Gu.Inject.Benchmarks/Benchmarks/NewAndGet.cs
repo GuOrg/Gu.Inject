@@ -5,14 +5,15 @@
     using Ninject;
     using SimpleInjector;
 
-    public class NewAndGet
+    public class NewAndGet<T>
+        where T : class 
     {
         [Benchmark]
         public object Ninject()
         {
             using (var kernel = new Ninject.StandardKernel())
             {
-                return kernel.Get<Foo>();
+                return kernel.Get<T>();
             }
         }
 
@@ -21,7 +22,7 @@
         {
             using (var container = new Container())
             {
-                return container.GetInstance<Foo>();
+                return container.GetInstance<T>();
             }
         }
 
@@ -30,7 +31,7 @@
         {
             using (var kernel = new Kernel())
             {
-                return kernel.Get<Foo>();
+                return kernel.Get<T>();
             }
         }
     }
