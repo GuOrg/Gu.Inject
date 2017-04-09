@@ -11,7 +11,7 @@ namespace Gu.Inject.Benchmarks
 
     public class Program
     {
-        private static readonly string DestinationDirectory = System.IO.Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName, "Benchmarks");
+        private static readonly string DestinationDirectory = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName, "Benchmarks");
 
         public static void Main()
         {
@@ -23,7 +23,7 @@ namespace Gu.Inject.Benchmarks
 
         private static IEnumerable<Summary> RunAll()
         {
-            ClearAllResults();
+            ////ClearAllResults();
             var switcher = new BenchmarkSwitcher(typeof(Program).Assembly);
             var summaries = switcher.Run(new[] { "*" });
             return summaries;
@@ -39,10 +39,10 @@ namespace Gu.Inject.Benchmarks
         {
 #if DEBUG
 #else
-            var sourceFileName = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "BenchmarkDotNet.Artifacts", "results", name + "-report-github.md");
-            System.IO.Directory.CreateDirectory(DestinationDirectory);
-            var destinationFileName = System.IO.Path.Combine(DestinationDirectory, name + ".md");
-            File.Copy(sourceFileName, destinationFileName, true);
+            var sourceFileName = Path.Combine(Directory.GetCurrentDirectory(), "BenchmarkDotNet.Artifacts", "results", name + "-report-github.md");
+            Directory.CreateDirectory(DestinationDirectory);
+            var destinationFileName = Path.Combine(DestinationDirectory, name + ".md");
+            File.Copy(sourceFileName, destinationFileName, overwrite: true);
 #endif
         }
 
