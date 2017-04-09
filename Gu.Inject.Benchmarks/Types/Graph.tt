@@ -3,9 +3,9 @@
 <#@ assembly name="System.Core" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Linq" #>
-public static class Graph50
+public static class Graph
 {
-<#  var size = 50;
+<#  var size = 500;
     var rand = new Random();
     for (var i = 1; i < size; ++i)
     {

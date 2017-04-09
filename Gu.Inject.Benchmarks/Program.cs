@@ -16,7 +16,7 @@ namespace Gu.Inject.Benchmarks
 
         public static void Main()
         {
-            foreach (var summary in RunSingle<Get<Graph50.Node1>>())
+            foreach (var summary in RunSingle<NewAndGet<Graph500.Node1>>())
             {
                 CopyResult(summary.Title);
             }

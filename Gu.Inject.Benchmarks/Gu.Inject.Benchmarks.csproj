@@ -44,6 +44,7 @@
     <Compile Include="Benchmarks\NewAndGet.cs" />
     <Compile Include="Types\Foo.cs" />
     <Compile Include="Types\Graph50.cs" />
+    <Compile Include="Types\Graph500.cs" />
     <Content Include="TraceEvent.ReadMe.txt">
       <Paket>True</Paket>
     </Content>
@@ -69,6 +70,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Benchmarks\Get.md" />
+    <None Include="Benchmarks\Get{Graph50.Node1}.md" />
     <None Include="Benchmarks\NewAndGet.md" />
     <None Include="Benchmarks\NewAndGet{Graph50.Node1}.md" />
     <None Include="Benchmarks\Reflection.md" />
