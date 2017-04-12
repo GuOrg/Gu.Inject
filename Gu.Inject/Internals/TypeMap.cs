@@ -20,30 +20,7 @@
                 return Empty;
             }
 
-            if (cache.TryGetValue(type, out List<Type> mapped))
-            {
-                return mapped;
-            }
-
-            if (type.IsGenericType)
-            {
-                var typeDefinition = type.GetGenericTypeDefinition();
-                if (cache.TryGetValue(typeDefinition, out mapped))
-                {
-                    var mappedTypes = new List<Type>(mapped.Count);
-                    foreach (var type1 in mapped)
-                    {
-                        mappedTypes.Add(type1.IsGenericTypeDefinition
-                            ? type1.MakeGenericType(type.GenericTypeArguments)
-                            : type1);
-                    }
-
-                    cache.TryAdd(type, mappedTypes);
-                    return mappedTypes;
-                }
-            }
-
-            return Empty;
+            return cache.GetOrAdd(type, CreateMapped);
         }
 
         internal static void Initialize(Assembly root, bool recursive = true)
@@ -62,6 +39,30 @@
 
                 cache = Create(root, recursive);
             }
+        }
+
+        private static List<Type> CreateMapped(Type type)
+        {
+            if (type.IsGenericType)
+            {
+                var typeDefinition = type.GetGenericTypeDefinition();
+                if (cache.TryGetValue(typeDefinition, out List<Type> mappeds))
+                {
+                    var mappedTypes = new List<Type>(mappeds.Count);
+                    foreach (var mapped in mappeds)
+                    {
+                        mappedTypes.Add(
+                            mapped.IsGenericTypeDefinition
+                                ? mapped.MakeGenericType(type.GenericTypeArguments)
+                                : mapped);
+                    }
+
+                    cache.TryAdd(type, mappedTypes);
+                    return mappedTypes;
+                }
+            }
+
+            return new List<Type>(0);
         }
 
         private static ConcurrentDictionary<Type, List<Type>> Create(Assembly root, bool recursive)

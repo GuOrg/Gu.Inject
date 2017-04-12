@@ -82,6 +82,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Benchmarks\Caching.md" />
+    <None Include="Benchmarks\Constructor.md" />
     <None Include="Benchmarks\GetFoo.md" />
     <None Include="Benchmarks\GetGraph500.md" />
     <None Include="Benchmarks\GetGraph50.md" />
