@@ -68,40 +68,52 @@
         private static ConcurrentDictionary<Type, List<Type>> Create(Assembly root, bool recursive)
         {
             var map = new Dictionary<Type, List<Type>>();
-            var assemblies = recursive
-                ? RecursiveAssemblies(root)
-                : (IEnumerable<Assembly>)new[] { root };
-            foreach (var assembly in assemblies)
+            map.MapTypes(root.GetTypes());
+            if (recursive)
             {
-                foreach (var type in assembly.GetTypes())
+                var assemblies = RecursiveReferencedAssemblies(root);
+                foreach (var assembly in assemblies)
                 {
-                    if (type.IsValueType ||
-                        type.IsStatic() ||
-                        type.IsInterface)
+                    if (assembly == root)
                     {
                         continue;
                     }
 
-                    var info = type.GetTypeInfo();
-                    foreach (var @interface in info.ImplementedInterfaces)
-                    {
-                        MapInterfaceOrBase(type, @interface, map);
-                    }
-
-                    var baseType = type.BaseType;
-                    while (baseType != null &&
-                        baseType != typeof(object))
-                    {
-                        MapInterfaceOrBase(type, baseType, map);
-                        baseType = baseType.BaseType;
-                    }
+                    map.MapTypes(assembly.GetExportedTypes());
                 }
             }
 
             return new ConcurrentDictionary<Type, List<Type>>(map);
         }
 
-        private static void MapInterfaceOrBase(Type type, Type interfaceOrBase, Dictionary<Type, List<Type>> map)
+        private static void MapTypes(this Dictionary<Type, List<Type>> map, IEnumerable<Type> types)
+        {
+            foreach (var type in types)
+            {
+                if (type.IsValueType ||
+                    type.IsStatic() ||
+                    type.IsInterface)
+                {
+                    continue;
+                }
+
+                var info = type.GetTypeInfo();
+                foreach (var @interface in info.ImplementedInterfaces)
+                {
+                    MapInterfaceOrBase(map, type, @interface);
+                }
+
+                var baseType = type.BaseType;
+                while (baseType != null &&
+                       baseType != typeof(object))
+                {
+                    MapInterfaceOrBase(map, type, baseType);
+                    baseType = baseType.BaseType;
+                }
+            }
+        }
+
+        private static void MapInterfaceOrBase(Dictionary<Type, List<Type>> map, Type type, Type interfaceOrBase)
         {
             if (type.IsAbstract)
             {
@@ -124,7 +136,7 @@
             }
         }
 
-        private static HashSet<Assembly> RecursiveAssemblies(Assembly assembly, HashSet<Assembly> assemblies = null)
+        private static HashSet<Assembly> RecursiveReferencedAssemblies(Assembly assembly, HashSet<Assembly> assemblies = null)
         {
             assemblies = assemblies ?? new HashSet<Assembly>();
             if (assemblies.Add(assembly))
@@ -134,7 +146,7 @@
                     var referencedAssembly = AppDomain.CurrentDomain.GetAssemblies()
                                                                     .SingleOrDefault(x => x.GetName() == referencedAssemblyName) ??
                                              AppDomain.CurrentDomain.Load(referencedAssemblyName);
-                    RecursiveAssemblies(referencedAssembly, assemblies);
+                    RecursiveReferencedAssemblies(referencedAssembly, assemblies);
                 }
             }
 
