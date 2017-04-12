@@ -30,10 +30,10 @@
                                  .Select(x => x.ParameterType)
                                  .ToArray();
 
-            if (ctor.IsPublic)
-            {
-                return new CreateInstanceFactory(type, parameters);
-            }
+            //if (ctor.IsPublic)
+            //{
+            //    return new CreateInstanceFactory(type, parameters);
+            //}
 
             return new Factory(ctor, parameters);
         }

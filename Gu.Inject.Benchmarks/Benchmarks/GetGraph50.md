@@ -8,8 +8,8 @@ Frequency=2435878 Hz, Resolution=410.5296 ns, Timer=TSC
 
 
 ```
- |         Method |          Mean |     StdErr |     StdDev | Scaled | Scaled-StdDev |  Gen 0 | Allocated |
- |--------------- |-------------- |----------- |----------- |------- |-------------- |------- |---------- |
- |        Ninject | 5,169.3762 ns | 12.5128 ns | 48.4618 ns |  34.41 |          0.91 | 0.4934 |   1.39 kB |
- | SimpleInjector |   813.7279 ns |  9.0025 ns | 33.6841 ns |   5.42 |          0.25 | 0.2652 |     584 B |
- |       GuInject |   150.3227 ns |  1.0648 ns |  3.9842 ns |   1.00 |          0.00 | 0.0341 |      84 B |
+ |         Method |          Mean |      StdDev | Scaled | Scaled-StdDev |  Gen 0 | Allocated |
+ |--------------- |-------------- |------------ |------- |-------------- |------- |---------- |
+ |        Ninject | 5,486.7607 ns | 160.4916 ns |  35.02 |          1.29 | 0.4852 |   1.39 kB |
+ | SimpleInjector |   821.8564 ns |  16.3422 ns |   5.25 |          0.16 | 0.2327 |     584 B |
+ |       GuInject |   156.7617 ns |   3.8268 ns |   1.00 |          0.00 | 0.0350 |      84 B |

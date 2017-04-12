@@ -10,6 +10,6 @@ Frequency=2435878 Hz, Resolution=410.5296 ns, Timer=TSC
 ```
  |         Method |          Mean |     StdDev | Scaled | Scaled-StdDev |  Gen 0 | Allocated |
  |--------------- |-------------- |----------- |------- |-------------- |------- |---------- |
- |        Ninject | 4,410.5559 us | 63.2444 us |  42.62 |          0.69 |      - | 183.68 kB |
- | SimpleInjector | 1,186.1895 us |  9.9300 us |  11.46 |          0.13 |      - |  77.27 kB |
- |       GuInject |   103.4845 us |  0.9006 us |   1.00 |          0.00 | 8.7162 |  20.75 kB |
+ |        Ninject | 4,425.7875 us | 59.0675 us |  48.78 |          0.80 |      - | 183.68 kB |
+ | SimpleInjector | 1,214.0124 us | 15.9778 us |  13.38 |          0.22 | 1.8229 |  77.37 kB |
+ |       GuInject |    90.7330 us |  0.9540 us |   1.00 |          0.00 | 5.8268 |   17.8 kB |
