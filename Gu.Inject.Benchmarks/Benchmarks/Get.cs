@@ -7,8 +7,8 @@ namespace Gu.Inject.Benchmarks.Benchmarks
 
     using SimpleInjector;
 
-    public class Get<T>
-        where T : class 
+    public abstract class Get<T>
+        where T : class
     {
         private static readonly Ninject.StandardKernel StandardKernel = new Ninject.StandardKernel(new Module());
         private static readonly Container Container = new Container();

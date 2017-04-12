@@ -5,8 +5,8 @@ namespace Gu.Inject.Benchmarks.Benchmarks
     using Ninject;
     using SimpleInjector;
 
-    public class NewAndGet<T>
-        where T : class 
+    public abstract class NewAndGet<T>
+        where T : class
     {
         [Benchmark]
         public object Ninject()

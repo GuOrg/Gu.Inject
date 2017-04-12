@@ -42,7 +42,13 @@
   <ItemGroup>
     <Compile Include="Benchmarks\Caching.cs" />
     <Compile Include="Benchmarks\Get.cs" />
+    <Compile Include="Benchmarks\GetFoo.cs" />
+    <Compile Include="Benchmarks\GetGraph50.cs" />
+    <Compile Include="Benchmarks\GetGraph500.cs" />
     <Compile Include="Benchmarks\NewAndGet.cs" />
+    <Compile Include="Benchmarks\NewAndGetFoo.cs" />
+    <Compile Include="Benchmarks\NewAndGetGraph50.cs" />
+    <Compile Include="Benchmarks\NewAndGetGraph500.cs" />
     <Compile Include="Types\Foo.cs" />
     <Compile Include="Types\Graph50.cs" />
     <Compile Include="Types\Graph500.cs" />
@@ -75,12 +81,12 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="Benchmarks\Caching.md" />
-    <None Include="Benchmarks\Get.md" />
-    <None Include="Benchmarks\Get{Graph500}.md" />
-    <None Include="Benchmarks\Get{Graph50}.md" />
+    <None Include="Benchmarks\GetFoo.md" />
+    <None Include="Benchmarks\GetGraph500.md" />
+    <None Include="Benchmarks\GetGraph50.md" />
     <None Include="Benchmarks\NewAndGet.md" />
-    <None Include="Benchmarks\NewAndGet{Graph500}.md" />
-    <None Include="Benchmarks\NewAndGet{Graph50}.md" />
+    <None Include="Benchmarks\NewAndGetGraph500.md" />
+    <None Include="Benchmarks\NewAndGetGraph50.md" />
     <None Include="Benchmarks\Reflection.md" />
     <None Include="Gu.Inject.Benchmarks.ruleset" />
     <None Include="paket.references" />
