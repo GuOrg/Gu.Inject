@@ -8,14 +8,14 @@
 
     internal static class Ctor
     {
-        private static readonly ConcurrentDictionary<Type, Factory> Ctors = new ConcurrentDictionary<Type, Factory>();
+        private static readonly ConcurrentDictionary<Type, IFactory> Ctors = new ConcurrentDictionary<Type, IFactory>();
 
-        internal static Factory GetFactory(Type type)
+        internal static IFactory GetFactory(Type type)
         {
             return Ctors.GetOrAdd(type, Create);
         }
 
-        private static Factory Create(Type type)
+        private static IFactory Create(Type type)
         {
             var ctors = type.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             if (ctors.Length > 1)
@@ -26,7 +26,16 @@
             }
 
             var ctor = ctors[0];
-            return new Factory(ctor, ctor.GetParameters().Select(x => x.ParameterType).ToArray());
+            var parameters = ctor.GetParameters()
+                                 .Select(x => x.ParameterType)
+                                 .ToArray();
+
+            if (ctor.IsPublic)
+            {
+                return new CreateInstanceFactory(type, parameters);
+            }
+
+            return new Factory(ctor, parameters);
         }
 
         internal class Factory : IFactory
@@ -44,6 +53,24 @@
             public object Create(object[] args)
             {
                 return this.ctor.Invoke(args);
+            }
+        }
+
+        internal class CreateInstanceFactory : IFactory
+        {
+            private readonly Type type;
+
+            public CreateInstanceFactory(Type type, IReadOnlyList<Type> parameterTypes)
+            {
+                this.type = type;
+                this.ParameterTypes = parameterTypes;
+            }
+
+            public IReadOnlyList<Type> ParameterTypes { get; } 
+
+            public object Create(object[] args)
+            {
+                return Activator.CreateInstance(this.type, args);
             }
         }
     }
