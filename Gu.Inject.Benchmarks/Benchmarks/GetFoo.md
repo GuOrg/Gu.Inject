@@ -1,17 +1,15 @@
-```ini
+``` ini
 
-BenchmarkDotNet=v0.9.7.0
-OS=Microsoft Windows NT 6.1.7601 Service Pack 1
-Processor=Intel(R) Xeon(R) CPU X5687 3.60GHz, ProcessorCount=8
-Frequency=3515820 ticks, Resolution=284.4287 ns, Timer=ACPI
-HostCLR=MS.NET 4.0.30319.42000, Arch=32-bit RELEASE
-JitModules=clrjit-v4.6.1590.0
+BenchmarkDotNet=v0.10.3.0, OS=Microsoft Windows NT 6.2.9200.0
+Processor=Intel(R) Core(TM) i7-3667U CPU 2.00GHz, ProcessorCount=4
+Frequency=2435878 Hz, Resolution=410.5296 ns, Timer=TSC
+  [Host]     : Clr 4.0.30319.42000, 32bit LegacyJIT-v4.6.1637.0
+  DefaultJob : Clr 4.0.30319.42000, 32bit LegacyJIT-v4.6.1637.0
 
-Type=Get  Mode=Throughput  
 
 ```
-         Method |        Median |      StdDev | Scaled |  Gen 0 | Gen 1 | Gen 2 | Bytes Allocated/Op |
---------------- |-------------- |------------ |------- |------- |------ |------ |------------------- |
-        Ninject | 4,596.4139 ns | 140.9864 ns |  88.39 | 304,00 |     - |     - |             571,83 |
- SimpleInjector |    50.8747 ns |   1.3655 ns |   0.98 |   2,41 |     - |     - |               4,76 |
-       GuInject |    52.0005 ns |   0.9497 ns |   1.00 |   6,84 |     - |     - |              12,89 |
+ |         Method |          Mean |     StdErr |      StdDev |        Median | Scaled | Scaled-StdDev |  Gen 0 | Allocated |
+ |--------------- |-------------- |----------- |------------ |-------------- |------- |-------------- |------- |---------- |
+ |        Ninject | 4,934.2377 ns | 47.8980 ns | 214.2064 ns | 4,870.3756 ns |  32.14 |          1.83 | 0.4934 |   1.39 kB |
+ | SimpleInjector |    61.6829 ns |  0.6583 ns |   4.1637 ns |    59.9336 ns |   0.40 |          0.03 | 0.0024 |      12 B |
+ |       GuInject |   153.7411 ns |  1.5119 ns |   6.2336 ns |   151.1570 ns |   1.00 |          0.00 | 0.0341 |      84 B |
