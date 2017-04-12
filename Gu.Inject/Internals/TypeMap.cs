@@ -71,7 +71,7 @@
             map.MapTypes(root.GetTypes());
             if (recursive)
             {
-                var assemblies = RecursiveReferencedAssemblies(root);
+                var assemblies = root.RecursiveReferencedAssemblies();
                 foreach (var assembly in assemblies)
                 {
                     if (assembly == root)
@@ -136,7 +136,7 @@
             }
         }
 
-        private static HashSet<Assembly> RecursiveReferencedAssemblies(Assembly assembly, HashSet<Assembly> assemblies = null)
+        private static HashSet<Assembly> RecursiveReferencedAssemblies(this Assembly assembly, HashSet<Assembly> assemblies = null)
         {
             assemblies = assemblies ?? new HashSet<Assembly>();
             if (assemblies.Add(assembly))
