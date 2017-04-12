@@ -1,4 +1,4 @@
-﻿namespace Gu.Inject.Benchmarks.Benchmarks
+﻿namespace Gu.Inject.Benchmarks
 {
     using Gu.Inject.Benchmarks.Types;
 

@@ -1,5 +1,5 @@
 ﻿// ReSharper disable UnusedMember.Global
-namespace Gu.Inject.Benchmarks.Benchmarks
+namespace Gu.Inject.Benchmarks
 {
     using BenchmarkDotNet.Attributes;
     using Ninject;
