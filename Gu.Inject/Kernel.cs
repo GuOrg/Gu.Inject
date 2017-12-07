@@ -67,8 +67,7 @@
 
         /// <summary>
         /// Provide an override for the automatic mapping.
-        /// The kernel will keep <paramref name="instance"/> alive until disposed.
-        /// <paramref name="instance"/> is not disposed by the kernel if disposable.
+        /// If the <paramref name="instance"/> implements IDisposable, the responsibility to dispose it remains the caller's, disposing the kernel doesn't do that.
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="instance">The instance to bind.</param>
@@ -87,11 +86,11 @@
 
         /// <summary>
         /// Provide an override for the automatic mapping.
-        /// The kernel will keep <paramref name="create"/> alive until disposed.
-        /// <paramref name="create"/> is disposed by the kernel if disposable.
+        /// The instance is created lazily by <paramref name="create"/> and is cached for subsequent calls to .Get().
+        /// The instance is owned by the kernel, that is, calling .Dispose() on the kernel disposes the instance, if its type implements IDisposable.
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
-        /// <param name="create">The instance to bind.</param>
+        /// <param name="create">The factory function used to create the instance.</param>
         public void BindFactory<T>(Func<T> create)
             where T : class
         {
@@ -170,12 +169,12 @@
         }
 
         /// <summary>
-        /// Provide an override for a automatic mapping.
-        /// The kernel will keep <paramref name="instance"/> alive until disposed.
-        /// <paramref name="instance"/> is not disposed by the kernel if disposable.
+        /// Provide an override for the automatic mapping.
+        /// This operation is only legal after providing a binding and before the first call to .Get().
+        /// If the <paramref name="instance"/> implements IDisposable, the responsibility to dispose it remains the caller's, disposing the kernel doesn't do that.
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
-        /// <param name="instance">The instance to bind.</param>
+        /// <param name="instance">The instance to bind.</param>>
         public void ReBindInstance<T>(T instance)
             where T : class
         {
@@ -190,12 +189,13 @@
         }
 
         /// <summary>
-        /// Provide an override for a automatic mapping.
-        /// The kernel will keep <paramref name="create"/> alive until disposed.
-        /// <paramref name="create"/> is disposed by the kernel if disposable.
+        /// Provide an override for the automatic mapping.
+        /// This operation is only legal after providing a binding and before the first call to .Get().
+        /// The instance is created lazily by <paramref name="create"/> and is cached for subsequent calls to .Get().
+        /// The instance is owned by the kernel, that is, calling .Dispose() on the kernel disposes the instance, if its type implements IDisposable.
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
-        /// <param name="create">The instance to bind.</param>
+        /// <param name="create">The factory function used to create the instance.</param>
         public void ReBindFactory<T>(Func<T> create)
             where T : class
         {
