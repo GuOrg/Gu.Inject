@@ -14,7 +14,7 @@ namespace Gu.Inject
         /// <param name="type">The type that was resolved.</param>
         /// <param name="mapped">The mapped types.</param>
         /// <param name="message">The exception message.</param>
-        protected BindingException(Type type, IReadOnlyList<Type> mapped, string message)
+        protected BindingException(Type type, IEnumerable<Type> mapped, string message)
             : base(type, message)
         {
             this.Mapped = mapped;
@@ -23,6 +23,6 @@ namespace Gu.Inject
         /// <summary>
         /// Gets the candidate types to resolve.
         /// </summary>
-        public IReadOnlyList<Type> Mapped { get; }
+        public IEnumerable<Type> Mapped { get; }
     }
 }

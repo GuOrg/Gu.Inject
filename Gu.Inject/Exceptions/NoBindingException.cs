@@ -13,7 +13,7 @@ namespace Gu.Inject
         /// </summary>
         /// <param name="type">The type that has no binding.</param>
         /// <param name="mapped">Always empty.</param>
-        public NoBindingException(Type type, IReadOnlyList<Type> mapped)
+        public NoBindingException(Type type, IEnumerable<Type> mapped)
             : base(type, mapped, CreateMessage(type))
         {
         }
