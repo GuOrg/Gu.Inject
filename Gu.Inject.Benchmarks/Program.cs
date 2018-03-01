@@ -3,26 +3,25 @@
 // ReSharper disable PossibleNullReferenceException
 namespace Gu.Inject.Benchmarks
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using BenchmarkDotNet.Reports;
     using BenchmarkDotNet.Running;
 
     public class Program
     {
-        private static readonly string DestinationDirectory = Path.Combine(new DirectoryInfo(Directory.GetCurrentDirectory()).Parent.Parent.FullName, "Benchmarks");
-
         public static void Main()
         {
             foreach (var summary in RunSingle<Constructor>())
             {
-                CopyResult(summary.Title);
+                CopyResult(summary);
             }
         }
 
         private static IEnumerable<Summary> RunAll()
         {
-            ////ClearAllResults();
             var switcher = new BenchmarkSwitcher(typeof(Program).Assembly);
             var summaries = switcher.Run(new[] { "*" });
             return summaries;
@@ -30,30 +29,16 @@ namespace Gu.Inject.Benchmarks
 
         private static IEnumerable<Summary> RunSingle<T>()
         {
-            var summaries = new[] { BenchmarkRunner.Run<T>() };
-            return summaries;
+            yield return BenchmarkRunner.Run<T>();
         }
 
-        private static void CopyResult(string name)
+        private static void CopyResult(Summary summary)
         {
-#if DEBUG
-#else
-            var sourceFileName = Path.Combine(Directory.GetCurrentDirectory(), "BenchmarkDotNet.Artifacts", "results", name + "-report-github.md");
-            Directory.CreateDirectory(DestinationDirectory);
-            var destinationFileName = Path.Combine(DestinationDirectory, name + ".md");
+            var sourceFileName = Directory.EnumerateFiles(summary.ResultsDirectoryPath, $"*{summary.Title}-report-github.md")
+                                          .Single();
+            var destinationFileName = Path.Combine(summary.ResultsDirectoryPath, "..\\..\\Benchmarks", summary.Title + ".md");
+            Console.WriteLine($"Copy: {sourceFileName} -> {destinationFileName}");
             File.Copy(sourceFileName, destinationFileName, overwrite: true);
-#endif
-        }
-
-        private static void ClearAllResults()
-        {
-            if (Directory.Exists(DestinationDirectory))
-            {
-                foreach (var resultFile in Directory.EnumerateFiles(DestinationDirectory, "*.md"))
-                {
-                    File.Delete(resultFile);
-                }
-            }
         }
     }
 }
