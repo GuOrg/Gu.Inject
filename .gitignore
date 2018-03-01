@@ -297,3 +297,4 @@ __pycache__/
 Gu.Inject.Benchmarks/_TraceEventProgrammersGuide.docx
 Gu.Inject.Benchmarks/Types/Graph.generated.txt
 Gu.Inject.Benchmarks/Types/Graph.generated.txt
+/Gu.Inject.Benchmarks/BenchmarkDotNet.Artifacts/*
