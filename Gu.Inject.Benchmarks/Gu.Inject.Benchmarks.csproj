@@ -8,11 +8,13 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <CodeAnalysisRuleSet>Gu.Inject.Benchmarks.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="BenchmarkDotNet.Artifacts\**" />
     <EmbeddedResource Remove="BenchmarkDotNet.Artifacts\**" />
     <None Remove="BenchmarkDotNet.Artifacts\**" />
   </ItemGroup>
+  
   <ItemGroup>
     <Content Include="Types\Graph.generated.txt">
       <AutoGen>True</AutoGen>
@@ -24,9 +26,11 @@
       <LastGenOutput>Graph.generated.txt</LastGenOutput>
     </Content>
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Gu.Inject\Gu.Inject.csproj" />
   </ItemGroup>
+  
   <Import Project="..\packages\benchmarks\NETStandard.Library\build\NETStandard.Library.targets" Condition="Exists('..\packages\benchmarks\NETStandard.Library\build\NETStandard.Library.targets')" Label="Paket" />
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>

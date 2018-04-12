@@ -1,17 +1,20 @@
 source https://www.nuget.org/api/v2/
 
 group Analyzers
+  storage: none
   source http://nuget.org/api/v2
   nuget StyleCop.Analyzers
   nuget Gu.Analyzers
 
 group Test
+  storage: none
   source http://nuget.org/api/v2
   framework: net461
   nuget Moq
   nuget NUnit
 
 group Benchmarks
+  storage: none
   source http://www.nuget.org/api/v2/
   framework: net461
   nuget BenchmarkDotNet.Diagnostics.Windows
