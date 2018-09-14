@@ -6,7 +6,7 @@ projectUrl https://github.com/GuOrg/Gu.Inject
 licenseUrl http://opensource.org/licenses/MIT
 
 files
-  bin/Release/net452/Gu.Localization.* ==> lib/net452
+  bin/Release/net452/* ==> lib/net452
   bin/Release/netstandard2.0/* ==> lib/netstandard2.0
 
 releasenotes
