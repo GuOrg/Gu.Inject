@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Gu.Inject.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <PropertyGroup>
     <Version>0.1.0-dev</Version>
     <Authors>Johan Larsson;milleniumbug</Authors>
     <Description>A simple fast IoC container. The lack of features is the main feature!</Description>
