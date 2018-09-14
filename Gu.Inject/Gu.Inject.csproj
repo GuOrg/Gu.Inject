@@ -1,16 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Version>0.1.0-dev</Version>
-    <Authors>Johan Larsson;milleniumbug</Authors>
     <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <CodeAnalysisRuleSet>Gu.Inject.ruleset</CodeAnalysisRuleSet>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+
+  <PropertyGroup>
+    <Version>0.1.0-dev</Version>
+    <Authors>Johan Larsson;milleniumbug</Authors>
+    <Description>A simple fast IoC container. The lack of features is the main feature!</Description>
+    <PackageTags>IoC DI</PackageTags>
+    <PackageReleaseNotes>
+      FEATURE: Netstandard support.
+    </PackageReleaseNotes>
+    <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/GuOrg/Gu.Inject</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/GuOrg/Gu.Inject</RepositoryUrl>
+  </PropertyGroup>
 
   <Import Project="..\.paket\Paket.Restore.targets" />
 </Project>
