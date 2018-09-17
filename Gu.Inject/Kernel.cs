@@ -149,7 +149,7 @@
         /// Provide an override to a mapping.
         /// </summary>
         /// <typeparam name="TInterface">The type to map.</typeparam>
-        /// <typeparam name="TConcrete">The mapped type</typeparam>
+        /// <typeparam name="TConcrete">The mapped type.</typeparam>
         public void ReBind<TInterface, TConcrete>()
             where TConcrete : TInterface
         {
@@ -210,10 +210,10 @@
         }
 
         /// <summary>
-        /// Get the singleton instance of <typeparamref name="T"/>
+        /// Get the singleton instance of <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The type to resolve.</typeparam>
-        /// <returns>The singleton instance of <typeparamref name="T"/></returns>
+        /// <returns>The singleton instance of <typeparamref name="T"/>.</returns>
         public T Get<T>()
             where T : class
         {

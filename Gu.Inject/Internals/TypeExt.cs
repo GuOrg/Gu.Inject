@@ -4,7 +4,7 @@
     using System.Linq;
 
     /// <summary>
-    /// Helpers for <see cref="Type"/>
+    /// Helpers for <see cref="Type"/>.
     /// </summary>
     internal static class TypeExt
     {
