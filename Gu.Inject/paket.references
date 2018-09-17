@@ -1,3 +1,6 @@
 group Analyzers
-  StyleCop.Analyzers
+  AsyncUsageAnalyzers
   Gu.Analyzers
+  IDisposableAnalyzers
+  ReflectionAnalyzers
+  StyleCop.Analyzers
