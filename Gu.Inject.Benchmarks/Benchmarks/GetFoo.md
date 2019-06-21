@@ -1,15 +1,14 @@
 ``` ini
 
-BenchmarkDotNet=v0.10.3.0, OS=Microsoft Windows NT 6.2.9200.0
-Processor=Intel(R) Core(TM) i7-3667U CPU 2.00GHz, ProcessorCount=4
-Frequency=2435878 Hz, Resolution=410.5296 ns, Timer=TSC
-  [Host]     : Clr 4.0.30319.42000, 32bit LegacyJIT-v4.6.1637.0
-  DefaultJob : Clr 4.0.30319.42000, 32bit LegacyJIT-v4.6.1637.0
+BenchmarkDotNet=v0.11.3, OS=Windows 10.0.17763.503 (1809/October2018Update/Redstone5)
+Intel Xeon CPU E5-2637 v4 3.50GHz, 2 CPU, 16 logical and 8 physical cores
+  [Host]     : .NET Framework 4.7.2 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.3416.0
+  DefaultJob : .NET Framework 4.7.2 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.3416.0
 
 
 ```
- |         Method |          Mean |     StdDev | Scaled | Scaled-StdDev |  Gen 0 | Allocated |
- |--------------- |-------------- |----------- |------- |-------------- |------- |---------- |
- |        Ninject | 4,963.2895 ns | 70.2442 ns |  32.44 |          0.61 | 0.4608 |   1.39 kB |
- | SimpleInjector |    62.5121 ns |  1.5561 ns |   0.41 |          0.01 | 0.0034 |      12 B |
- |       GuInject |   153.0247 ns |  2.0584 ns |   1.00 |          0.00 | 0.0334 |      84 B |
+|         Method |        Mean |      Error |      StdDev | Ratio | RatioSD | Gen 0/1k Op | Gen 1/1k Op | Gen 2/1k Op | Allocated Memory/Op |
+|--------------- |------------:|-----------:|------------:|------:|--------:|------------:|------------:|------------:|--------------------:|
+|        Ninject | 1,304.70 ns |  1.5752 ns |   1.2298 ns |  0.45 |    0.02 |      0.1755 |           - |           - |              1112 B |
+| SimpleInjector |    48.61 ns |  0.9405 ns |   0.9658 ns |  0.02 |    0.00 |      0.0038 |           - |           - |                24 B |
+|       GuInject | 2,919.57 ns | 57.5058 ns | 110.7942 ns |  1.00 |    0.00 |           - |           - |           - |                   - |

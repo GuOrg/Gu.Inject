@@ -6,6 +6,7 @@
     using BenchmarkDotNet.Attributes;
     using Gu.Inject.Benchmarks.Types;
 
+    [MemoryDiagnoser]
     public class Constructor
     {
         private static readonly ConstructorInfo ConstructorInfo = typeof(Foo).GetConstructors()[0];

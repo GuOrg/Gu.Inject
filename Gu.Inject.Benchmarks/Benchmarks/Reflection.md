@@ -1,19 +1,16 @@
-```ini
+``` ini
 
-BenchmarkDotNet=v0.9.7.0
-OS=Microsoft Windows NT 6.1.7601 Service Pack 1
-Processor=Intel(R) Xeon(R) CPU X5687 3.60GHz, ProcessorCount=8
-Frequency=3515820 ticks, Resolution=284.4287 ns, Timer=ACPI
-HostCLR=MS.NET 4.0.30319.42000, Arch=32-bit RELEASE
-JitModules=clrjit-v4.6.1590.0
+BenchmarkDotNet=v0.11.3, OS=Windows 10.0.17763.503 (1809/October2018Update/Redstone5)
+Intel Xeon CPU E5-2637 v4 3.50GHz, 2 CPU, 16 logical and 8 physical cores
+  [Host]     : .NET Framework 4.7.2 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.3416.0
+  DefaultJob : .NET Framework 4.7.2 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.3416.0
 
-Type=Reflection  Mode=Throughput  
 
 ```
-                       Method |      Median |     StdDev | Gen 0 | Gen 1 | Gen 2 | Bytes Allocated/Op |
------------------------------ |------------ |----------- |------ |------ |------ |------------------- |
-              GetConstructors |  61.9244 ns |  2.0229 ns | 55,53 |     - |     - |               7,13 |
- GetConstructorsGetParameters |  66.2811 ns |  2.2967 ns | 46,11 |     - |     - |               5,93 |
-                   InvokeCtor | 206.5621 ns |  4.4459 ns | 37,73 |     - |     - |               5,53 |
-      ActivatorCreateInstance |  92.2340 ns |  8.7025 ns | 33,13 |     - |     - |               4,82 |
-         GetConstructorInvoke | 271.3738 ns | 14.0951 ns | 83,00 |     - |     - |              11,39 |
+|                       Method |      Mean |     Error |    StdDev | Gen 0/1k Op | Gen 1/1k Op | Gen 2/1k Op | Allocated Memory/Op |
+|----------------------------- |----------:|----------:|----------:|------------:|------------:|------------:|--------------------:|
+|              GetConstructors |  55.35 ns | 1.0368 ns | 0.9191 ns |      0.0050 |           - |           - |                32 B |
+| GetConstructorsGetParameters |  58.56 ns | 0.2128 ns | 0.1990 ns |      0.0050 |           - |           - |                32 B |
+|                   InvokeCtor | 137.57 ns | 2.3956 ns | 2.1237 ns |      0.0036 |           - |           - |                24 B |
+|      ActivatorCreateInstance |  60.58 ns | 0.0932 ns | 0.0779 ns |      0.0037 |           - |           - |                24 B |
+|         GetConstructorInvoke | 209.84 ns | 4.0938 ns | 4.2040 ns |      0.0088 |           - |           - |                56 B |

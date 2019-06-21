@@ -6,6 +6,7 @@ namespace Gu.Inject.Benchmarks
     using Ninject.Modules;
     using SimpleInjector;
 
+    [MemoryDiagnoser]
     public abstract class Get<T>
         where T : class
     {

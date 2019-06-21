@@ -1,17 +1,16 @@
 ``` ini
 
-BenchmarkDotNet=v0.10.3.0, OS=Microsoft Windows NT 6.2.9200.0
-Processor=Intel(R) Core(TM) i7-3667U CPU 2.00GHz, ProcessorCount=4
-Frequency=2435878 Hz, Resolution=410.5296 ns, Timer=TSC
-  [Host]     : Clr 4.0.30319.42000, 32bit LegacyJIT-v4.6.1637.0
-  DefaultJob : Clr 4.0.30319.42000, 32bit LegacyJIT-v4.6.1637.0
+BenchmarkDotNet=v0.11.3, OS=Windows 10.0.17763.503 (1809/October2018Update/Redstone5)
+Intel Xeon CPU E5-2637 v4 3.50GHz, 2 CPU, 16 logical and 8 physical cores
+  [Host]     : .NET Framework 4.7.2 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.3416.0
+  DefaultJob : .NET Framework 4.7.2 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.3416.0
 
 
 ```
- |                    Method |          Mean |     StdErr |     StdDev |        Median |   Scaled | Scaled-StdDev |  Gen 0 | Allocated |
- |-------------------------- |-------------- |----------- |----------- |-------------- |--------- |-------------- |------- |---------- |
- |                       New |     2.7559 ns |  0.0863 ns |  0.8590 ns |     2.4864 ns |     1.00 |          0.00 | 0.0056 |      12 B |
- | ConstructorDelegateInvoke |     5.1615 ns |  0.1039 ns |  0.8118 ns |     5.0167 ns |     2.04 |          0.64 | 0.0055 |      12 B |
- | CreateConstructorDelegate | 7,095.1747 ns | 23.3596 ns | 87.4035 ns | 7,098.7229 ns | 2,799.87 |        754.88 | 0.1831 |     781 B |
- |     ConstructorInfoInvoke |   252.6629 ns |  2.5609 ns | 23.4708 ns |   242.1974 ns |    99.70 |         28.50 | 0.0020 |      12 B |
- |   ActivatorCreateInstance |    96.2596 ns |  0.9989 ns |  6.5505 ns |    93.3145 ns |    37.99 |         10.57 | 0.0033 |      12 B |
+|                    Method |         Mean |       Error |      StdDev |    Ratio | RatioSD | Gen 0/1k Op | Gen 1/1k Op | Gen 2/1k Op | Allocated Memory/Op |
+|-------------------------- |-------------:|------------:|------------:|---------:|--------:|------------:|------------:|------------:|--------------------:|
+|                       New |     3.125 ns |   0.1297 ns |   0.1332 ns |     1.00 |    0.00 |      0.0038 |           - |           - |                24 B |
+| ConstructorDelegateInvoke |     4.779 ns |   0.0524 ns |   0.0490 ns |     1.53 |    0.07 |      0.0038 |           - |           - |                24 B |
+| CreateConstructorDelegate | 5,811.342 ns | 115.4993 ns | 235.9344 ns | 1,856.76 |   93.94 |      0.2060 |      0.0992 |      0.0229 |              1305 B |
+|     ConstructorInfoInvoke |   137.273 ns |   2.6694 ns |   2.4969 ns |    43.83 |    1.92 |      0.0036 |           - |           - |                24 B |
+|   ActivatorCreateInstance |    59.948 ns |   1.6011 ns |   1.7132 ns |    19.24 |    1.04 |      0.0037 |           - |           - |                24 B |

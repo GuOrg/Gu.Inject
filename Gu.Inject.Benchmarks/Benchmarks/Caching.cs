@@ -5,6 +5,7 @@ namespace Gu.Inject.Benchmarks
     using System.Collections.Concurrent;
     using BenchmarkDotNet.Attributes;
 
+    [MemoryDiagnoser]
     public class Caching
     {
         private static readonly ConcurrentQueue<Node> Cache = new ConcurrentQueue<Node>();

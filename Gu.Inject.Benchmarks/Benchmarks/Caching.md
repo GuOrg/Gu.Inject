@@ -1,14 +1,13 @@
 ``` ini
 
-BenchmarkDotNet=v0.10.3.0, OS=Microsoft Windows NT 6.2.9200.0
-Processor=Intel(R) Core(TM) i7-3667U CPU 2.00GHz, ProcessorCount=4
-Frequency=2435878 Hz, Resolution=410.5296 ns, Timer=TSC
-  [Host]     : Clr 4.0.30319.42000, 32bit LegacyJIT-v4.6.1637.0
-  DefaultJob : Clr 4.0.30319.42000, 32bit LegacyJIT-v4.6.1637.0
+BenchmarkDotNet=v0.11.3, OS=Windows 10.0.17763.503 (1809/October2018Update/Redstone5)
+Intel Xeon CPU E5-2637 v4 3.50GHz, 2 CPU, 16 logical and 8 physical cores
+  [Host]     : .NET Framework 4.7.2 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.3416.0
+  DefaultJob : .NET Framework 4.7.2 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.3416.0
 
 
 ```
- |            Method |       Mean |    StdErr |    StdDev | Scaled | Scaled-StdDev |  Gen 0 | Allocated |
- |------------------ |----------- |---------- |---------- |------- |-------------- |------- |---------- |
- |               New |  6.1784 ns | 0.1299 ns | 0.4861 ns |   1.00 |          0.00 | 0.0072 |      16 B |
- | TryDequeueEnqueue | 49.4140 ns | 0.9835 ns | 3.9339 ns |   8.04 |          0.84 |      - |       7 B |
+|            Method |      Mean |     Error |    StdDev |    Median | Ratio | RatioSD | Gen 0/1k Op | Gen 1/1k Op | Gen 2/1k Op | Allocated Memory/Op |
+|------------------ |----------:|----------:|----------:|----------:|------:|--------:|------------:|------------:|------------:|--------------------:|
+|               New |  6.695 ns | 0.2021 ns | 0.2962 ns |  6.671 ns |  1.00 |    0.00 |      0.0051 |           - |           - |                32 B |
+| TryDequeueEnqueue | 37.997 ns | 0.8285 ns | 1.7655 ns | 37.359 ns |  5.63 |    0.37 |      0.0020 |      0.0011 |      0.0001 |                13 B |
