@@ -33,7 +33,7 @@ namespace Gu.Inject.Benchmarks.Types
                     node26,
                     node27,
                     node29,
-                    node32
+                    node32,
                 };
             }
 
@@ -55,7 +55,7 @@ namespace Gu.Inject.Benchmarks.Types
                     node4,
                     node8,
                     node16,
-                    node48
+                    node48,
                 };
             }
 
@@ -71,7 +71,7 @@ namespace Gu.Inject.Benchmarks.Types
             {
                 this.Children = new INode[]
                 {
-                    node33
+                    node33,
                 };
             }
 
@@ -91,7 +91,7 @@ namespace Gu.Inject.Benchmarks.Types
                 {
                     node8,
                     node32,
-                    node36
+                    node36,
                 };
             }
 
@@ -107,7 +107,7 @@ namespace Gu.Inject.Benchmarks.Types
             {
                 this.Children = new INode[]
                 {
-                    node30
+                    node30,
                 };
             }
 
@@ -125,7 +125,7 @@ namespace Gu.Inject.Benchmarks.Types
                 this.Children = new INode[]
                 {
                     node18,
-                    node30
+                    node30,
                 };
             }
 
@@ -143,7 +143,7 @@ namespace Gu.Inject.Benchmarks.Types
                 this.Children = new INode[]
                 {
                     node35,
-                    node49
+                    node49,
                 };
             }
 
@@ -173,7 +173,7 @@ namespace Gu.Inject.Benchmarks.Types
             {
                 this.Children = new INode[]
                 {
-                    node18
+                    node18,
                 };
             }
 
@@ -203,7 +203,7 @@ namespace Gu.Inject.Benchmarks.Types
             {
                 this.Children = new INode[]
                 {
-                    node22
+                    node22,
                 };
             }
 
@@ -221,7 +221,7 @@ namespace Gu.Inject.Benchmarks.Types
                 this.Children = new INode[]
                 {
                     node24,
-                    node48
+                    node48,
                 };
             }
 
@@ -237,7 +237,7 @@ namespace Gu.Inject.Benchmarks.Types
             {
                 this.Children = new INode[]
                 {
-                    node39
+                    node39,
                 };
             }
 
@@ -253,7 +253,7 @@ namespace Gu.Inject.Benchmarks.Types
             {
                 this.Children = new INode[]
                 {
-                    node28
+                    node28,
                 };
             }
 
@@ -269,7 +269,7 @@ namespace Gu.Inject.Benchmarks.Types
             {
                 this.Children = new INode[]
                 {
-                    node30
+                    node30,
                 };
             }
 
@@ -397,7 +397,7 @@ namespace Gu.Inject.Benchmarks.Types
             {
                 this.Children = new INode[]
                 {
-                    node48
+                    node48,
                 };
             }
 
