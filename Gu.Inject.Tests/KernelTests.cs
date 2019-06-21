@@ -36,7 +36,7 @@
         [TestCase(typeof(ManyToOne.IFoo), typeof(ManyToOne.Foo))]
         public void Get(Type type, Type expected)
         {
-            using (var kernel = new Kernel())
+            using (var kernel = new Kernel<object>())
             {
                 var actual = kernel.Get(type);
                 Assert.AreEqual(expected.PrettyName(), actual.GetType().PrettyName());
@@ -47,7 +47,7 @@
         [Test]
         public void InjectsSingletons2()
         {
-            using (var kernel = new Kernel())
+            using (var kernel = new Kernel<object>())
             {
                 var actual = kernel.Get<WithTwo<WithTwo<ManyToOne.IFoo, ManyToOne.IFooBase1>, With<DefaultCtor>>>();
                 Assert.AreSame(actual.Value1.Value1, actual.Value1.Value2);
@@ -57,7 +57,7 @@
         [Test]
         public void InjectsSingletons1()
         {
-            using (var kernel = new Kernel())
+            using (var kernel = new Kernel<object>())
             {
                 var actual = kernel.Get<WithTwo<DefaultCtor, DefaultCtor>>();
                 Assert.AreSame(actual.Value1, actual.Value2);
@@ -67,7 +67,7 @@
         [Test]
         public void GetGraph50()
         {
-            using (var kernel = new Kernel())
+            using (var kernel = new Kernel<object>())
             {
                 var root = kernel.Get<Graph50.Node1>();
                 var allChildren = root.AllChildren.ToArray();
@@ -82,7 +82,7 @@
         public void DisposesCreated()
         {
             Disposable actual;
-            using (var kernel = new Kernel())
+            using (var kernel = new Kernel<object>())
             {
                 actual = kernel.Get<Disposable>();
                 Assert.AreEqual(0, actual.Disposed);
@@ -94,7 +94,7 @@
         [Test]
         public void NotifiesCreating()
         {
-            using (var kernel = new Kernel())
+            using (var kernel = new Kernel<object>())
             {
                 var actual = new List<Type>();
                 kernel.Creating += (sender, type) => actual.Add(type);

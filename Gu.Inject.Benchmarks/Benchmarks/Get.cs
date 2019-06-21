@@ -12,7 +12,7 @@ namespace Gu.Inject.Benchmarks
     {
         private static readonly Ninject.StandardKernel StandardKernel = new Ninject.StandardKernel(new Module());
         private static readonly Container Container = new Container();
-        private static readonly Kernel Kernel = new Kernel();
+        private static readonly Kernel<object> Kernel = new Kernel<object>();
 
         [Benchmark]
         public object Ninject()

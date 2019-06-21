@@ -25,7 +25,7 @@
             [TestCase(typeof(InheritNonAbstract.Foo), typeof(InheritNonAbstract.Foo))]
             public void BindThenGet(Type from, Type to)
             {
-                using (var kernel = new Kernel())
+                using (var kernel = new Kernel<object>())
                 {
                     kernel.Bind(from, to);
                     var actual = kernel.Get(from);
@@ -36,7 +36,7 @@
             [Test]
             public void BindInstanceThenGet()
             {
-                using (var kernel = new Kernel())
+                using (var kernel = new Kernel<object>())
                 {
                     var instance = new DefaultCtor();
                     kernel.Bind(instance);
@@ -50,7 +50,7 @@
             {
                 var instance = new With<DefaultCtor>(new DefaultCtor());
 
-                using (var kernel = new Kernel())
+                using (var kernel = new Kernel<object>())
                 {
                     kernel.Bind(instance);
                     kernel.Bind<IWith<DefaultCtor>, With<DefaultCtor>>();
@@ -66,7 +66,7 @@
             [Test]
             public void BindTwoThenGet()
             {
-                using (var kernel = new Kernel())
+                using (var kernel = new Kernel<object>())
                 {
                     kernel.Bind<IWith, IWith<DefaultCtor>, With<DefaultCtor>>();
                     Assert.AreSame(kernel.Get<IWith<DefaultCtor>>(), kernel.Get<With<DefaultCtor>>());
@@ -79,7 +79,7 @@
             {
                 using (var disposable = new Disposable())
                 {
-                    using (var kernel = new Kernel())
+                    using (var kernel = new Kernel<object>())
                     {
                         kernel.Bind(disposable);
                         var actual = kernel.Get<Disposable>();
@@ -94,7 +94,7 @@
             public void BindFactory()
             {
                 Mock<IDisposable> mock;
-                using (var kernel = new Kernel())
+                using (var kernel = new Kernel<object>())
                 {
                     kernel.Bind(Mock.Of<IDisposable>);
                     var actual = kernel.Get<IDisposable>();
@@ -108,7 +108,7 @@
             [Test]
             public void BindFactoryWithArgument()
             {
-                using (var kernel = new Kernel())
+                using (var kernel = new Kernel<object>())
                 {
                     kernel.Bind((DefaultCtor x) => new With<DefaultCtor>(x));
                     var actual = kernel.Get<With<DefaultCtor>>();
@@ -120,7 +120,7 @@
             [Test]
             public void BindFactoryWithGetter()
             {
-                using (var kernel = new Kernel())
+                using (var kernel = new Kernel<object>())
                 {
                     kernel.Bind(x => new With<DefaultCtor>(x.Get<DefaultCtor>()));
                     var actual = kernel.Get<With<DefaultCtor>>();
@@ -133,7 +133,7 @@
             public void BindFactoryWithArgumentDisposed()
             {
                 DisposableWith<DefaultCtor> actual;
-                using (var kernel = new Kernel())
+                using (var kernel = new Kernel<object>())
                 {
                     kernel.Bind((DefaultCtor x) => new DisposableWith<DefaultCtor>(x));
                     actual = kernel.Get<DisposableWith<DefaultCtor>>();

@@ -9,7 +9,7 @@
     /// <summary>
     /// A factory for resolving object graphs.
     /// </summary>
-    public sealed class Kernel : IDisposable, IGetter
+    public sealed class Kernel<TRoot> : IDisposable, IGetter
     {
         private ConcurrentDictionary<Type, object> created = ConcurrentDictionaryPool<Type, object>.Borrow();
         private ConcurrentDictionary<Type, object> bindings;

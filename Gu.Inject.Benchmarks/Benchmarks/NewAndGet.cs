@@ -30,7 +30,7 @@ namespace Gu.Inject.Benchmarks
         [Benchmark(Baseline = true)]
         public object GuInject()
         {
-            using (var kernel = new Kernel())
+            using (var kernel = new Kernel<object>())
             {
                 return kernel.Get<T>();
             }
