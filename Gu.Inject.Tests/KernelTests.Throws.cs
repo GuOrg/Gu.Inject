@@ -109,7 +109,7 @@
                 using (var kernel = new Kernel())
                 {
                     var instance = new With<DefaultCtor>(new DefaultCtor());
-                    kernel.BindInstance<IWith>(instance);
+                    kernel.Bind<IWith>(instance);
                     var exception = Assert.Throws<InvalidOperationException>(() => kernel.Bind<IWith, With<DefaultCtor>>());
                     Assert.AreEqual("IWith already has a binding to Gu.Inject.Tests.Types.With`1[Gu.Inject.Tests.Types.DefaultCtor]", exception.Message);
                 }
@@ -122,7 +122,7 @@
                 {
                     kernel.Bind<IWith, With<DefaultCtor>>();
                     var instance = new With<DefaultCtor>(new DefaultCtor());
-                    var exception = Assert.Throws<InvalidOperationException>(() => kernel.BindInstance<IWith>(instance));
+                    var exception = Assert.Throws<InvalidOperationException>(() => kernel.Bind<IWith>(instance));
                     Assert.AreEqual("IWith already has a binding to With<DefaultCtor>", exception.Message);
                 }
             }

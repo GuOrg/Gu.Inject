@@ -39,7 +39,7 @@
                 using (var kernel = new Kernel())
                 {
                     var instance = new DefaultCtor();
-                    kernel.BindInstance(instance);
+                    kernel.Bind(instance);
                     var actual = kernel.Get<DefaultCtor>();
                     Assert.AreSame(actual, instance);
                 }
@@ -52,7 +52,7 @@
 
                 using (var kernel = new Kernel())
                 {
-                    kernel.BindInstance(instance);
+                    kernel.Bind(instance);
                     kernel.Bind<IWith<DefaultCtor>, With<DefaultCtor>>();
 
                     object actual = kernel.Get<With<DefaultCtor>>();
@@ -81,7 +81,7 @@
                 {
                     using (var kernel = new Kernel())
                     {
-                        kernel.BindInstance(disposable);
+                        kernel.Bind(disposable);
                         var actual = kernel.Get<Disposable>();
                         Assert.AreSame(actual, disposable);
                     }
@@ -96,7 +96,7 @@
                 Mock<IDisposable> mock;
                 using (var kernel = new Kernel())
                 {
-                    kernel.BindFactory(Mock.Of<IDisposable>);
+                    kernel.Bind(Mock.Of<IDisposable>);
                     var actual = kernel.Get<IDisposable>();
                     mock = Mock.Get(actual);
                     mock.Setup(x => x.Dispose());
@@ -110,7 +110,7 @@
             {
                 using (var kernel = new Kernel())
                 {
-                    kernel.BindFactory((DefaultCtor x) => new With<DefaultCtor>(x));
+                    kernel.Bind((DefaultCtor x) => new With<DefaultCtor>(x));
                     var actual = kernel.Get<With<DefaultCtor>>();
                     Assert.AreSame(actual, kernel.Get<With<DefaultCtor>>());
                     Assert.AreSame(actual.Value, kernel.Get<DefaultCtor>());
@@ -122,7 +122,7 @@
             {
                 using (var kernel = new Kernel())
                 {
-                    kernel.BindFactory(x => new With<DefaultCtor>(x.Get<DefaultCtor>()));
+                    kernel.Bind(x => new With<DefaultCtor>(x.Get<DefaultCtor>()));
                     var actual = kernel.Get<With<DefaultCtor>>();
                     Assert.AreSame(actual, kernel.Get<With<DefaultCtor>>());
                     Assert.AreSame(actual.Value, kernel.Get<DefaultCtor>());
@@ -135,7 +135,7 @@
                 DisposableWith<DefaultCtor> actual;
                 using (var kernel = new Kernel())
                 {
-                    kernel.BindFactory((DefaultCtor x) => new DisposableWith<DefaultCtor>(x));
+                    kernel.Bind((DefaultCtor x) => new DisposableWith<DefaultCtor>(x));
                     actual = kernel.Get<DisposableWith<DefaultCtor>>();
                     Assert.AreSame(actual.Value, kernel.Get<DefaultCtor>());
                 }

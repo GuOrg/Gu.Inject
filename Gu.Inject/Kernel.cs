@@ -71,7 +71,7 @@
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="instance">The instance to bind.</param>
-        public void BindInstance<T>(T instance)
+        public void Bind<T>(T instance)
             where T : class
         {
             if (instance == null)
@@ -91,7 +91,7 @@
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="create">The factory function used to create the instance.</param>
-        public void BindFactory<T>(Func<T> create)
+        public void Bind<T>(Func<T> create)
             where T : class
         {
             if (create == null)
@@ -111,7 +111,7 @@
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="create">The instance to bind.</param>
-        public void BindFactory<T>(Func<IGetter, T> create)
+        public void Bind<T>(Func<IGetter, T> create)
             where T : class
         {
             if (create == null)
@@ -132,7 +132,7 @@
         /// <typeparam name="TArg">The type of the argument. The container will resolve the argument and inject it. </typeparam>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="create">The instance to bind.</param>
-        public void BindFactory<TArg, T>(Func<TArg, T> create)
+        public void Bind<TArg, T>(Func<TArg, T> create)
             where T : class
         {
             if (create == null)
