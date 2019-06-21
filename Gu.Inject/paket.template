@@ -4,10 +4,6 @@ tags IoC DI
 projectUrl https://github.com/GuOrg/Gu.Inject
 licenseUrl http://opensource.org/licenses/MIT
 
-files
-  bin/Release/net452/* ==> lib/net452
-  bin/Release/netstandard2.0/* ==> lib/netstandard2.0
-
 releasenotes
   FEATURE: Netstandard support.
 
