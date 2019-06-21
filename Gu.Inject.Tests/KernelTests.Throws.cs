@@ -126,27 +126,6 @@
                     Assert.AreEqual("IWith already has a binding to With<DefaultCtor>", exception.Message);
                 }
             }
-
-            [Test]
-            public void RebindWhenHasResolved()
-            {
-                using (var kernel = new Kernel())
-                {
-                    kernel.Get<DefaultCtor>();
-                    var exception = Assert.Throws<InvalidOperationException>(() => kernel.ReBind<IWith, With<With<DefaultCtor>>>());
-                    Assert.AreEqual("ReBind not allowed after Get.", exception.Message);
-                }
-            }
-
-            [Test]
-            public void RebindWhenNoBinding()
-            {
-                using (var kernel = new Kernel())
-                {
-                    var exception = Assert.Throws<InvalidOperationException>(() => kernel.ReBind<IWith, With<With<DefaultCtor>>>());
-                    Assert.AreEqual("IWith does not have a binding.", exception.Message);
-                }
-            }
         }
     }
 }

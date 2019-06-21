@@ -146,70 +146,6 @@
         }
 
         /// <summary>
-        /// Provide an override to a mapping.
-        /// </summary>
-        /// <typeparam name="TInterface">The type to map.</typeparam>
-        /// <typeparam name="TConcrete">The mapped type.</typeparam>
-        public void ReBind<TInterface, TConcrete>()
-            where TConcrete : TInterface
-        {
-            this.ReBind(typeof(TInterface), typeof(TConcrete));
-        }
-
-        /// <summary>
-        /// Provide an override for a mapping.
-        /// </summary>
-        /// <param name="from">The type to map.</param>
-        /// <param name="to">The mapped type.</param>
-        public void ReBind(Type from, Type to)
-        {
-            this.ThrowIfDisposed();
-            this.ThrowIfHasResolved();
-            this.RebindCore(@from, to);
-        }
-
-        /// <summary>
-        /// Provide an override for the automatic mapping.
-        /// This operation is only legal after providing a binding and before the first call to .Get().
-        /// If the <paramref name="instance"/> implements IDisposable, the responsibility to dispose it remains the caller's, disposing the kernel doesn't do that.
-        /// </summary>
-        /// <typeparam name="T">The mapped type.</typeparam>
-        /// <param name="instance">The instance to bind.</param>>
-        public void ReBindInstance<T>(T instance)
-            where T : class
-        {
-            if (instance == null)
-            {
-                throw new ArgumentNullException(nameof(instance));
-            }
-
-            this.ThrowIfDisposed();
-            this.ThrowIfHasResolved();
-            this.RebindCore(typeof(T), instance);
-        }
-
-        /// <summary>
-        /// Provide an override for the automatic mapping.
-        /// This operation is only legal after providing a binding and before the first call to .Get().
-        /// The instance is created lazily by <paramref name="create"/> and is cached for subsequent calls to .Get().
-        /// The instance is owned by the kernel, that is, calling .Dispose() on the kernel disposes the instance, if its type implements IDisposable.
-        /// </summary>
-        /// <typeparam name="T">The mapped type.</typeparam>
-        /// <param name="create">The factory function used to create the instance.</param>
-        public void ReBindFactory<T>(Func<T> create)
-            where T : class
-        {
-            if (create == null)
-            {
-                throw new ArgumentNullException(nameof(create));
-            }
-
-            this.ThrowIfDisposed();
-            this.ThrowIfHasResolved();
-            this.RebindCore(typeof(T), new Factory<T>(create));
-        }
-
-        /// <summary>
         /// Get the singleton instance of <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The type to resolve.</typeparam>
@@ -277,19 +213,6 @@
                 key,
                 t => value,
                 (type, o) => throw new InvalidOperationException($"{type.PrettyName()} already has a binding to {(o as Type)?.PrettyName() ?? o}"));
-        }
-
-        private void RebindCore(Type key, object value)
-        {
-            if (this.bindings == null)
-            {
-                throw new InvalidOperationException($"{key.PrettyName()} does not have a binding.");
-            }
-
-            this.bindings.AddOrUpdate(
-                key,
-                t => throw new InvalidOperationException($"{t.PrettyName()} does not have a binding."),
-                (t1, t2) => value);
         }
 
         private object GetCore(Type type, Node visited = null)
