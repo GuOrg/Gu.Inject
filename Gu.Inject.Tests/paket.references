@@ -8,3 +8,4 @@ group Analyzers
 group Test
   Moq
   NUnit
+  NUnit3TestAdapter
