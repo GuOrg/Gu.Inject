@@ -1,7 +1,10 @@
+Microsoft.CodeAnalysis.CSharp.Workspaces
+Gu.Roslyn.Extensions
+
 group Analyzers
   AsyncUsageAnalyzers
   Gu.Analyzers
   IDisposableAnalyzers
-  ReflectionAnalyzers
   Microsoft.CodeAnalysis.FxCopAnalyzers
   StyleCop.Analyzers
+
