@@ -24,10 +24,11 @@
         /// </summary>
         /// <typeparam name="TInterface">The type to map.</typeparam>
         /// <typeparam name="TConcrete">The mapped type.</typeparam>
-        public void Bind<TInterface, TConcrete>()
+        public Kernel<TRoot> Bind<TInterface, TConcrete>()
             where TConcrete : TInterface
         {
             this.Bind(typeof(TInterface), typeof(TConcrete));
+            return this;
         }
 
         /// <summary>
@@ -36,11 +37,12 @@
         /// <typeparam name="TInterface1">The first type to map.</typeparam>
         /// <typeparam name="TInterface2">The second type to map.</typeparam>
         /// <typeparam name="TConcrete">The mapped type.</typeparam>
-        public void Bind<TInterface1, TInterface2, TConcrete>()
+        public Kernel<TRoot> Bind<TInterface1, TInterface2, TConcrete>()
             where TConcrete : TInterface1, TInterface2
         {
             this.Bind(typeof(TInterface1), typeof(TConcrete));
             this.Bind(typeof(TInterface2), typeof(TConcrete));
+            return this;
         }
 
         /// <summary>
@@ -48,7 +50,7 @@
         /// </summary>
         /// <param name="from">The type to map.</param>
         /// <param name="to">The mapped type.</param>
-        public void Bind(Type from, Type to)
+        public Kernel<TRoot> Bind(Type from, Type to)
         {
             if (from == null)
             {
@@ -63,6 +65,7 @@
             this.ThrowIfDisposed();
             this.ThrowIfHasResolved();
             this.BindCore(from, to);
+            return this;
         }
 
         /// <summary>
@@ -71,7 +74,7 @@
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="instance">The instance to bind.</param>
-        public void Bind<T>(T instance)
+        public Kernel<TRoot> Bind<T>(T instance)
             where T : class
         {
             if (instance == null)
@@ -82,6 +85,7 @@
             this.ThrowIfDisposed();
             this.ThrowIfHasResolved();
             this.BindCore(typeof(T), instance);
+            return this;
         }
 
         /// <summary>
@@ -91,7 +95,7 @@
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="create">The factory function used to create the instance.</param>
-        public void Bind<T>(Func<T> create)
+        public Kernel<TRoot> Bind<T>(Func<T> create)
             where T : class
         {
             if (create == null)
@@ -102,6 +106,7 @@
             this.ThrowIfDisposed();
             this.ThrowIfHasResolved();
             this.BindCore(typeof(T), new Factory<T>(create));
+            return this;
         }
 
         /// <summary>
@@ -111,7 +116,7 @@
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="create">The instance to bind.</param>
-        public void Bind<T>(Func<IGetter, T> create)
+        public Kernel<TRoot> Bind<T>(Func<IGetter, T> create)
             where T : class
         {
             if (create == null)
@@ -122,6 +127,7 @@
             this.ThrowIfDisposed();
             this.ThrowIfHasResolved();
             this.BindCore(typeof(T), new Factory<T>(() => create(this)));
+            return this;
         }
 
         /// <summary>
@@ -132,7 +138,7 @@
         /// <typeparam name="TArg">The type of the argument. The container will resolve the argument and inject it. </typeparam>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="create">The instance to bind.</param>
-        public void Bind<TArg, T>(Func<TArg, T> create)
+        public Kernel<TRoot> Bind<TArg, T>(Func<TArg, T> create)
             where T : class
         {
             if (create == null)
@@ -143,6 +149,7 @@
             this.ThrowIfDisposed();
             this.ThrowIfHasResolved();
             this.BindCore(typeof(T), new Factory<TArg, T>(create));
+            return this;
         }
 
         /// <summary>
