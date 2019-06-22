@@ -44,5 +44,70 @@ namespace RoslynSandbox
 
             AnalyzerAssert.Diagnostics(Analyzer, ExpectedDiagnostic.WithMessage("Use AutoBind() to wire up bindings."), autoBindCode, testCode);
         }
+
+        [Test]
+        public static void WhenNoExtension()
+        {
+            var autoBindCode = @"
+namespace RoslynSandbox
+{
+    using Gu.Inject;
+
+    public static class KernelExtensions
+    {
+    }
+}";
+
+            var testCode = @"
+namespace RoslynSandbox
+{
+    using Gu.Inject;
+
+    public class C
+    {
+        public C()
+        {
+            var x = ↓new Kernel<C>();
+        }
+    }
+}";
+
+            AnalyzerAssert.Diagnostics(Analyzer, ExpectedDiagnostic, autoBindCode, testCode);
+        }
+
+        [Test]
+        public static void WhenCallingBind()
+        {
+            var autoBindCode = @"
+namespace RoslynSandbox
+{
+    using Gu.Inject;
+
+    public static class KernelExtensions
+    {
+        public static Kernel<C> AutoBind(this Kernel<C> kernel)
+        { 
+            kernel.Bind(() => new C());
+            return kernel;
+        }
+    }
+}";
+
+            var testCode = @"
+namespace RoslynSandbox
+{
+    using Gu.Inject;
+
+    public class C
+    {
+        public C()
+        {
+            var x = ↓new Kernel<C>().Bind(() => new C());
+        }
+    }
+}";
+
+            AnalyzerAssert.Diagnostics(Analyzer, ExpectedDiagnostic, autoBindCode, testCode);
+        }
     }
 }

@@ -62,7 +62,40 @@ namespace RoslynSandbox
         }
 
         [Test]
-        public static void WhenKernelOfObjectd()
+        public static void WhenKernelAndCallingBindAndAutoBind()
+        {
+            var autoBindCode = @"
+namespace RoslynSandbox
+{
+    using Gu.Inject;
+
+    public static class KernelExtensions
+    {
+        public static Kernel<C> AutoBind(this Kernel<C> kernel)
+        { 
+            kernel.Bind(() => new C());
+            return kernel;
+        }
+    }
+}";
+            var testCode = @"
+namespace RoslynSandbox
+{
+    using Gu.Inject;
+
+    public class C
+    {
+        public C()
+        {
+            var x = new Kernel<C>().Bind(() => new C()).AutoBind();
+        }
+    }
+}";
+            AnalyzerAssert.Valid(Analyzer, autoBindCode, testCode);
+        }
+
+        [Test]
+        public static void WhenKernelOfObject()
         {
             var testCode = @"
 namespace RoslynSandbox

@@ -32,11 +32,29 @@
                 type == KnownSymbol.KernelOfT &&
                 namedType.TypeArguments.TrySingle(out var typeArg) &&
                 typeArg != KnownSymbol.Object &&
-                !objectCreation.Parent.IsKind(SyntaxKind.SimpleMemberAccessExpression))
+                !IsAutoBound(objectCreation))
             {
                 context.ReportDiagnostic(Diagnostic.Create(
                     GuInj001AddAutoBind.Descriptor,
                     objectCreation.GetLocation()));
+            }
+
+            bool IsAutoBound(ObjectCreationExpressionSyntax candidate)
+            {
+                var parent = objectCreation.Parent;
+                while (parent is MemberAccessExpressionSyntax memberAccess &&
+                       memberAccess.Parent is InvocationExpressionSyntax invocation)
+                {
+                    if (invocation.TryGetMethodName(out var name) &&
+                        name == "AutoBind")
+                    {
+                        return true;
+                    }
+
+                    parent = invocation.Parent;
+                }
+
+                return false;
             }
         }
     }

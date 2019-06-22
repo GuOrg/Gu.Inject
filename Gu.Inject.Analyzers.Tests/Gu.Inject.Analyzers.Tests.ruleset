@@ -122,4 +122,7 @@
     <Rule Id="UseAsyncSuffix" Action="None" />
     <Rule Id="AvoidAsyncSuffix" Action="None" />
   </Rules>
+  <Rules AnalyzerId="Microsoft.NetCore.Analyzers" RuleNamespace="Microsoft.NetCore.Analyzers">
+    <Rule Id="CA1303" Action="None" />
+  </Rules>
 </RuleSet>

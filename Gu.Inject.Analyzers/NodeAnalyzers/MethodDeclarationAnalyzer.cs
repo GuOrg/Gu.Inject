@@ -30,7 +30,6 @@
                 parameter.Type is INamedTypeSymbol kernelType &&
                 kernelType.TypeArguments.TrySingle(out var rootType))
             {
-
             }
         }
     }
