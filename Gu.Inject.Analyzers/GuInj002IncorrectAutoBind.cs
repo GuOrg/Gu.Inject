@@ -2,9 +2,9 @@
 {
     using Microsoft.CodeAnalysis;
 
-    public static class GuInj001IncorrectAutoBind
+    public static class GuInj002IncorrectAutoBind
     {
-        public const string DiagnosticId = "GUINJ001";
+        public const string DiagnosticId = "GUINJ002";
 
         public static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
             id: DiagnosticId,
