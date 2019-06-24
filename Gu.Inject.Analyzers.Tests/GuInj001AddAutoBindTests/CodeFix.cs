@@ -160,6 +160,56 @@ namespace RoslynSandbox
         }
 
         [Test]
+        public static void WhenNoExtensionClass()
+        {
+            var testCode = @"
+namespace RoslynSandbox
+{
+    using Gu.Inject;
+
+    public class C
+    {
+        public C()
+        {
+            var x = ↓new Container<C>();
+        }
+    }
+}";
+
+            var fixedAutoBindCode = @"
+namespace RoslynSandbox
+{
+    using Gu.Inject;
+
+    [System.Runtime.CompilerServices.CompilerGenerated]
+    public static class ContainerExtensions
+    {
+        public static Container<C> AutoBind(this Container<C> container)
+        { 
+            container.Bind(() => new C());
+            return container;
+        }
+    }
+}";
+
+            var fixedTestCode = @"
+namespace RoslynSandbox
+{
+    using Gu.Inject;
+
+    public class C
+    {
+        public C()
+        {
+            var x = new Container<C>().AutoBind();
+        }
+    }
+}";
+
+            RoslynAssert.FixAll(Analyzer, Fix, ExpectedDiagnostic, new[] { testCode }, new[] { fixedAutoBindCode, fixedTestCode });
+        }
+
+        [Test]
         public static void WhenCallingBind()
         {
             var autoBindCode = @"
