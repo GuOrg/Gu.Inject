@@ -163,9 +163,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node8()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -193,9 +191,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node10()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -289,9 +285,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node16()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -303,9 +297,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node17()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -317,9 +309,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node18()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -331,9 +321,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node19()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -345,9 +333,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node20()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -359,9 +345,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node21()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -373,9 +357,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node22()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -387,9 +369,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node23()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -417,9 +397,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node25()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -431,9 +409,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node26()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -445,9 +421,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node27()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -459,9 +433,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node28()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -473,9 +445,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node29()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -487,9 +457,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node30()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -501,9 +469,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node31()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -515,9 +481,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node32()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -529,9 +493,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node33()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -543,9 +505,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node34()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -557,9 +517,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node35()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -571,9 +529,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node36()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -585,9 +541,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node37()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -599,9 +553,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node38()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -613,9 +565,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node39()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -627,9 +577,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node40()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -641,9 +589,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node41()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -655,9 +601,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node42()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -669,9 +613,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node43()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -683,9 +625,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node44()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -697,9 +637,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node45()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -711,9 +649,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node46()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -725,9 +661,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node47()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -739,9 +673,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node48()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
@@ -753,9 +685,7 @@ namespace Gu.Inject.Tests.Types
         {
             public Node49()
             {
-                this.Children = new INode[]
-                {
-                };
+                this.Children = System.Array.Empty<INode>();
             }
 
             public IReadOnlyList<INode> Children { get; }
