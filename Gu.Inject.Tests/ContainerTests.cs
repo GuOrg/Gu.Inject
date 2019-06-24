@@ -6,7 +6,7 @@
     using Gu.Inject.Tests.Types;
     using NUnit.Framework;
 
-    public partial class KernelTests
+    public partial class ContainerTests
     {
         [TestCase(typeof(DefaultCtor), typeof(DefaultCtor))]
         [TestCase(typeof(IDefaultCtor), typeof(DefaultCtor))]
@@ -36,20 +36,20 @@
         [TestCase(typeof(ManyToOne.IFoo), typeof(ManyToOne.Foo))]
         public void Get(Type type, Type expected)
         {
-            using (var kernel = new Kernel<object>())
+            using (var container = new Container<object>())
             {
-                var actual = kernel.Get(type);
+                var actual = container.Get(type);
                 Assert.AreEqual(expected.PrettyName(), actual.GetType().PrettyName());
-                Assert.AreSame(actual, kernel.Get(expected));
+                Assert.AreSame(actual, container.Get(expected));
             }
         }
 
         [Test]
         public void InjectsSingletons2()
         {
-            using (var kernel = new Kernel<object>())
+            using (var container = new Container<object>())
             {
-                var actual = kernel.Get<WithTwo<WithTwo<ManyToOne.IFoo, ManyToOne.IFooBase1>, With<DefaultCtor>>>();
+                var actual = container.Get<WithTwo<WithTwo<ManyToOne.IFoo, ManyToOne.IFooBase1>, With<DefaultCtor>>>();
                 Assert.AreSame(actual.Value1.Value1, actual.Value1.Value2);
             }
         }
@@ -57,9 +57,9 @@
         [Test]
         public void InjectsSingletons1()
         {
-            using (var kernel = new Kernel<object>())
+            using (var container = new Container<object>())
             {
-                var actual = kernel.Get<WithTwo<DefaultCtor, DefaultCtor>>();
+                var actual = container.Get<WithTwo<DefaultCtor, DefaultCtor>>();
                 Assert.AreSame(actual.Value1, actual.Value2);
             }
         }
@@ -67,9 +67,9 @@
         [Test]
         public void GetGraph50()
         {
-            using (var kernel = new Kernel<object>())
+            using (var container = new Container<object>())
             {
-                var root = kernel.Get<Graph50.Node1>();
+                var root = container.Get<Graph50.Node1>();
                 var allChildren = root.AllChildren.ToArray();
                 Console.WriteLine($"Total count: {allChildren.Length}");
                 var distinct = allChildren.Distinct().ToArray();
@@ -82,9 +82,9 @@
         public void DisposesCreated()
         {
             Disposable actual;
-            using (var kernel = new Kernel<object>())
+            using (var container = new Container<object>())
             {
-                actual = kernel.Get<Disposable>();
+                actual = container.Get<Disposable>();
                 Assert.AreEqual(0, actual.Disposed);
             }
 
@@ -94,17 +94,17 @@
         [Test]
         public void NotifiesCreating()
         {
-            using (var kernel = new Kernel<object>())
+            using (var container = new Container<object>())
             {
                 var actual = new List<Type>();
-                kernel.Creating += (sender, type) => actual.Add(type);
-                kernel.Bind(() =>
+                container.Creating += (sender, type) => actual.Add(type);
+                container.Bind(() =>
                 {
                     // check that we notify before creating.
                     CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
                     return new DefaultCtor();
                 });
-                kernel.Get<DefaultCtor>();
+                container.Get<DefaultCtor>();
                 CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
             }
         }

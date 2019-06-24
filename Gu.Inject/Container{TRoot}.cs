@@ -9,7 +9,7 @@
     /// <summary>
     /// A factory for resolving object graphs.
     /// </summary>
-    public sealed class Kernel<TRoot> : IDisposable, IGetter
+    public sealed class Container<TRoot> : IDisposable, IGetter
     {
         private ConcurrentDictionary<Type, object> created = ConcurrentDictionaryPool<Type, object>.Borrow();
         private ConcurrentDictionary<Type, object> bindings;
@@ -24,7 +24,7 @@
         /// </summary>
         /// <typeparam name="TInterface">The type to map.</typeparam>
         /// <typeparam name="TConcrete">The mapped type.</typeparam>
-        public Kernel<TRoot> Bind<TInterface, TConcrete>()
+        public Container<TRoot> Bind<TInterface, TConcrete>()
             where TConcrete : TInterface
         {
             this.Bind(typeof(TInterface), typeof(TConcrete));
@@ -37,7 +37,7 @@
         /// <typeparam name="TInterface1">The first type to map.</typeparam>
         /// <typeparam name="TInterface2">The second type to map.</typeparam>
         /// <typeparam name="TConcrete">The mapped type.</typeparam>
-        public Kernel<TRoot> Bind<TInterface1, TInterface2, TConcrete>()
+        public Container<TRoot> Bind<TInterface1, TInterface2, TConcrete>()
             where TConcrete : TInterface1, TInterface2
         {
             this.Bind(typeof(TInterface1), typeof(TConcrete));
@@ -50,7 +50,7 @@
         /// </summary>
         /// <param name="from">The type to map.</param>
         /// <param name="to">The mapped type.</param>
-        public Kernel<TRoot> Bind(Type from, Type to)
+        public Container<TRoot> Bind(Type from, Type to)
         {
             if (from == null)
             {
@@ -70,11 +70,11 @@
 
         /// <summary>
         /// Provide an override for the automatic mapping.
-        /// If the <paramref name="instance"/> implements IDisposable, the responsibility to dispose it remains the caller's, disposing the kernel doesn't do that.
+        /// If the <paramref name="instance"/> implements IDisposable, the responsibility to dispose it remains the caller's, disposing the container doesn't do that.
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="instance">The instance to bind.</param>
-        public Kernel<TRoot> Bind<T>(T instance)
+        public Container<TRoot> Bind<T>(T instance)
             where T : class
         {
             if (instance == null)
@@ -91,11 +91,11 @@
         /// <summary>
         /// Provide an override for the automatic mapping.
         /// The instance is created lazily by <paramref name="create"/> and is cached for subsequent calls to .Get().
-        /// The instance is owned by the kernel, that is, calling .Dispose() on the kernel disposes the instance, if its type implements IDisposable.
+        /// The instance is owned by the container, that is, calling .Dispose() on the container disposes the instance, if its type implements IDisposable.
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="create">The factory function used to create the instance.</param>
-        public Kernel<TRoot> Bind<T>(Func<T> create)
+        public Container<TRoot> Bind<T>(Func<T> create)
             where T : class
         {
             if (create == null)
@@ -111,12 +111,12 @@
 
         /// <summary>
         /// Provide an override for the automatic mapping.
-        /// The kernel will keep <paramref name="create"/> alive until disposed.
-        /// <paramref name="create"/> is disposed by the kernel if disposable.
+        /// The container will keep <paramref name="create"/> alive until disposed.
+        /// <paramref name="create"/> is disposed by the container if disposable.
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="create">The instance to bind.</param>
-        public Kernel<TRoot> Bind<T>(Func<IGetter, T> create)
+        public Container<TRoot> Bind<T>(Func<IGetter, T> create)
             where T : class
         {
             if (create == null)
@@ -132,13 +132,13 @@
 
         /// <summary>
         /// Provide an override for the automatic mapping.
-        /// The kernel will keep <paramref name="create"/> alive until disposed.
-        /// <paramref name="create"/> is disposed by the kernel if disposable.
+        /// The container will keep <paramref name="create"/> alive until disposed.
+        /// <paramref name="create"/> is disposed by the container if disposable.
         /// </summary>
         /// <typeparam name="TArg">The type of the argument. The container will resolve the argument and inject it. </typeparam>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="create">The instance to bind.</param>
-        public Kernel<TRoot> Bind<TArg, T>(Func<TArg, T> create)
+        public Container<TRoot> Bind<TArg, T>(Func<TArg, T> create)
             where T : class
         {
             if (create == null)

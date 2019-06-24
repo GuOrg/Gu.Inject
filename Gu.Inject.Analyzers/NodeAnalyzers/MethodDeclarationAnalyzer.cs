@@ -11,7 +11,7 @@
     {
         /// <inheritdoc/>
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(
-            GuInj001IncorrectAutoBind.Descriptor);
+            GuInj002IncorrectAutoBind.Descriptor);
 
         /// <inheritdoc/>
         public override void Initialize(AnalysisContext context)
@@ -26,9 +26,9 @@
             if (context.ContainingSymbol is IMethodSymbol method &&
                 method.HasCompilerGeneratedAttribute() &&
                 method.Parameters.TrySingle(out var parameter) &&
-                parameter.Type == KnownSymbol.KernelOfT &&
-                parameter.Type is INamedTypeSymbol kernelType &&
-                kernelType.TypeArguments.TrySingle(out var rootType))
+                parameter.Type == KnownSymbol.ContainerOfT &&
+                parameter.Type is INamedTypeSymbol containerType &&
+                containerType.TypeArguments.TrySingle(out var rootType))
             {
             }
         }

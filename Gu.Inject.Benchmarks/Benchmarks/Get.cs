@@ -4,15 +4,20 @@ namespace Gu.Inject.Benchmarks
     using BenchmarkDotNet.Attributes;
     using Ninject;
     using Ninject.Modules;
-    using SimpleInjector;
 
     [MemoryDiagnoser]
     public abstract class Get<T>
         where T : class
     {
         private static readonly Ninject.StandardKernel StandardKernel = new Ninject.StandardKernel(new Module());
-        private static readonly Container Container = new Container();
-        private static readonly Kernel<object> Kernel = new Kernel<object>();
+        private static readonly SimpleInjector.Container SimpleInjectorContainer = new SimpleInjector.Container();
+        private static readonly Container<object> Container = new Container<object>();
+
+        [Benchmark(Baseline = true)]
+        public object GuInject()
+        {
+            return Container.Get<T>();
+        }
 
         [Benchmark]
         public object Ninject()
@@ -23,13 +28,7 @@ namespace Gu.Inject.Benchmarks
         [Benchmark]
         public object SimpleInjector()
         {
-            return Container.GetInstance<T>();
-        }
-
-        [Benchmark(Baseline = true)]
-        public object GuInject()
-        {
-            return Kernel.Get<T>();
+            return SimpleInjectorContainer.GetInstance<T>();
         }
 
         private class Module : NinjectModule

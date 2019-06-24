@@ -6,7 +6,7 @@
     using Moq;
     using NUnit.Framework;
 
-    public partial class KernelTests
+    public partial class ContainerTests
     {
         public class Bind
         {
@@ -25,22 +25,22 @@
             [TestCase(typeof(InheritNonAbstract.Foo), typeof(InheritNonAbstract.Foo))]
             public void BindThenGet(Type from, Type to)
             {
-                using (var kernel = new Kernel<object>())
+                using (var container = new Container<object>())
                 {
-                    kernel.Bind(from, to);
-                    var actual = kernel.Get(from);
-                    Assert.AreSame(actual, kernel.Get(to));
+                    container.Bind(from, to);
+                    var actual = container.Get(from);
+                    Assert.AreSame(actual, container.Get(to));
                 }
             }
 
             [Test]
             public void BindInstanceThenGet()
             {
-                using (var kernel = new Kernel<object>())
+                using (var container = new Container<object>())
                 {
                     var instance = new DefaultCtor();
-                    kernel.Bind(instance);
-                    var actual = kernel.Get<DefaultCtor>();
+                    container.Bind(instance);
+                    var actual = container.Get<DefaultCtor>();
                     Assert.AreSame(actual, instance);
                 }
             }
@@ -50,15 +50,15 @@
             {
                 var instance = new With<DefaultCtor>(new DefaultCtor());
 
-                using (var kernel = new Kernel<object>())
+                using (var container = new Container<object>())
                 {
-                    kernel.Bind(instance);
-                    kernel.Bind<IWith<DefaultCtor>, With<DefaultCtor>>();
+                    container.Bind(instance);
+                    container.Bind<IWith<DefaultCtor>, With<DefaultCtor>>();
 
-                    object actual = kernel.Get<With<DefaultCtor>>();
+                    object actual = container.Get<With<DefaultCtor>>();
                     Assert.AreSame(actual, instance);
 
-                    actual = kernel.Get<IWith<DefaultCtor>>();
+                    actual = container.Get<IWith<DefaultCtor>>();
                     Assert.AreSame(actual, instance);
                 }
             }
@@ -66,11 +66,11 @@
             [Test]
             public void BindTwoThenGet()
             {
-                using (var kernel = new Kernel<object>())
+                using (var container = new Container<object>())
                 {
-                    kernel.Bind<IWith, IWith<DefaultCtor>, With<DefaultCtor>>();
-                    Assert.AreSame(kernel.Get<IWith<DefaultCtor>>(), kernel.Get<With<DefaultCtor>>());
-                    Assert.AreSame(kernel.Get<IWith>(), kernel.Get<With<DefaultCtor>>());
+                    container.Bind<IWith, IWith<DefaultCtor>, With<DefaultCtor>>();
+                    Assert.AreSame(container.Get<IWith<DefaultCtor>>(), container.Get<With<DefaultCtor>>());
+                    Assert.AreSame(container.Get<IWith>(), container.Get<With<DefaultCtor>>());
                 }
             }
 
@@ -79,10 +79,10 @@
             {
                 using (var disposable = new Disposable())
                 {
-                    using (var kernel = new Kernel<object>())
+                    using (var container = new Container<object>())
                     {
-                        kernel.Bind(disposable);
-                        var actual = kernel.Get<Disposable>();
+                        container.Bind(disposable);
+                        var actual = container.Get<Disposable>();
                         Assert.AreSame(actual, disposable);
                     }
 
@@ -94,10 +94,10 @@
             public void BindFactory()
             {
                 Mock<IDisposable> mock;
-                using (var kernel = new Kernel<object>())
+                using (var container = new Container<object>())
                 {
-                    kernel.Bind(Mock.Of<IDisposable>);
-                    var actual = kernel.Get<IDisposable>();
+                    container.Bind(Mock.Of<IDisposable>);
+                    var actual = container.Get<IDisposable>();
                     mock = Mock.Get(actual);
                     mock.Setup(x => x.Dispose());
                 }
@@ -108,24 +108,24 @@
             [Test]
             public void BindFactoryWithArgument()
             {
-                using (var kernel = new Kernel<object>())
+                using (var container = new Container<object>())
                 {
-                    kernel.Bind((DefaultCtor x) => new With<DefaultCtor>(x));
-                    var actual = kernel.Get<With<DefaultCtor>>();
-                    Assert.AreSame(actual, kernel.Get<With<DefaultCtor>>());
-                    Assert.AreSame(actual.Value, kernel.Get<DefaultCtor>());
+                    container.Bind((DefaultCtor x) => new With<DefaultCtor>(x));
+                    var actual = container.Get<With<DefaultCtor>>();
+                    Assert.AreSame(actual, container.Get<With<DefaultCtor>>());
+                    Assert.AreSame(actual.Value, container.Get<DefaultCtor>());
                 }
             }
 
             [Test]
             public void BindFactoryWithGetter()
             {
-                using (var kernel = new Kernel<object>())
+                using (var container = new Container<object>())
                 {
-                    kernel.Bind(x => new With<DefaultCtor>(x.Get<DefaultCtor>()));
-                    var actual = kernel.Get<With<DefaultCtor>>();
-                    Assert.AreSame(actual, kernel.Get<With<DefaultCtor>>());
-                    Assert.AreSame(actual.Value, kernel.Get<DefaultCtor>());
+                    container.Bind(x => new With<DefaultCtor>(x.Get<DefaultCtor>()));
+                    var actual = container.Get<With<DefaultCtor>>();
+                    Assert.AreSame(actual, container.Get<With<DefaultCtor>>());
+                    Assert.AreSame(actual.Value, container.Get<DefaultCtor>());
                 }
             }
 
@@ -133,11 +133,11 @@
             public void BindFactoryWithArgumentDisposed()
             {
                 DisposableWith<DefaultCtor> actual;
-                using (var kernel = new Kernel<object>())
+                using (var container = new Container<object>())
                 {
-                    kernel.Bind((DefaultCtor x) => new DisposableWith<DefaultCtor>(x));
-                    actual = kernel.Get<DisposableWith<DefaultCtor>>();
-                    Assert.AreSame(actual.Value, kernel.Get<DefaultCtor>());
+                    container.Bind((DefaultCtor x) => new DisposableWith<DefaultCtor>(x));
+                    actual = container.Get<DisposableWith<DefaultCtor>>();
+                    Assert.AreSame(actual.Value, container.Get<DefaultCtor>());
                 }
 
                 Assert.AreEqual(1, actual.Disposed);

@@ -3,7 +3,7 @@
     public enum Constructor
     {
         /// <summary>
-        /// This means that the kernel will throw when resolving a type that has more than one constructor.
+        /// This means that the container will throw when resolving a type that has more than one constructor.
         /// For typoes with more than one constructor explicit bindings must be provided.
         /// </summary>
         AllowOnlyOne,

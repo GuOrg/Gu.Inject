@@ -29,7 +29,7 @@
                 objectCreation.Type is GenericNameSyntax &&
                 context.SemanticModel.TryGetType(objectCreation, context.CancellationToken, out var type) &&
                 type is INamedTypeSymbol namedType &&
-                type == KnownSymbol.KernelOfT &&
+                type == KnownSymbol.ContainerOfT &&
                 namedType.TypeArguments.TrySingle(out var typeArg) &&
                 typeArg != KnownSymbol.Object &&
                 !IsAutoBound(objectCreation))

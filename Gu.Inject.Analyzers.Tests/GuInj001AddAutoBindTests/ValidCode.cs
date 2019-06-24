@@ -10,7 +10,7 @@
         private static readonly DiagnosticAnalyzer Analyzer = new ObjectCreationAnalyzer();
 
         [Test]
-        public static void WhenNotKernel()
+        public static void WhenNotcontainer()
         {
             var testCode = @"
 namespace RoslynSandbox
@@ -29,19 +29,19 @@ namespace RoslynSandbox
         }
 
         [Test]
-        public static void WhenKernelAndCallingAutoBind()
+        public static void WhencontainerAndCallingAutoBind()
         {
             var autoBindCode = @"
 namespace RoslynSandbox
 {
     using Gu.Inject;
 
-    public static class KernelExtensions
+    public static class ContainerExtensions
     {
-        public static Kernel<C> AutoBind(this Kernel<C> kernel)
+        public static Container<C> AutoBind(this Container<C> container)
         { 
-            kernel.Bind(() => new C());
-            return kernel;
+            container.Bind(() => new C());
+            return container;
         }
     }
 }";
@@ -54,7 +54,7 @@ namespace RoslynSandbox
     {
         public C()
         {
-            var x = new Kernel<C>().AutoBind();
+            var x = new Container<C>().AutoBind();
         }
     }
 }";
@@ -62,19 +62,19 @@ namespace RoslynSandbox
         }
 
         [Test]
-        public static void WhenKernelAndCallingBindAndAutoBind()
+        public static void WhencontainerAndCallingBindAndAutoBind()
         {
             var autoBindCode = @"
 namespace RoslynSandbox
 {
     using Gu.Inject;
 
-    public static class KernelExtensions
+    public static class ContainerExtensions
     {
-        public static Kernel<C> AutoBind(this Kernel<C> kernel)
+        public static Container<C> AutoBind(this Container<C> container)
         { 
-            kernel.Bind(() => new C());
-            return kernel;
+            container.Bind(() => new C());
+            return container;
         }
     }
 }";
@@ -87,7 +87,7 @@ namespace RoslynSandbox
     {
         public C()
         {
-            var x = new Kernel<C>().Bind(() => new C()).AutoBind();
+            var x = new Container<C>().Bind(() => new C()).AutoBind();
         }
     }
 }";
@@ -95,7 +95,7 @@ namespace RoslynSandbox
         }
 
         [Test]
-        public static void WhenKernelOfObject()
+        public static void WhencontainerOfObject()
         {
             var testCode = @"
 namespace RoslynSandbox
@@ -106,7 +106,7 @@ namespace RoslynSandbox
     {
         public C()
         {
-            var x = new Kernel<object>();
+            var x = new Container<object>();
         }
     }
 }";

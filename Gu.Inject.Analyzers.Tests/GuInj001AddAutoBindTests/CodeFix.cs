@@ -22,12 +22,12 @@ namespace RoslynSandbox
     using Gu.Inject;
 
     [System.Runtime.CompilerServices.CompilerGenerated]
-    public static class KernelExtensions
+    public static class ContainerExtensions
     {
-        public static Kernel<C> AutoBind(this Kernel<C> kernel)
+        public static Container<C> AutoBind(this Container<C> container)
         { 
-            kernel.Bind(() => new C());
-            return kernel;
+            container.Bind(() => new C());
+            return container;
         }
     }
 }";
@@ -40,7 +40,7 @@ namespace RoslynSandbox
     {
         public C()
         {
-            var x = ↓new Kernel<C>();
+            var x = ↓new Container<C>();
         }
     }
 }";
@@ -57,12 +57,12 @@ namespace RoslynSandbox
     using Gu.Inject;
 
     [System.Runtime.CompilerServices.CompilerGenerated]
-    public static class KernelExtensions
+    public static class ContainerExtensions
     {
-        public static Kernel<C> AutoBind(this Kernel<C> kernel)
+        public static Container<C> AutoBind(this Container<C> container)
         { 
-            kernel.Bind(() => new C());
-            return kernel;
+            container.Bind(() => new C());
+            return container;
         }
     }
 }";
@@ -76,7 +76,7 @@ namespace RoslynSandbox
     {
         public C()
         {
-            var x = ↓new Kernel<C>();
+            var x = ↓new Container<C>();
         }
     }
 }";
@@ -90,7 +90,7 @@ namespace RoslynSandbox
     {
         public C()
         {
-            var x = new Kernel<C>().AutoBind();
+            var x = new Container<C>().AutoBind();
         }
     }
 }";
@@ -107,7 +107,7 @@ namespace RoslynSandbox
     using Gu.Inject;
 
     [System.Runtime.CompilerServices.CompilerGenerated]
-    public static class KernelExtensions
+    public static class ContainerExtensions
     {
     }
 }";
@@ -121,7 +121,7 @@ namespace RoslynSandbox
     {
         public C()
         {
-            var x = ↓new Kernel<C>();
+            var x = ↓new Container<C>();
         }
     }
 }";
@@ -132,12 +132,12 @@ namespace RoslynSandbox
     using Gu.Inject;
 
     [System.Runtime.CompilerServices.CompilerGenerated]
-    public static class KernelExtensions
+    public static class ContainerExtensions
     {
-        public static Kernel<C> AutoBind(this Kernel<C> kernel)
+        public static Container<C> AutoBind(this Container<C> container)
         { 
-            kernel.Bind(() => new C());
-            return kernel;
+            container.Bind(() => new C());
+            return container;
         }
     }
 }";
@@ -151,7 +151,7 @@ namespace RoslynSandbox
     {
         public C()
         {
-            var x = new Kernel<C>().AutoBind();
+            var x = new Container<C>().AutoBind();
         }
     }
 }";
@@ -168,12 +168,12 @@ namespace RoslynSandbox
     using Gu.Inject;
 
     [System.Runtime.CompilerServices.CompilerGenerated]
-    public static class KernelExtensions
+    public static class ContainerExtensions
     {
-        public static Kernel<C> AutoBind(this Kernel<C> kernel)
+        public static Container<C> AutoBind(this Container<C> container)
         { 
-            kernel.Bind(() => new C());
-            return kernel;
+            container.Bind(() => new C());
+            return container;
         }
     }
 }";
@@ -187,7 +187,7 @@ namespace RoslynSandbox
     {
         public C()
         {
-            var x = ↓new Kernel<C>().Bind(() => new C());
+            var x = ↓new Container<C>().Bind(() => new C());
         }
     }
 }";

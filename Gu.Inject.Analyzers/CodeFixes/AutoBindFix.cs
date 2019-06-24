@@ -40,7 +40,7 @@
                                 nameof(AutoBindFix)),
                             diagnostic);
                     }
-                    else if (semanticModel.LookupSymbols(objectCreation.SpanStart, name: "KernelExtensions")
+                    else if (semanticModel.LookupSymbols(objectCreation.SpanStart, name: "ContainerExtensions")
                                           .TrySingle(x => x is ITypeSymbol candidate && candidate.HasCompilerGeneratedAttribute(), out var extensionsType) &&
                              extensionsType.TrySingleDeclaration(context.CancellationToken, out ClassDeclarationSyntax declaration))
                     {
@@ -81,10 +81,10 @@
                     ClassDeclarationSyntax WithExtensionMethod(ClassDeclarationSyntax declaration)
                     {
                         return declaration.AddMembers(Parse.MethodDeclaration(@"
-        public static Kernel<C> AutoBind(this Kernel<C> kernel)
+        public static Container<C> AutoBind(this Container<C> container)
         { 
-            kernel.Bind(() => new C());
-            return kernel;
+            container.Bind(() => new C());
+            return container;
         }").WithLeadingElasticLineFeed()
            .WithTrailingElasticLineFeed());
                     }

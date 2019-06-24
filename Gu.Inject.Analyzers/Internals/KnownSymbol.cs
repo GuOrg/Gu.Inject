@@ -6,6 +6,6 @@
     {
         internal static readonly QualifiedType Object = new QualifiedType("System.Object", "object");
         internal static readonly QualifiedType Boolean = new QualifiedType("System.Boolean", "bool");
-        internal static readonly QualifiedType KernelOfT = new QualifiedType("Gu.Inject.Kernel`1");
+        internal static readonly QualifiedType ContainerOfT = new QualifiedType("Gu.Inject.Container`1");
     }
 }
