@@ -65,7 +65,29 @@
                                 nameof(AutoBindFix)),
                             diagnostic);
                     }
-
+                    else
+                    {
+                        //context.RegisterCodeFix(
+                        //    CodeAction.Create(
+                        //        "Generate and call AutoBind()",
+                        //        cancellationToken =>
+                        //        {
+                        //            var sln = context.Document.Project.Solution;
+                        //            return Task.FromResult(
+                        //                sln.WithDocumentSyntaxRoot(
+                        //                        context.Document.Id,
+                        //                        WithCallToAutoBind())
+                        //                    .AddDocument(
+                        //                        DocumentId.CreateNewId(context.Document.Project.Id),
+                        //                        "Extensions.generated.cs",
+                        //                        SyntaxFactory.CompilationUnit(""),
+                        //                        context.Document.Folders,
+                        //                        isGenerated: true,
+                        //                        preservationMode: PreservationMode.PreserveValue));
+                        //        },
+                        //        nameof(AutoBindFix)),
+                        //    diagnostic);
+                    }
                     SyntaxNode WithCallToAutoBind()
                     {
                         return syntaxRoot.ReplaceNode(

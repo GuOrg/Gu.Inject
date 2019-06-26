@@ -99,6 +99,57 @@ namespace RoslynSandbox
         }
 
         [Test]
+        public static void WhenExtensionMethodExistsInDifferentNamespace()
+        {
+            var autoBindCode = @"
+namespace RoslynSandbox.Extensions
+{
+    using Gu.Inject;
+
+    [System.Runtime.CompilerServices.CompilerGenerated]
+    public static class ContainerExtensions
+    {
+        public static Container<C> AutoBind(this Container<C> container)
+        { 
+            container.Bind(() => new C());
+            return container;
+        }
+    }
+}";
+
+            var testCode = @"
+namespace RoslynSandbox
+{
+    using Gu.Inject;
+
+    public class C
+    {
+        public C()
+        {
+            var x = ↓new Container<C>();
+        }
+    }
+}";
+
+            var fixedCode = @"
+namespace RoslynSandbox
+{
+    using Gu.Inject;
+    using RoslynSandbox.Extensions;
+
+    public class C
+    {
+        public C()
+        {
+            var x = new Container<C>().AutoBind();
+        }
+    }
+}";
+
+            RoslynAssert.CodeFix(Analyzer, Fix, ExpectedDiagnostic, new[] { autoBindCode, testCode }, fixedCode);
+        }
+
+        [Test]
         public static void WhenNoExtensionMethod()
         {
             var autoBindCode = @"
@@ -146,6 +197,68 @@ namespace RoslynSandbox
 namespace RoslynSandbox
 {
     using Gu.Inject;
+
+    public class C
+    {
+        public C()
+        {
+            var x = new Container<C>().AutoBind();
+        }
+    }
+}";
+
+            RoslynAssert.FixAll(Analyzer, Fix, ExpectedDiagnostic, new[] { autoBindCode, testCode }, new[] { fixedAutoBindCode, fixedTestCode });
+        }
+
+        [Test]
+        public static void WhenNoExtensionMethodClassInDifferentNamespace()
+        {
+            var autoBindCode = @"
+namespace RoslynSandbox.Extensions
+{
+    using Gu.Inject;
+
+    [System.Runtime.CompilerServices.CompilerGenerated]
+    public static class ContainerExtensions
+    {
+    }
+}";
+
+            var testCode = @"
+namespace RoslynSandbox
+{
+    using Gu.Inject;
+
+    public class C
+    {
+        public C()
+        {
+            var x = ↓new Container<C>();
+        }
+    }
+}";
+
+            var fixedAutoBindCode = @"
+namespace RoslynSandbox.Extensions
+{
+    using Gu.Inject;
+
+    [System.Runtime.CompilerServices.CompilerGenerated]
+    public static class ContainerExtensions
+    {
+        public static Container<C> AutoBind(this Container<C> container)
+        { 
+            container.Bind(() => new C());
+            return container;
+        }
+    }
+}";
+
+            var fixedTestCode = @"
+namespace RoslynSandbox
+{
+    using Gu.Inject;
+    using RoslynSandbox.Extensions;
 
     public class C
     {
