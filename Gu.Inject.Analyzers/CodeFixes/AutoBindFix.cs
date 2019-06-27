@@ -3,8 +3,11 @@
     using System.Collections.Immutable;
     using System.Composition;
     using System.Linq;
+    using System.Runtime.InteropServices.ComTypes;
+    using System.Threading;
     using System.Threading.Tasks;
     using Gu.Roslyn.AnalyzerExtensions;
+    using Gu.Roslyn.AnalyzerExtensions.StyleCopComparers;
     using Gu.Roslyn.CodeFixExtensions;
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CodeActions;
@@ -16,6 +19,9 @@
     [Shared]
     public class AutoBindFix : CodeFixProvider
     {
+        private const string AutoBind = nameof(AutoBind);
+        private const string ContainerExtensions = nameof(ContainerExtensions);
+
         public override ImmutableArray<string> FixableDiagnosticIds { get; } = ImmutableArray.Create(
             GuInj001AddAutoBind.DiagnosticId);
 
@@ -25,93 +31,175 @@
                                           .ConfigureAwait(false);
             var semanticModel = await context.Document.GetSemanticModelAsync(context.CancellationToken)
                                              .ConfigureAwait(false);
-            foreach (var diagnostic in context.Diagnostics)
+            if (syntaxRoot is CompilationUnitSyntax compilationUnit)
             {
-                if (syntaxRoot.TryFindNode(diagnostic, out ObjectCreationExpressionSyntax objectCreation) &&
-                    semanticModel.TryGetType(objectCreation, context.CancellationToken, out var type))
+                foreach (var diagnostic in context.Diagnostics)
                 {
-                    if (semanticModel.LookupSymbols(objectCreation.SpanStart, type, "AutoBind", includeReducedExtensionMethods: true)
-                                     .Any(x => x is IMethodSymbol candidate && candidate.Parameters.Length == 0))
+                    if (syntaxRoot.TryFindNode(diagnostic, out ObjectCreationExpressionSyntax objectCreation))
                     {
-                        context.RegisterCodeFix(
-                            CodeAction.Create(
-                                "Call AutoBind()",
-                                _ => Task.FromResult(context.Document.WithSyntaxRoot(WithCallToAutoBind())),
-                                nameof(AutoBindFix)),
-                            diagnostic);
-                    }
-                    else if (semanticModel.LookupSymbols(objectCreation.SpanStart, name: "ContainerExtensions")
-                                          .TrySingle(x => x is ITypeSymbol candidate && candidate.HasCompilerGeneratedAttribute(), out var extensionsType) &&
-                             extensionsType.TrySingleDeclaration(context.CancellationToken, out ClassDeclarationSyntax declaration))
-                    {
-                        context.RegisterCodeFix(
-                            CodeAction.Create(
-                                "Generate and call AutoBind()",
-                                cancellationToken =>
+                        if (TryFindAutoBind(semanticModel, objectCreation, context.CancellationToken, out var containerExtensions, out var autoBind))
+                        {
+                            if (autoBind != null)
+                            {
+                                context.RegisterCodeFix(
+                                    CodeAction.Create(
+                                        $"Call {AutoBind}()",
+                                        _ => Task.FromResult(
+                                            context.Document.WithSyntaxRoot(
+                                                WithCallToAutoBind(autoBind.Name).AddUsing(autoBind.ContainingType, semanticModel))),
+                                        nameof(AutoBindFix)),
+                                    diagnostic);
+                            }
+                            else
+                            {
+                                foreach (var reference in containerExtensions.DeclaringSyntaxReferences)
                                 {
-                                    var sln = context.Document.Project.Solution;
-                                    var extDoc = sln.GetDocument(declaration.SyntaxTree);
-                                    return Task.FromResult(
-                                        sln.WithDocumentSyntaxRoot(
-                                               context.Document.Id,
-                                               WithCallToAutoBind())
-                                           .WithDocumentSyntaxRoot(
-                                               extDoc.Id,
-                                               declaration.SyntaxTree.GetRoot(cancellationToken)
-                                                          .ReplaceNode(
-                                                              declaration,
-                                                              WithExtensionMethod(declaration))));
-                                },
-                                nameof(AutoBindFix)),
-                            diagnostic);
-                    }
-                    else
-                    {
-                        //context.RegisterCodeFix(
-                        //    CodeAction.Create(
-                        //        "Generate and call AutoBind()",
-                        //        cancellationToken =>
-                        //        {
-                        //            var sln = context.Document.Project.Solution;
-                        //            return Task.FromResult(
-                        //                sln.WithDocumentSyntaxRoot(
-                        //                        context.Document.Id,
-                        //                        WithCallToAutoBind())
-                        //                    .AddDocument(
-                        //                        DocumentId.CreateNewId(context.Document.Project.Id),
-                        //                        "Extensions.generated.cs",
-                        //                        SyntaxFactory.CompilationUnit(""),
-                        //                        context.Document.Folders,
-                        //                        isGenerated: true,
-                        //                        preservationMode: PreservationMode.PreserveValue));
-                        //        },
-                        //        nameof(AutoBindFix)),
-                        //    diagnostic);
-                    }
-                    SyntaxNode WithCallToAutoBind()
-                    {
-                        return syntaxRoot.ReplaceNode(
-                            objectCreation,
-                            SyntaxFactory.InvocationExpression(
-                                SyntaxFactory.MemberAccessExpression(
-                                    SyntaxKind.SimpleMemberAccessExpression,
-                                    objectCreation,
-                                    SyntaxFactory
-                                        .IdentifierName("AutoBind"))));
-                    }
+                                    var declaration = (ClassDeclarationSyntax)reference.GetSyntax(context.CancellationToken);
+                                    context.RegisterCodeFix(
+                                        CodeAction.Create(
+                                            $"Generate and call {AutoBind}()",
+                                            cancellationToken =>
+                                            {
+                                                var sln = context.Document.Project.Solution;
+                                                var extDoc = sln.GetDocument(declaration.SyntaxTree);
+                                                return Task.FromResult(
+                                                    sln.WithDocumentSyntaxRoot(
+                                                           context.Document.Id,
+                                                           WithCallToAutoBind(AutoBind).AddUsing(containerExtensions, semanticModel))
+                                                       .WithDocumentSyntaxRoot(
+                                                           extDoc.Id,
+                                                           declaration.SyntaxTree.GetRoot(cancellationToken)
+                                                                      .ReplaceNode(
+                                                                          declaration,
+                                                                          WithExtensionMethod(declaration))));
+                                            },
+                                            nameof(AutoBindFix)),
+                                        diagnostic);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            //context.RegisterCodeFix(
+                            //    CodeAction.Create(
+                            //        $"Generate and call {AutoBind}()",
+                            //        cancellationToken =>
+                            //        {
+                            //            var sln = context.Document.Project.Solution;
+                            //            return Task.FromResult(
+                            //                sln.WithDocumentSyntaxRoot(
+                            //                        context.Document.Id,
+                            //                        WithCallToAutoBind())
+                            //                    .AddDocument(
+                            //                        DocumentId.CreateNewId(context.Document.Project.Id),
+                            //                        "Extensions.generated.cs",
+                            //                        SyntaxFactory.CompilationUnit(""),
+                            //                        context.Document.Folders,
+                            //                        isGenerated: true,
+                            //                        preservationMode: PreservationMode.PreserveValue));
+                            //        },
+                            //        nameof(AutoBindFix)),
+                            //    diagnostic);                        
+                        }
 
-                    ClassDeclarationSyntax WithExtensionMethod(ClassDeclarationSyntax declaration)
-                    {
-                        return declaration.AddMembers(Parse.MethodDeclaration(@"
-        public static Container<C> AutoBind(this Container<C> container)
-        { 
-            container.Bind(() => new C());
-            return container;
-        }").WithLeadingElasticLineFeed()
-           .WithTrailingElasticLineFeed());
+                        CompilationUnitSyntax WithCallToAutoBind(string name)
+                        {
+                            return compilationUnit.ReplaceNode(
+                                                      objectCreation,
+                                                      SyntaxFactory.InvocationExpression(
+                                                          SyntaxFactory.MemberAccessExpression(
+                                                              SyntaxKind.SimpleMemberAccessExpression,
+                                                              objectCreation,
+                                                              SyntaxFactory
+                                                                  .IdentifierName(name))));
+                        }
+
+                        ClassDeclarationSyntax WithExtensionMethod(ClassDeclarationSyntax declaration)
+                        {
+                            var code = StringBuilderPool.Borrow()
+                                                        .AppendLine("        // <auto-generated/>")
+                                                        .AppendLine($"        public static Container<C> {AutoBind}(this Container<C> container)")
+                                                        .AppendLine("        {")
+                                                        .AppendLine("            container.Bind(() => new C());")
+                                                        .AppendLine("            return container;")
+                                                        .AppendLine("        }")
+                                                        .Return();
+                            return declaration.AddMembers(Parse.MethodDeclaration(code)
+                                                               .WithLeadingElasticLineFeed()
+                                                               .WithTrailingElasticLineFeed());
+                        }
                     }
                 }
             }
+        }
+
+        private static bool TryFindAutoBind(SemanticModel semanticModel, ObjectCreationExpressionSyntax objectCreation, CancellationToken cancellationToken, out INamedTypeSymbol containerExtensions, out IMethodSymbol autoBind)
+        {
+            if (semanticModel.TryGetType(objectCreation, cancellationToken, out var containerType))
+            {
+                foreach (var candidate in semanticModel.LookupSymbols(objectCreation.SpanStart, containerType, AutoBind, includeReducedExtensionMethods: true))
+                {
+                    if (candidate is IMethodSymbol method &&
+                        method.IsExtensionMethod &&
+                        method.Parameters.Length == 0)
+                    {
+                        containerExtensions = method.ContainingType;
+                        autoBind = method;
+                        return true;
+                    }
+                }
+
+                foreach (var candidate in semanticModel.LookupNamespacesAndTypes(objectCreation.SpanStart, name: ContainerExtensions))
+                {
+                    if (candidate is INamedTypeSymbol type &&
+                        type.IsStatic)
+                    {
+                        autoBind = null;
+                        containerExtensions = type;
+                        return true;
+                    }
+                }
+
+                foreach (var candidate in semanticModel.LookupNamespacesAndTypes(objectCreation.SpanStart))
+                {
+                    if (candidate is INamespaceSymbol ns)
+                    {
+                        if (TryFindRecursive(ns, objectCreation, containerType, semanticModel, out containerExtensions, out autoBind))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            containerExtensions = null;
+            autoBind = null;
+            return false;
+        }
+
+        private static bool TryFindRecursive(INamespaceSymbol ns, ObjectCreationExpressionSyntax objectCreation, ITypeSymbol containerType, SemanticModel semanticModel, out INamedTypeSymbol containerExtensions, out IMethodSymbol autoBind)
+        {
+            foreach (var candidate in semanticModel.LookupNamespacesAndTypes(objectCreation.SpanStart, ns))
+            {
+                switch (candidate)
+                {
+                    case INamespaceSymbol nested when TryFindRecursive(nested, objectCreation, containerType, semanticModel, out containerExtensions, out autoBind):
+                        return true;
+                    case INamedTypeSymbol type when type.IsStatic && type.Name == ContainerExtensions:
+                        containerExtensions = type;
+                        _ = type.TryFindFirstMethod(
+                            AutoBind,
+                            x => x.IsExtensionMethod &&
+                                 x.Parameters.TrySingle(out var parameter) &&
+                                 Equals(parameter.Type, containerType),
+                            out autoBind);
+                        return true;
+                }
+            }
+
+            containerExtensions = null;
+            autoBind = null;
+            return false;
         }
     }
 }
