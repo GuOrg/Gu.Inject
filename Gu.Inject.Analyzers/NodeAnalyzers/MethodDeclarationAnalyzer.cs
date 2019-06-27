@@ -16,7 +16,12 @@
         /// <inheritdoc/>
         public override void Initialize(AnalysisContext context)
         {
-            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
+            if (context == null)
+            {
+                return;
+            }
+
+            context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.Analyze | GeneratedCodeAnalysisFlags.ReportDiagnostics);
             context.EnableConcurrentExecution();
             context.RegisterSyntaxNodeAction(Handle, SyntaxKind.MethodDeclaration);
         }
@@ -24,7 +29,6 @@
         private static void Handle(SyntaxNodeAnalysisContext context)
         {
             if (context.ContainingSymbol is IMethodSymbol method &&
-                method.HasCompilerGeneratedAttribute() &&
                 method.Parameters.TrySingle(out var parameter) &&
                 parameter.Type == KnownSymbol.ContainerOfT &&
                 parameter.Type is INamedTypeSymbol containerType &&

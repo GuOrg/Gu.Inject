@@ -17,6 +17,11 @@
         /// <inheritdoc/>
         public override void Initialize(AnalysisContext context)
         {
+            if (context == null)
+            {
+                return;
+            }
+
             context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
             context.EnableConcurrentExecution();
             context.RegisterSyntaxNodeAction(Handle, SyntaxKind.ObjectCreationExpression);
@@ -41,7 +46,7 @@
 
             bool IsAutoBound(ObjectCreationExpressionSyntax candidate)
             {
-                var parent = objectCreation.Parent;
+                var parent = candidate.Parent;
                 while (parent is MemberAccessExpressionSyntax memberAccess &&
                        memberAccess.Parent is InvocationExpressionSyntax invocation)
                 {
