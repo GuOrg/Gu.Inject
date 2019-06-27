@@ -1,0 +1,10 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <Description>Used by Gu.Inject.Analyzer.Tests</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Gu.Inject\Gu.Inject.csproj" />
+  </ItemGroup>
+</Project>
