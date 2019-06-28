@@ -104,7 +104,7 @@
                     CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
                     return new DefaultCtor();
                 });
-                container.Get<DefaultCtor>();
+                _ = container.Get<DefaultCtor>();
                 CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
             }
         }

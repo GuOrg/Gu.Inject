@@ -4,3 +4,4 @@
 [assembly: MetadataReference(typeof(System.Diagnostics.Debug), new[] { "global", "System" })]
 [assembly: MetadataReference(typeof(System.Runtime.CompilerServices.CompilerGeneratedAttribute))]
 [assembly: TransitiveMetadataReferences(typeof(Gu.Inject.Container<>))]
+[assembly: TransitiveMetadataReferences(typeof(Gu.Inject.Tests.ContainerTests))]
