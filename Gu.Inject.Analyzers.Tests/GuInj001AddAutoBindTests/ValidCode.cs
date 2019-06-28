@@ -10,7 +10,7 @@
         private static readonly DiagnosticAnalyzer Analyzer = new ObjectCreationAnalyzer();
 
         [Test]
-        public static void WhenNotcontainer()
+        public static void WhenNotContainer()
         {
             var testCode = @"
 namespace RoslynSandbox
@@ -29,7 +29,7 @@ namespace RoslynSandbox
         }
 
         [Test]
-        public static void WhencontainerAndCallingAutoBind()
+        public static void WhenContainerAndCallingAutoBind()
         {
             var autoBindCode = @"
 namespace RoslynSandbox
@@ -62,7 +62,7 @@ namespace RoslynSandbox
         }
 
         [Test]
-        public static void WhencontainerAndCallingBindAndAutoBind()
+        public static void WhenContainerAndCallingBindAndAutoBind()
         {
             var autoBindCode = @"
 namespace RoslynSandbox
@@ -95,7 +95,7 @@ namespace RoslynSandbox
         }
 
         [Test]
-        public static void WhencontainerOfObject()
+        public static void WhenContainerOfObject()
         {
             var testCode = @"
 namespace RoslynSandbox
