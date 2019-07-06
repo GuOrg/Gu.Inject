@@ -8,7 +8,6 @@ namespace Gu.Inject.Benchmarks
         public override void Load()
         {
             this.Bind<Graph50.Node1>().ToSelf().InSingletonScope();
-            this.Bind<Graph50.Node1>().ToSelf().InSingletonScope();
             this.Bind<Graph50.Node2>().ToSelf().InSingletonScope();
             this.Bind<Graph50.Node4>().ToSelf().InSingletonScope();
             this.Bind<Graph50.Node8>().ToSelf().InSingletonScope();

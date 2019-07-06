@@ -11,3 +11,4 @@ group Benchmarks
   System.Reflection.Metadata
   Ninject
   SimpleInjector
+  DryIoc

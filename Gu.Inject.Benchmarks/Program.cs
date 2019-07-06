@@ -14,7 +14,7 @@ namespace Gu.Inject.Benchmarks
     {
         public static void Main()
         {
-            foreach (var summary in RunSingle<CreateContainerAndGetFoo>())
+            foreach (var summary in RunSingle<CreateContainerAndGetGraph500>())
             {
                 CopyResult(summary);
             }

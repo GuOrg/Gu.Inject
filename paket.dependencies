@@ -33,3 +33,4 @@ group Benchmarks
   nuget CommandLineParser 2.4.3
   nuget Ninject
   nuget SimpleInjector
+  nuget DryIoc
