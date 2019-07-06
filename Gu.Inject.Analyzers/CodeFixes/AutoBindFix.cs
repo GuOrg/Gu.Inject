@@ -424,52 +424,56 @@
                 ExpressionSyntax Bind(ExpressionSyntax e, INamedTypeSymbol type)
                 {
                     if (bound.Add(type) &&
-                        type.Constructors.TrySingle(x => !x.IsStatic, out var ctor))
+                        TryCreateLambda(out var lambda, out var parameters))
                     {
-                        if (!semanticModel.IsAccessible(position, ctor) ||
-                            ctor.Parameters.Any(x => x.RefKind != RefKind.None ||
-                                                     x.HasExplicitDefaultValue ||
-                                                     !(x.Type is INamedTypeSymbol)))
-                        {
-                            return e;
-                        }
-
                         e = (InvocationExpressionSyntax)g.InvocationExpression(
                             SyntaxFactory.MemberAccessExpression(
                                 SyntaxKind.SimpleMemberAccessExpression,
                                 e.WithTrailingTrivia(SyntaxFactory.ElasticEndOfLine("\n")),
                                 SyntaxFactory.Token(SyntaxKind.DotToken).WithLeadingTrivia(SyntaxFactory.ElasticWhitespace("            ")),
                                 SyntaxFactory.IdentifierName("Bind")),
-                            Lambda());
+                            lambda);
 
-                        foreach (var parameter in ctor.Parameters)
+                        foreach (var parameter in parameters)
                         {
                             e = (InvocationExpressionSyntax)Bind(e, (INamedTypeSymbol)parameter.Type);
-                        }
-
-                        return e;
-
-                        SyntaxNode Lambda()
-                        {
-                            if (ctor.Parameters.Length == 0)
-                            {
-                                return g.ValueReturningLambdaExpression(
-                                    g.ObjectCreationExpression(type));
-                            }
-
-                            return g.ValueReturningLambdaExpression(
-                                new[] { g.LambdaParameter("x") },
-                                g.ObjectCreationExpression(
-                                    type,
-                                    ctor.Parameters.Select(x =>
-                                        g.InvocationExpression(
-                                            g.MemberAccessExpression(
-                                                SyntaxFactory.IdentifierName("x"),
-                                                g.GenericName("Get", x.Type))))));
                         }
                     }
 
                     return e;
+
+                    bool TryCreateLambda(out SyntaxNode result, out ImmutableArray<IParameterSymbol> resultParameters)
+                    {
+                        if (AutoBinding.TryGetMember(type, semanticModel, position, out var member))
+                        {
+                            switch (member)
+                            {
+                                case IMethodSymbol ctor when ctor.MethodKind == MethodKind.Constructor:
+                                    resultParameters = ctor.Parameters;
+                                    if (ctor.Parameters.Length == 0)
+                                    {
+                                        result = g.ValueReturningLambdaExpression(
+                                            g.ObjectCreationExpression(type));
+                                        return true;
+                                    }
+
+                                    result = g.ValueReturningLambdaExpression(
+                                        new[] { g.LambdaParameter("x") },
+                                        g.ObjectCreationExpression(
+                                            type,
+                                            ctor.Parameters.Select(x =>
+                                                g.InvocationExpression(
+                                                    g.MemberAccessExpression(
+                                                        SyntaxFactory.IdentifierName("x"),
+                                                        g.GenericName("Get", x.Type))))));
+                                    return true;
+                            }
+                        }
+
+                        resultParameters = default;
+                        result = null;
+                        return false;
+                    }
                 }
             }
 
