@@ -933,11 +933,12 @@ namespace RoslynSandbox
         }
     }
 }";
-
             RoslynAssert.CodeFix(Analyzer, Fix, ExpectedDiagnostic, new[] { autoBindCode, testCode }, new[] { fixedAutoBindCode, fixedTestCode });
         }
 
         [TestCase(typeof(TwoConstructors))]
+        [TestCase(typeof(ParamsCtor))]
+        [TestCase(typeof(IntCtor))]
         [TestCase(typeof(DoubletonField))]
         [TestCase(typeof(DoubletonProperty))]
         public static void Ignore(Type type)
