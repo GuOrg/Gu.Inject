@@ -559,6 +559,7 @@ namespace RoslynSandbox
             RoslynAssert.CodeFix(Analyzer, Fix, ExpectedDiagnostic, new[] { autoBindCode, testCode }, new[] { autoBindCode, fixedTestCode });
         }
 
+        [Explicit("Extremely slow, maybe due to the formatter?")]
         [Test]
         public static void Graph50()
         {
