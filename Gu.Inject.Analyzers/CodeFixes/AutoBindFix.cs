@@ -454,7 +454,6 @@
                             if (ctor.Parameters.Length == 0)
                             {
                                 return g.ValueReturningLambdaExpression(
-                                    new[] { g.LambdaParameter("_") },
                                     g.ObjectCreationExpression(type));
                             }
 

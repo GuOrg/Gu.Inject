@@ -32,7 +32,7 @@ namespace RoslynSandbox
         /// </summary>
         /// <param name=""container"">The <see cref=""Gu.Inject.Container{C}""/>.</param>
         public static Gu.Inject.Container<C> AutoBind(this Gu.Inject.Container<C> container) => container
-            .Bind(_ => new C());
+            .Bind(() => new C());
     }
 }";
             var testCode = @"
@@ -71,7 +71,7 @@ namespace RoslynSandbox
         /// </summary>
         /// <param name=""container"">The <see cref=""Gu.Inject.Container{C}""/>.</param>
         public static Gu.Inject.Container<C> AutoBind(this Gu.Inject.Container<C> container) => container
-            .Bind(_ => new C());
+            .Bind(() => new C());
     }
 }";
 
@@ -125,7 +125,7 @@ namespace RoslynSandbox.Extensions
         /// </summary>
         /// <param name=""container"">The <see cref=""Gu.Inject.Container{C}""/>.</param>
         public static Gu.Inject.Container<C> AutoBind(this Gu.Inject.Container<C> container) => container
-            .Bind(_ => new C());
+            .Bind(() => new C());
     }
 }";
 
@@ -207,7 +207,7 @@ namespace RoslynSandbox
         /// </summary>
         /// <param name=""container"">The <see cref=""Gu.Inject.Container{C}""/>.</param>
         public static Gu.Inject.Container<C> AutoBind(this Gu.Inject.Container<C> container) => container
-            .Bind(_ => new C());
+            .Bind(() => new C());
     }
 }";
 
@@ -280,7 +280,7 @@ namespace RoslynSandbox
         /// <param name=""container"">The <see cref=""Container{Gu.Inject.Tests.Types.Foo}""/>.</param>
         public static Container<Gu.Inject.Tests.Types.Foo> AutoBind(this Container<Gu.Inject.Tests.Types.Foo> container) => container
             .Bind(x => new Gu.Inject.Tests.Types.Foo(x.Get<Gu.Inject.Tests.Types.Bar>()))
-            .Bind(_ => new Gu.Inject.Tests.Types.Bar());
+            .Bind(() => new Gu.Inject.Tests.Types.Bar());
     }
 }";
 
@@ -356,7 +356,7 @@ namespace RoslynSandbox
         /// <param name=""container"">The <see cref=""Container{Foo}""/>.</param>
         public static Container<Foo> AutoBind(this Container<Foo> container) => container
             .Bind(x => new Foo(x.Get<Bar>()))
-            .Bind(_ => new Bar());
+            .Bind(() => new Bar());
     }
 }";
 
@@ -428,7 +428,7 @@ namespace RoslynSandbox.Extensions
         /// </summary>
         /// <param name=""container"">The <see cref=""Container{C}""/>.</param>
         public static Container<C> AutoBind(this Container<C> container) => container
-            .Bind(_ => new C());
+            .Bind(() => new C());
     }
 }";
 
@@ -482,7 +482,7 @@ namespace RoslynSandbox
         /// </summary>
         /// <param name=""container"">The <see cref=""Gu.Inject.Container{C}""/>.</param>
         public static Gu.Inject.Container<C> AutoBind(this Gu.Inject.Container<C> container) => container
-            .Bind(_ => new C());
+            .Bind(() => new C());
     }
 }";
 
@@ -524,7 +524,7 @@ namespace RoslynSandbox
         /// </summary>
         /// <param name=""container"">The <see cref=""Container{C}""/>.</param>
         public static Container<C> AutoBind(this Container<C> container) => container
-            .Bind(_ => new C());
+            .Bind(() => new C());
     }
 }";
 
@@ -537,7 +537,7 @@ namespace RoslynSandbox
     {
         public C()
         {
-            var x = ↓new Container<C>().Bind(_ => new C());
+            var x = ↓new Container<C>().Bind(() => new C());
         }
     }
 }";
@@ -551,7 +551,7 @@ namespace RoslynSandbox
     {
         public C()
         {
-            var x = new Container<C>().AutoBind().Bind(_ => new C());
+            var x = new Container<C>().AutoBind().Bind(() => new C());
         }
     }
 }";
@@ -616,20 +616,20 @@ namespace RoslynSandbox
             .Bind(x => new Graph50.Node1(x.Get<Graph50.Node2>(), x.Get<Graph50.Node7>(), x.Get<Graph50.Node10>(), x.Get<Graph50.Node16>(), x.Get<Graph50.Node18>(), x.Get<Graph50.Node24>(), x.Get<Graph50.Node26>(), x.Get<Graph50.Node27>(), x.Get<Graph50.Node29>(), x.Get<Graph50.Node32>()))
             .Bind(x => new Graph50.Node2(x.Get<Graph50.Node4>(), x.Get<Graph50.Node8>(), x.Get<Graph50.Node16>(), x.Get<Graph50.Node48>()))
             .Bind(x => new Graph50.Node4(x.Get<Graph50.Node8>(), x.Get<Graph50.Node32>(), x.Get<Graph50.Node36>()))
-            .Bind(_ => new Graph50.Node8())
-            .Bind(_ => new Graph50.Node32())
-            .Bind(_ => new Graph50.Node36())
-            .Bind(_ => new Graph50.Node16())
-            .Bind(_ => new Graph50.Node48())
+            .Bind(() => new Graph50.Node8())
+            .Bind(() => new Graph50.Node32())
+            .Bind(() => new Graph50.Node36())
+            .Bind(() => new Graph50.Node16())
+            .Bind(() => new Graph50.Node48())
             .Bind(x => new Graph50.Node7(x.Get<Graph50.Node35>(), x.Get<Graph50.Node49>()))
-            .Bind(_ => new Graph50.Node35())
-            .Bind(_ => new Graph50.Node49())
-            .Bind(_ => new Graph50.Node10())
-            .Bind(_ => new Graph50.Node18())
+            .Bind(() => new Graph50.Node35())
+            .Bind(() => new Graph50.Node49())
+            .Bind(() => new Graph50.Node10())
+            .Bind(() => new Graph50.Node18())
             .Bind(x => new Graph50.Node24(x.Get<Graph50.Node48>()))
-            .Bind(_ => new Graph50.Node26())
-            .Bind(_ => new Graph50.Node27())
-            .Bind(_ => new Graph50.Node29());
+            .Bind(() => new Graph50.Node26())
+            .Bind(() => new Graph50.Node27())
+            .Bind(() => new Graph50.Node29());
     }
 }";
 
@@ -708,160 +708,160 @@ namespace RoslynSandbox
             .Bind(x => new Graph500.Node1(x.Get<Graph500.Node7>(), x.Get<Graph500.Node8>(), x.Get<Graph500.Node20>(), x.Get<Graph500.Node26>(), x.Get<Graph500.Node29>(), x.Get<Graph500.Node34>(), x.Get<Graph500.Node37>(), x.Get<Graph500.Node49>(), x.Get<Graph500.Node50>(), x.Get<Graph500.Node57>(), x.Get<Graph500.Node60>(), x.Get<Graph500.Node63>(), x.Get<Graph500.Node72>(), x.Get<Graph500.Node79>(), x.Get<Graph500.Node83>(), x.Get<Graph500.Node93>(), x.Get<Graph500.Node96>(), x.Get<Graph500.Node101>(), x.Get<Graph500.Node109>(), x.Get<Graph500.Node113>(), x.Get<Graph500.Node116>(), x.Get<Graph500.Node118>(), x.Get<Graph500.Node121>(), x.Get<Graph500.Node124>(), x.Get<Graph500.Node127>(), x.Get<Graph500.Node135>(), x.Get<Graph500.Node136>(), x.Get<Graph500.Node144>(), x.Get<Graph500.Node154>(), x.Get<Graph500.Node156>(), x.Get<Graph500.Node162>(), x.Get<Graph500.Node167>(), x.Get<Graph500.Node179>(), x.Get<Graph500.Node180>(), x.Get<Graph500.Node183>(), x.Get<Graph500.Node188>(), x.Get<Graph500.Node193>(), x.Get<Graph500.Node200>(), x.Get<Graph500.Node202>(), x.Get<Graph500.Node207>(), x.Get<Graph500.Node216>(), x.Get<Graph500.Node217>(), x.Get<Graph500.Node219>(), x.Get<Graph500.Node221>(), x.Get<Graph500.Node225>(), x.Get<Graph500.Node226>(), x.Get<Graph500.Node230>(), x.Get<Graph500.Node233>(), x.Get<Graph500.Node234>(), x.Get<Graph500.Node240>(), x.Get<Graph500.Node244>(), x.Get<Graph500.Node245>(), x.Get<Graph500.Node252>(), x.Get<Graph500.Node254>(), x.Get<Graph500.Node259>(), x.Get<Graph500.Node261>(), x.Get<Graph500.Node263>(), x.Get<Graph500.Node268>(), x.Get<Graph500.Node277>(), x.Get<Graph500.Node282>(), x.Get<Graph500.Node287>(), x.Get<Graph500.Node288>(), x.Get<Graph500.Node294>(), x.Get<Graph500.Node295>(), x.Get<Graph500.Node300>(), x.Get<Graph500.Node305>(), x.Get<Graph500.Node310>(), x.Get<Graph500.Node318>(), x.Get<Graph500.Node324>(), x.Get<Graph500.Node328>(), x.Get<Graph500.Node334>(), x.Get<Graph500.Node338>(), x.Get<Graph500.Node340>(), x.Get<Graph500.Node344>(), x.Get<Graph500.Node346>(), x.Get<Graph500.Node348>(), x.Get<Graph500.Node349>(), x.Get<Graph500.Node352>(), x.Get<Graph500.Node359>(), x.Get<Graph500.Node363>(), x.Get<Graph500.Node375>(), x.Get<Graph500.Node381>(), x.Get<Graph500.Node383>(), x.Get<Graph500.Node395>(), x.Get<Graph500.Node408>(), x.Get<Graph500.Node411>(), x.Get<Graph500.Node412>(), x.Get<Graph500.Node415>(), x.Get<Graph500.Node423>(), x.Get<Graph500.Node431>(), x.Get<Graph500.Node432>(), x.Get<Graph500.Node437>(), x.Get<Graph500.Node440>(), x.Get<Graph500.Node444>(), x.Get<Graph500.Node448>(), x.Get<Graph500.Node461>(), x.Get<Graph500.Node466>(), x.Get<Graph500.Node472>(), x.Get<Graph500.Node476>(), x.Get<Graph500.Node485>(), x.Get<Graph500.Node490>(), x.Get<Graph500.Node498>()))
             .Bind(x => new Graph500.Node7(x.Get<Graph500.Node35>(), x.Get<Graph500.Node63>(), x.Get<Graph500.Node77>(), x.Get<Graph500.Node105>(), x.Get<Graph500.Node210>(), x.Get<Graph500.Node217>(), x.Get<Graph500.Node329>(), x.Get<Graph500.Node378>(), x.Get<Graph500.Node420>(), x.Get<Graph500.Node441>(), x.Get<Graph500.Node448>(), x.Get<Graph500.Node455>()))
             .Bind(x => new Graph500.Node35(x.Get<Graph500.Node175>(), x.Get<Graph500.Node210>(), x.Get<Graph500.Node280>(), x.Get<Graph500.Node350>(), x.Get<Graph500.Node455>()))
-            .Bind(_ => new Graph500.Node175())
-            .Bind(_ => new Graph500.Node210())
-            .Bind(_ => new Graph500.Node280())
-            .Bind(_ => new Graph500.Node350())
-            .Bind(_ => new Graph500.Node455())
+            .Bind(() => new Graph500.Node175())
+            .Bind(() => new Graph500.Node210())
+            .Bind(() => new Graph500.Node280())
+            .Bind(() => new Graph500.Node350())
+            .Bind(() => new Graph500.Node455())
             .Bind(x => new Graph500.Node63(x.Get<Graph500.Node126>()))
-            .Bind(_ => new Graph500.Node126())
+            .Bind(() => new Graph500.Node126())
             .Bind(x => new Graph500.Node77(x.Get<Graph500.Node308>(), x.Get<Graph500.Node385>(), x.Get<Graph500.Node462>()))
-            .Bind(_ => new Graph500.Node308())
-            .Bind(_ => new Graph500.Node385())
-            .Bind(_ => new Graph500.Node462())
-            .Bind(_ => new Graph500.Node105())
-            .Bind(_ => new Graph500.Node217())
-            .Bind(_ => new Graph500.Node329())
-            .Bind(_ => new Graph500.Node378())
-            .Bind(_ => new Graph500.Node420())
-            .Bind(_ => new Graph500.Node441())
-            .Bind(_ => new Graph500.Node448())
+            .Bind(() => new Graph500.Node308())
+            .Bind(() => new Graph500.Node385())
+            .Bind(() => new Graph500.Node462())
+            .Bind(() => new Graph500.Node105())
+            .Bind(() => new Graph500.Node217())
+            .Bind(() => new Graph500.Node329())
+            .Bind(() => new Graph500.Node378())
+            .Bind(() => new Graph500.Node420())
+            .Bind(() => new Graph500.Node441())
+            .Bind(() => new Graph500.Node448())
             .Bind(x => new Graph500.Node8(x.Get<Graph500.Node40>(), x.Get<Graph500.Node168>(), x.Get<Graph500.Node216>(), x.Get<Graph500.Node232>(), x.Get<Graph500.Node248>(), x.Get<Graph500.Node264>(), x.Get<Graph500.Node272>(), x.Get<Graph500.Node304>(), x.Get<Graph500.Node312>(), x.Get<Graph500.Node456>(), x.Get<Graph500.Node464>()))
             .Bind(x => new Graph500.Node40(x.Get<Graph500.Node80>(), x.Get<Graph500.Node160>(), x.Get<Graph500.Node200>(), x.Get<Graph500.Node360>(), x.Get<Graph500.Node480>()))
-            .Bind(_ => new Graph500.Node80())
-            .Bind(_ => new Graph500.Node160())
+            .Bind(() => new Graph500.Node80())
+            .Bind(() => new Graph500.Node160())
             .Bind(x => new Graph500.Node200(x.Get<Graph500.Node400>()))
-            .Bind(_ => new Graph500.Node400())
-            .Bind(_ => new Graph500.Node360())
-            .Bind(_ => new Graph500.Node480())
-            .Bind(_ => new Graph500.Node168())
+            .Bind(() => new Graph500.Node400())
+            .Bind(() => new Graph500.Node360())
+            .Bind(() => new Graph500.Node480())
+            .Bind(() => new Graph500.Node168())
             .Bind(x => new Graph500.Node216(x.Get<Graph500.Node432>()))
-            .Bind(_ => new Graph500.Node432())
-            .Bind(_ => new Graph500.Node232())
-            .Bind(_ => new Graph500.Node248())
-            .Bind(_ => new Graph500.Node264())
-            .Bind(_ => new Graph500.Node272())
-            .Bind(_ => new Graph500.Node304())
-            .Bind(_ => new Graph500.Node312())
-            .Bind(_ => new Graph500.Node456())
-            .Bind(_ => new Graph500.Node464())
+            .Bind(() => new Graph500.Node432())
+            .Bind(() => new Graph500.Node232())
+            .Bind(() => new Graph500.Node248())
+            .Bind(() => new Graph500.Node264())
+            .Bind(() => new Graph500.Node272())
+            .Bind(() => new Graph500.Node304())
+            .Bind(() => new Graph500.Node312())
+            .Bind(() => new Graph500.Node456())
+            .Bind(() => new Graph500.Node464())
             .Bind(x => new Graph500.Node20(x.Get<Graph500.Node60>(), x.Get<Graph500.Node240>(), x.Get<Graph500.Node260>(), x.Get<Graph500.Node380>()))
             .Bind(x => new Graph500.Node60(x.Get<Graph500.Node480>()))
-            .Bind(_ => new Graph500.Node240())
-            .Bind(_ => new Graph500.Node260())
-            .Bind(_ => new Graph500.Node380())
+            .Bind(() => new Graph500.Node240())
+            .Bind(() => new Graph500.Node260())
+            .Bind(() => new Graph500.Node380())
             .Bind(x => new Graph500.Node26(x.Get<Graph500.Node104>(), x.Get<Graph500.Node260>(), x.Get<Graph500.Node338>(), x.Get<Graph500.Node364>(), x.Get<Graph500.Node390>()))
-            .Bind(_ => new Graph500.Node104())
-            .Bind(_ => new Graph500.Node338())
-            .Bind(_ => new Graph500.Node364())
-            .Bind(_ => new Graph500.Node390())
+            .Bind(() => new Graph500.Node104())
+            .Bind(() => new Graph500.Node338())
+            .Bind(() => new Graph500.Node364())
+            .Bind(() => new Graph500.Node390())
             .Bind(x => new Graph500.Node29(x.Get<Graph500.Node261>(), x.Get<Graph500.Node406>()))
-            .Bind(_ => new Graph500.Node261())
-            .Bind(_ => new Graph500.Node406())
+            .Bind(() => new Graph500.Node261())
+            .Bind(() => new Graph500.Node406())
             .Bind(x => new Graph500.Node34(x.Get<Graph500.Node68>(), x.Get<Graph500.Node340>(), x.Get<Graph500.Node476>()))
             .Bind(x => new Graph500.Node68(x.Get<Graph500.Node136>(), x.Get<Graph500.Node476>()))
-            .Bind(_ => new Graph500.Node136())
-            .Bind(_ => new Graph500.Node476())
-            .Bind(_ => new Graph500.Node340())
+            .Bind(() => new Graph500.Node136())
+            .Bind(() => new Graph500.Node476())
+            .Bind(() => new Graph500.Node340())
             .Bind(x => new Graph500.Node37(x.Get<Graph500.Node74>(), x.Get<Graph500.Node370>()))
             .Bind(x => new Graph500.Node74(x.Get<Graph500.Node222>(), x.Get<Graph500.Node370>()))
-            .Bind(_ => new Graph500.Node222())
-            .Bind(_ => new Graph500.Node370())
+            .Bind(() => new Graph500.Node222())
+            .Bind(() => new Graph500.Node370())
             .Bind(x => new Graph500.Node49(x.Get<Graph500.Node147>(), x.Get<Graph500.Node196>(), x.Get<Graph500.Node441>(), x.Get<Graph500.Node490>()))
-            .Bind(_ => new Graph500.Node147())
-            .Bind(_ => new Graph500.Node196())
-            .Bind(_ => new Graph500.Node490())
-            .Bind(_ => new Graph500.Node50())
+            .Bind(() => new Graph500.Node147())
+            .Bind(() => new Graph500.Node196())
+            .Bind(() => new Graph500.Node490())
+            .Bind(() => new Graph500.Node50())
             .Bind(x => new Graph500.Node57(x.Get<Graph500.Node285>()))
-            .Bind(_ => new Graph500.Node285())
+            .Bind(() => new Graph500.Node285())
             .Bind(x => new Graph500.Node72(x.Get<Graph500.Node144>(), x.Get<Graph500.Node288>()))
-            .Bind(_ => new Graph500.Node144())
-            .Bind(_ => new Graph500.Node288())
+            .Bind(() => new Graph500.Node144())
+            .Bind(() => new Graph500.Node288())
             .Bind(x => new Graph500.Node79(x.Get<Graph500.Node237>()))
-            .Bind(_ => new Graph500.Node237())
+            .Bind(() => new Graph500.Node237())
             .Bind(x => new Graph500.Node83(x.Get<Graph500.Node249>(), x.Get<Graph500.Node498>()))
-            .Bind(_ => new Graph500.Node249())
-            .Bind(_ => new Graph500.Node498())
-            .Bind(_ => new Graph500.Node93())
-            .Bind(_ => new Graph500.Node96())
-            .Bind(_ => new Graph500.Node101())
+            .Bind(() => new Graph500.Node249())
+            .Bind(() => new Graph500.Node498())
+            .Bind(() => new Graph500.Node93())
+            .Bind(() => new Graph500.Node96())
+            .Bind(() => new Graph500.Node101())
             .Bind(x => new Graph500.Node109(x.Get<Graph500.Node327>(), x.Get<Graph500.Node436>()))
-            .Bind(_ => new Graph500.Node327())
-            .Bind(_ => new Graph500.Node436())
+            .Bind(() => new Graph500.Node327())
+            .Bind(() => new Graph500.Node436())
             .Bind(x => new Graph500.Node113(x.Get<Graph500.Node226>()))
             .Bind(x => new Graph500.Node226(x.Get<Graph500.Node452>()))
-            .Bind(_ => new Graph500.Node452())
+            .Bind(() => new Graph500.Node452())
             .Bind(x => new Graph500.Node116(x.Get<Graph500.Node348>()))
-            .Bind(_ => new Graph500.Node348())
+            .Bind(() => new Graph500.Node348())
             .Bind(x => new Graph500.Node118(x.Get<Graph500.Node236>()))
             .Bind(x => new Graph500.Node236(x.Get<Graph500.Node472>()))
-            .Bind(_ => new Graph500.Node472())
+            .Bind(() => new Graph500.Node472())
             .Bind(x => new Graph500.Node121(x.Get<Graph500.Node363>()))
-            .Bind(_ => new Graph500.Node363())
+            .Bind(() => new Graph500.Node363())
             .Bind(x => new Graph500.Node124(x.Get<Graph500.Node248>(), x.Get<Graph500.Node496>()))
-            .Bind(_ => new Graph500.Node496())
-            .Bind(_ => new Graph500.Node127())
-            .Bind(_ => new Graph500.Node135())
-            .Bind(_ => new Graph500.Node154())
-            .Bind(_ => new Graph500.Node156())
-            .Bind(_ => new Graph500.Node162())
-            .Bind(_ => new Graph500.Node167())
-            .Bind(_ => new Graph500.Node179())
-            .Bind(_ => new Graph500.Node180())
-            .Bind(_ => new Graph500.Node183())
-            .Bind(_ => new Graph500.Node188())
+            .Bind(() => new Graph500.Node496())
+            .Bind(() => new Graph500.Node127())
+            .Bind(() => new Graph500.Node135())
+            .Bind(() => new Graph500.Node154())
+            .Bind(() => new Graph500.Node156())
+            .Bind(() => new Graph500.Node162())
+            .Bind(() => new Graph500.Node167())
+            .Bind(() => new Graph500.Node179())
+            .Bind(() => new Graph500.Node180())
+            .Bind(() => new Graph500.Node183())
+            .Bind(() => new Graph500.Node188())
             .Bind(x => new Graph500.Node193(x.Get<Graph500.Node386>()))
-            .Bind(_ => new Graph500.Node386())
-            .Bind(_ => new Graph500.Node202())
+            .Bind(() => new Graph500.Node386())
+            .Bind(() => new Graph500.Node202())
             .Bind(x => new Graph500.Node207(x.Get<Graph500.Node414>()))
-            .Bind(_ => new Graph500.Node414())
-            .Bind(_ => new Graph500.Node219())
+            .Bind(() => new Graph500.Node414())
+            .Bind(() => new Graph500.Node219())
             .Bind(x => new Graph500.Node221(x.Get<Graph500.Node442>()))
-            .Bind(_ => new Graph500.Node442())
-            .Bind(_ => new Graph500.Node225())
-            .Bind(_ => new Graph500.Node230())
-            .Bind(_ => new Graph500.Node233())
-            .Bind(_ => new Graph500.Node234())
-            .Bind(_ => new Graph500.Node244())
+            .Bind(() => new Graph500.Node442())
+            .Bind(() => new Graph500.Node225())
+            .Bind(() => new Graph500.Node230())
+            .Bind(() => new Graph500.Node233())
+            .Bind(() => new Graph500.Node234())
+            .Bind(() => new Graph500.Node244())
             .Bind(x => new Graph500.Node245(x.Get<Graph500.Node490>()))
-            .Bind(_ => new Graph500.Node252())
-            .Bind(_ => new Graph500.Node254())
-            .Bind(_ => new Graph500.Node259())
-            .Bind(_ => new Graph500.Node263())
-            .Bind(_ => new Graph500.Node268())
-            .Bind(_ => new Graph500.Node277())
-            .Bind(_ => new Graph500.Node282())
-            .Bind(_ => new Graph500.Node287())
-            .Bind(_ => new Graph500.Node294())
-            .Bind(_ => new Graph500.Node295())
-            .Bind(_ => new Graph500.Node300())
-            .Bind(_ => new Graph500.Node305())
-            .Bind(_ => new Graph500.Node310())
-            .Bind(_ => new Graph500.Node318())
-            .Bind(_ => new Graph500.Node324())
-            .Bind(_ => new Graph500.Node328())
-            .Bind(_ => new Graph500.Node334())
-            .Bind(_ => new Graph500.Node344())
-            .Bind(_ => new Graph500.Node346())
-            .Bind(_ => new Graph500.Node349())
-            .Bind(_ => new Graph500.Node352())
-            .Bind(_ => new Graph500.Node359())
-            .Bind(_ => new Graph500.Node375())
-            .Bind(_ => new Graph500.Node381())
-            .Bind(_ => new Graph500.Node383())
-            .Bind(_ => new Graph500.Node395())
-            .Bind(_ => new Graph500.Node408())
-            .Bind(_ => new Graph500.Node411())
-            .Bind(_ => new Graph500.Node412())
-            .Bind(_ => new Graph500.Node415())
-            .Bind(_ => new Graph500.Node423())
-            .Bind(_ => new Graph500.Node431())
-            .Bind(_ => new Graph500.Node437())
-            .Bind(_ => new Graph500.Node440())
-            .Bind(_ => new Graph500.Node444())
-            .Bind(_ => new Graph500.Node461())
-            .Bind(_ => new Graph500.Node466())
-            .Bind(_ => new Graph500.Node485());
+            .Bind(() => new Graph500.Node252())
+            .Bind(() => new Graph500.Node254())
+            .Bind(() => new Graph500.Node259())
+            .Bind(() => new Graph500.Node263())
+            .Bind(() => new Graph500.Node268())
+            .Bind(() => new Graph500.Node277())
+            .Bind(() => new Graph500.Node282())
+            .Bind(() => new Graph500.Node287())
+            .Bind(() => new Graph500.Node294())
+            .Bind(() => new Graph500.Node295())
+            .Bind(() => new Graph500.Node300())
+            .Bind(() => new Graph500.Node305())
+            .Bind(() => new Graph500.Node310())
+            .Bind(() => new Graph500.Node318())
+            .Bind(() => new Graph500.Node324())
+            .Bind(() => new Graph500.Node328())
+            .Bind(() => new Graph500.Node334())
+            .Bind(() => new Graph500.Node344())
+            .Bind(() => new Graph500.Node346())
+            .Bind(() => new Graph500.Node349())
+            .Bind(() => new Graph500.Node352())
+            .Bind(() => new Graph500.Node359())
+            .Bind(() => new Graph500.Node375())
+            .Bind(() => new Graph500.Node381())
+            .Bind(() => new Graph500.Node383())
+            .Bind(() => new Graph500.Node395())
+            .Bind(() => new Graph500.Node408())
+            .Bind(() => new Graph500.Node411())
+            .Bind(() => new Graph500.Node412())
+            .Bind(() => new Graph500.Node415())
+            .Bind(() => new Graph500.Node423())
+            .Bind(() => new Graph500.Node431())
+            .Bind(() => new Graph500.Node437())
+            .Bind(() => new Graph500.Node440())
+            .Bind(() => new Graph500.Node444())
+            .Bind(() => new Graph500.Node461())
+            .Bind(() => new Graph500.Node466())
+            .Bind(() => new Graph500.Node485());
     }
 }";
 
