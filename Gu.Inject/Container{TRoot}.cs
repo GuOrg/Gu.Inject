@@ -12,6 +12,9 @@
         private readonly Getter<TRoot> getter;
         private ConcurrentDictionary<Type, object> map = ConcurrentDictionaryPool<Type, object>.Borrow();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Container{TRoot}"/> class.
+        /// </summary>
         public Container()
         {
             this.getter = new Getter<TRoot>(this);
@@ -134,35 +137,6 @@
             if (this.map == null)
             {
                 throw new ObjectDisposedException(typeof(Container<TRoot>).PrettyName());
-            }
-        }
-
-        private class Node
-        {
-            private readonly Type type;
-            private readonly Node previous;
-
-            public Node(Type type)
-                : this(type, null)
-            {
-            }
-
-            private Node(Type type, Node previous)
-            {
-                this.type = type;
-                this.previous = previous;
-            }
-
-            public Node Next(Type next) => new Node(next, this);
-
-            public bool Contains(Type next)
-            {
-                if (this.type == next)
-                {
-                    return true;
-                }
-
-                return this.previous?.Contains(next) == true;
             }
         }
     }

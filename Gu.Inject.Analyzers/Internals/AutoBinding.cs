@@ -31,8 +31,24 @@
                 }
             }
 
-            member = null;
-            return false;
+            return type.TryFindSingleMember(
+                x => x.IsStatic && semanticModel.IsAccessible(position, x) && Equals(ReturnType(x), type),
+                out member);
+
+            INamedTypeSymbol ReturnType(ISymbol candidate)
+            {
+                switch (candidate)
+                {
+                    case IFieldSymbol field:
+                        return field.Type as INamedTypeSymbol;
+                    case IPropertySymbol property:
+                        return property.Type as INamedTypeSymbol;
+                    case IMethodSymbol method when method.MethodKind == MethodKind.Ordinary:
+                        return method.ReturnType as INamedTypeSymbol;
+                    default:
+                        return null;
+                }
+            }
         }
     }
 }

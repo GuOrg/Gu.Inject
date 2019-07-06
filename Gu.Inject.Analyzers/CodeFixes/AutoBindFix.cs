@@ -467,6 +467,12 @@
                                                         SyntaxFactory.IdentifierName("x"),
                                                         g.GenericName("Get", x.Type))))));
                                     return true;
+                                case IFieldSymbol _:
+                                case IPropertySymbol _:
+                                    result = g.ValueReturningLambdaExpression(
+                                        g.MemberAccessExpression(g.TypeExpression(type), member.Name));
+                                    resultParameters = ImmutableArray<IParameterSymbol>.Empty;
+                                    return true;
                             }
                         }
 
