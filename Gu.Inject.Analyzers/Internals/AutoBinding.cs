@@ -31,23 +31,30 @@
                 }
             }
 
-            return type.TryFindSingleMember(
-                x => x.IsStatic && semanticModel.IsAccessible(position, x) && Equals(ReturnType(x), type),
-                out member);
+            return type.TryFindSingleMember(x => IsMatch(x), out member);
 
-            INamedTypeSymbol ReturnType(ISymbol candidate)
+            bool IsMatch(ISymbol candidate)
             {
-                switch (candidate)
+                if (!candidate.IsStatic ||
+                    !semanticModel.IsAccessible(position, candidate))
                 {
-                    case IFieldSymbol field:
-                        return field.Type as INamedTypeSymbol;
-                    case IPropertySymbol property:
-                        return property.Type as INamedTypeSymbol;
-                    case IMethodSymbol method when method.MethodKind == MethodKind.Ordinary:
-                        return method.ReturnType as INamedTypeSymbol;
-                    default:
-                        return null;
+                    return false;
                 }
+
+                if (FieldOrProperty.TryCreate(candidate, out var fieldOrProperty))
+                {
+                    return Equals(fieldOrProperty.Type, type);
+                }
+
+                if (candidate is IMethodSymbol method &&
+                        method.MethodKind == MethodKind.Ordinary &&
+                        Equals(method.ReturnType, type) &&
+                        !method.Parameters.Any(x => x.IsOptional || x.IsParams || x.RefKind != RefKind.None))
+                {
+                    return true;
+                }
+
+                return false;
             }
         }
     }

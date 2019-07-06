@@ -473,11 +473,22 @@
                                     {
                                         result = g.ValueReturningLambdaExpression(
                                             g.InvocationExpression(g.MemberAccessExpression(g.TypeExpression(type), factory.Name)));
-                                        return true;
+                                    }
+                                    else
+                                    {
+                                        result = g.ValueReturningLambdaExpression(
+                                            new[] { g.LambdaParameter("x") },
+                                            g.InvocationExpression(
+                                                g.MemberAccessExpression(g.TypeExpression(type), factory.Name),
+                                                factory.Parameters.Select(x =>
+                                                    g.InvocationExpression(
+                                                        g.MemberAccessExpression(
+                                                            SyntaxFactory.IdentifierName("x"),
+                                                            g.GenericName("Get", x.Type))))));
                                     }
 
-                                    result = null;
-                                    return false;
+                                    resultParameters = factory.Parameters;
+                                    return true;
                                 case IFieldSymbol _:
                                 case IPropertySymbol _:
                                     result = g.ValueReturningLambdaExpression(
