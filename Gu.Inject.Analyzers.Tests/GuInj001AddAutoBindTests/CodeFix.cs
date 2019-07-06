@@ -709,7 +709,7 @@ namespace RoslynSandbox
         }
 
         [Test]
-        public static void SingletonFieldF()
+        public static void SingletonField()
         {
             var autoBindCode = @"
 namespace RoslynSandbox
