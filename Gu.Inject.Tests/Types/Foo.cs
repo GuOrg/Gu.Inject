@@ -4,6 +4,9 @@
     {
         public Foo(Bar bar)
         {
+            this.Bar = bar;
         }
+
+        public Bar Bar { get; }
     }
 }
