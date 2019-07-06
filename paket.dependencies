@@ -30,5 +30,6 @@ group Benchmarks
   storage: none
   source http://www.nuget.org/api/v2/
   nuget BenchmarkDotNet.Diagnostics.Windows
+  nuget CommandLineParser 2.4.3
   nuget Ninject
   nuget SimpleInjector

@@ -11,13 +11,6 @@ namespace Gu.Inject.Benchmarks
     {
         private static readonly Ninject.StandardKernel StandardKernel = new Ninject.StandardKernel(new Module());
         private static readonly SimpleInjector.Container SimpleInjectorContainer = new SimpleInjector.Container();
-        private static readonly Container<object> Container = new Container<object>();
-
-        [Benchmark(Baseline = true)]
-        public object GuInject()
-        {
-            return Container.Get<T>();
-        }
 
         [Benchmark]
         public object Ninject()
