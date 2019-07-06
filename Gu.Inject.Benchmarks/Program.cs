@@ -14,7 +14,7 @@ namespace Gu.Inject.Benchmarks
     {
         public static void Main()
         {
-            foreach (var summary in RunAll())
+            foreach (var summary in RunSingle<CreateContainerAndGetFoo>())
             {
                 CopyResult(summary);
             }
@@ -26,8 +26,26 @@ namespace Gu.Inject.Benchmarks
 
         private static void CopyResult(Summary summary)
         {
-            var sourceFileName = Directory.EnumerateFiles(summary.ResultsDirectoryPath, $"*{summary.Title}-report-github.md")
-                                          .Single();
+            var name = summary.Title.Split('.').LastOrDefault()?.Split('-').FirstOrDefault();
+            if (name == null)
+            {
+                Console.WriteLine("Did not find name in: " + summary.Title);
+                Console.WriteLine("Press any key to exit.");
+                _ = Console.ReadKey();
+                return;
+            }
+
+            var pattern = $"*{name}-report-github.md";
+            var sourceFileName = Directory.EnumerateFiles(summary.ResultsDirectoryPath, pattern)
+                                          .SingleOrDefault();
+            if (sourceFileName == null)
+            {
+                Console.WriteLine("Did not find a file matching the pattern: " + pattern);
+                Console.WriteLine("Press any key to exit.");
+                _ = Console.ReadKey();
+                return;
+            }
+
             var destinationFileName = Path.ChangeExtension(FindCsFile(), ".md");
             Console.WriteLine($"Copy:");
             Console.WriteLine($"Source: {sourceFileName}");
@@ -38,7 +56,7 @@ namespace Gu.Inject.Benchmarks
             {
                 return Directory.EnumerateFiles(
                                     AppDomain.CurrentDomain.BaseDirectory.Split(new[] { "\\bin\\" }, StringSplitOptions.RemoveEmptyEntries).First(),
-                                    $"{summary.Title.Split('.').Last()}.cs",
+                                    $"{name}.cs",
                                     SearchOption.AllDirectories)
                                 .Single();
             }
