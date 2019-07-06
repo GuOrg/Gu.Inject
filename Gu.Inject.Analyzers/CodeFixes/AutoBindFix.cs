@@ -467,6 +467,17 @@
                                                         SyntaxFactory.IdentifierName("x"),
                                                         g.GenericName("Get", x.Type))))));
                                     return true;
+                                case IMethodSymbol factory when factory.MethodKind == MethodKind.Ordinary:
+                                    resultParameters = factory.Parameters;
+                                    if (factory.Parameters.Length == 0)
+                                    {
+                                        result = g.ValueReturningLambdaExpression(
+                                            g.InvocationExpression(g.MemberAccessExpression(g.TypeExpression(type), factory.Name)));
+                                        return true;
+                                    }
+
+                                    result = null;
+                                    return false;
                                 case IFieldSymbol _:
                                 case IPropertySymbol _:
                                     result = g.ValueReturningLambdaExpression(
