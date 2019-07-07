@@ -2,18 +2,18 @@
 {
     using Microsoft.CodeAnalysis;
 
-    public static class GuInj002IncorrectAutoBind
+    public static class GuInj003Cycle
     {
-        public const string DiagnosticId = "GUINJ002";
+        public const string DiagnosticId = "GUINJ003";
 
         public static readonly DiagnosticDescriptor Descriptor = new DiagnosticDescriptor(
             id: DiagnosticId,
-            title: "Regenerate bindings.",
-            messageFormat: "Regenerate bindings.",
+            title: "Cycle detected in graph.",
+            messageFormat: "Cycle detected in graph.",
             category: AnalyzerCategory.Correctness,
             defaultSeverity: DiagnosticSeverity.Warning,
             isEnabledByDefault: true,
-            description: "The bindings are incorrect and must be regenerated.",
+            description: "Cycle detected in graph.",
             helpLinkUri: HelpLink.ForId(DiagnosticId));
     }
 }

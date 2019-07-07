@@ -12,7 +12,8 @@
     {
         /// <inheritdoc/>
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } = ImmutableArray.Create(
-            GuInj001AddAutoBind.Descriptor);
+            GuInj001MissingBinding.Descriptor,
+            GuInj002RedundantBinding.Descriptor);
 
         /// <inheritdoc/>
         public override void Initialize(AnalysisContext context)
@@ -32,34 +33,39 @@
             if (!context.IsExcludedFromAnalysis() &&
                 context.Node is ObjectCreationExpressionSyntax objectCreation &&
                 objectCreation.Type is GenericNameSyntax &&
-                context.SemanticModel.TryGetType(objectCreation, context.CancellationToken, out var type) &&
-                type is INamedTypeSymbol namedType &&
-                type == KnownSymbol.ContainerOfT &&
-                namedType.TypeArguments.TrySingle(out var typeArg) &&
-                typeArg != KnownSymbol.Object &&
-                !IsAutoBound(objectCreation))
+                context.SemanticModel.TryGetNamedType(objectCreation, context.CancellationToken, out var containerType) &&
+                containerType == KnownSymbol.ContainerOfT &&
+                containerType.TypeArguments.TrySingleOfType(out INamedTypeSymbol rootType) &&
+                rootType != KnownSymbol.Object)
             {
-                context.ReportDiagnostic(Diagnostic.Create(
-                    GuInj001AddAutoBind.Descriptor,
-                    objectCreation.GetLocation()));
-            }
-
-            bool IsAutoBound(ObjectCreationExpressionSyntax candidate)
-            {
-                var parent = candidate.Parent;
-                while (parent is MemberAccessExpressionSyntax memberAccess &&
-                       memberAccess.Parent is InvocationExpressionSyntax invocation)
+                using (var bindings = Binding.FindBindings(objectCreation, context.SemanticModel, context.CancellationToken))
                 {
-                    if (invocation.TryGetMethodName(out var name) &&
-                        name == "AutoBind")
+                    using (var graph = Binding.Graph(rootType, context.SemanticModel, objectCreation.SpanStart))
                     {
-                        return true;
+                        foreach (var kvp in bindings)
+                        {
+                            if (kvp.Value.Length > 1)
+                            {
+                                context.ReportDiagnostic(
+                                    Diagnostic.Create(
+                                        GuInj002RedundantBinding.Descriptor,
+                                        objectCreation.GetLocation(),
+                                        kvp.Key.ToDisplayString()));
+                            }
+                        }
+
+                        graph.ExceptWith(bindings.Keys);
+                        foreach (var missing in graph)
+                        {
+                            context.ReportDiagnostic(
+                                Diagnostic.Create(
+                                    GuInj001MissingBinding.Descriptor,
+                                    objectCreation.GetLocation(),
+                                    ImmutableDictionary<string, string>.Empty.Add(nameof(INamedTypeSymbol), missing.FullName()),
+                                    missing.ToMinimalDisplayString(context.SemanticModel, objectCreation.SpanStart)));
+                        }
                     }
-
-                    parent = invocation.Parent;
                 }
-
-                return false;
             }
         }
     }

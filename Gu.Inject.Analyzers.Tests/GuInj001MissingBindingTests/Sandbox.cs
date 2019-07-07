@@ -1,4 +1,4 @@
-﻿namespace Gu.Inject.Analyzers.Tests.GuInj001AddAutoBindTests
+﻿namespace Gu.Inject.Analyzers.Tests.GuInj001MissingBindingTests
 {
     using Gu.Inject;
     using Gu.Inject.Tests.Types;
