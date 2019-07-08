@@ -1388,8 +1388,8 @@ NUGET
       System.Reflection.Emit (>= 4.3) - restriction: || (&& (< net35) (>= netstandard1.3) (< netstandard1.5)) (&& (< net35) (>= netstandard1.5))
       System.Reflection.TypeExtensions (>= 4.3) - restriction: || (&& (< net35) (>= netstandard1.3) (< netstandard1.5)) (&& (< net35) (>= netstandard1.5))
       System.Xml.XmlDocument (>= 4.3) - restriction: || (&& (< net35) (>= netstandard1.3) (< netstandard1.5)) (&& (< net35) (>= netstandard1.5))
-    Gu.Roslyn.Asserts (2.9)
-      Microsoft.CodeAnalysis.CSharp.Workspaces (>= 2.0)
+    Gu.Roslyn.Asserts (3.0)
+      Microsoft.CodeAnalysis.CSharp.Workspaces (>= 3.0)
     Microsoft.CodeAnalysis.Analyzers (2.9.3) - restriction: >= netstandard2.0
     Microsoft.CodeAnalysis.Common (3.1) - restriction: >= netstandard2.0
       Microsoft.CodeAnalysis.Analyzers (>= 2.6.2-beta2) - restriction: >= netstandard2.0
