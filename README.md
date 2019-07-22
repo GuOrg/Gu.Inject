@@ -3,6 +3,7 @@
 Playing around with writing an IoC
 
 [![Build status](https://ci.appveyor.com/api/projects/status/c51yih3egb6lik1n/branch/master?svg=true)](https://ci.appveyor.com/project/GuOrg/gu-inject/branch/master)
+[![Build Status](https://dev.azure.com/guorg/Gu.Inject/_apis/build/status/GuOrg.Gu.Inject?branchName=master)](https://dev.azure.com/guorg/Gu.Inject/_build/latest?definitionId=2&branchName=master)
 [![Join the chat at https://gitter.im/JohanLarsson/Gu.Inject](https://badges.gitter.im/JohanLarsson/Gu.Inject.svg)](https://gitter.im/JohanLarsson/Gu.Inject?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Goal is to make a simple fast container enforcing sane conventions.
