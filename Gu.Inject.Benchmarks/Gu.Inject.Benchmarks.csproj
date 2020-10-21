@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\packages\benchmarks\Microsoft.Diagnostics.Tracing.TraceEvent\build\Microsoft.Diagnostics.Tracing.TraceEvent.props" Condition="Exists('..\packages\benchmarks\Microsoft.Diagnostics.Tracing.TraceEvent\build\Microsoft.Diagnostics.Tracing.TraceEvent.props')" Label="Paket" />
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net472</TargetFramework>
@@ -12,12 +11,6 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Gu.Inject.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="BenchmarkDotNet.Artifacts\**" />
-    <EmbeddedResource Remove="BenchmarkDotNet.Artifacts\**" />
-    <None Remove="BenchmarkDotNet.Artifacts\**" />
-  </ItemGroup>
   
   <ItemGroup>
     <Content Include="Types\Graph.generated.txt">
@@ -34,7 +27,14 @@
   <ItemGroup>
     <ProjectReference Include="..\Gu.Inject\Gu.Inject.csproj" />
   </ItemGroup>
-  
-  <Import Project="..\packages\benchmarks\NETStandard.Library\build\NETStandard.Library.targets" Condition="Exists('..\packages\benchmarks\NETStandard.Library\build\NETStandard.Library.targets')" Label="Paket" />
-  <Import Project="..\.paket\Paket.Restore.targets" />
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet.Diagnostics.Windows" Version="0.12.1" />
+    <PackageReference Include="Gu.Analyzers" Version="1.6.9-dev" PrivateAssets="all" />
+    <PackageReference Include="IDisposableAnalyzers" Version="3.4.2" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0" PrivateAssets="all" />
+    <PackageReference Include="Ninject" Version="3.3.4" />
+    <PackageReference Include="SimpleInjector" Version="5.0.4" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.205" PrivateAssets="all" />
+  </ItemGroup>
 </Project>

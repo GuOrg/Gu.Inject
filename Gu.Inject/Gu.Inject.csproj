@@ -25,5 +25,10 @@
     <RepositoryUrl>https://github.com/GuOrg/Gu.Inject</RepositoryUrl>
   </PropertyGroup>
 
-  <Import Project="..\.paket\Paket.Restore.targets" />
+  <ItemGroup>
+    <PackageReference Include="Gu.Analyzers" Version="1.6.9-dev" PrivateAssets="all" />
+    <PackageReference Include="IDisposableAnalyzers" Version="3.4.2" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0" PrivateAssets="all" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.205" PrivateAssets="all" />
+  </ItemGroup>
 </Project>

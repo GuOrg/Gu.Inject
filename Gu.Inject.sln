@@ -1,21 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26403.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".paket", ".paket", "{8DE2AA93-DC3E-4F23-B520-810A1E041E1F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".sln", ".sln", "{8DE2AA93-DC3E-4F23-B520-810A1E041E1F}"
 	ProjectSection(SolutionItems) = preProject
 		appveyor.yml = appveyor.yml
-		paket.dependencies = paket.dependencies
-		paket.lock = paket.lock
-		.paket\Readme.paket.md = .paket\Readme.paket.md
+		azure-pipelines.yml = azure-pipelines.yml
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.Inject", "Gu.Inject\Gu.Inject.csproj", "{8953C8E1-0819-4EB8-B10C-5286DEB0E079}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Inject", "Gu.Inject\Gu.Inject.csproj", "{8953C8E1-0819-4EB8-B10C-5286DEB0E079}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.Inject.Tests", "Gu.Inject.Tests\Gu.Inject.Tests.csproj", "{C30669FC-D159-488F-8FF8-BDCD4622C325}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Inject.Tests", "Gu.Inject.Tests\Gu.Inject.Tests.csproj", "{C30669FC-D159-488F-8FF8-BDCD4622C325}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.Inject.Benchmarks", "Gu.Inject.Benchmarks\Gu.Inject.Benchmarks.csproj", "{A92D6209-5247-4ADC-84B8-46F44F66BF42}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Inject.Benchmarks", "Gu.Inject.Benchmarks\Gu.Inject.Benchmarks.csproj", "{A92D6209-5247-4ADC-84B8-46F44F66BF42}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,5 +36,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BAAC99F0-AB5D-47E6-B4FF-E47CCDC59FEB}
 	EndGlobalSection
 EndGlobal
