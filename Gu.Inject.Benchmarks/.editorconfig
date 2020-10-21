@@ -18,3 +18,6 @@ dotnet_diagnostic.CA1062.severity = none
 # CA1720: Identifier 'String' contains type name
 dotnet_diagnostic.CA1720.severity = none
 
+
+# CA1825: Avoid zero-length array allocations
+dotnet_diagnostic.CA1825.severity = none

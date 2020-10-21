@@ -5,8 +5,8 @@ namespace Gu.Inject
 
     interface IFactory
     {
-        object Create(object[] args);
-
         IReadOnlyList<Type> ParameterTypes { get; }
+
+        object Create(object[] args);
     }
 }

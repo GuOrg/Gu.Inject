@@ -17,3 +17,6 @@ dotnet_diagnostic.CA1062.severity = none
 
 # CA1720: Identifier 'String' contains type name
 dotnet_diagnostic.CA1720.severity = none
+
+# CA1040: Avoid empty interfaces
+dotnet_diagnostic.CA1040.severity = none

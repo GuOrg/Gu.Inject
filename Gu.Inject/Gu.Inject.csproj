@@ -33,6 +33,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Gu.Analyzers" Version="1.6.9-dev" PrivateAssets="all" />
     <PackageReference Include="IDisposableAnalyzers" Version="3.4.2" PrivateAssets="all" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.0" PrivateAssets="all" />
