@@ -4,7 +4,8 @@
     <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
     <CodeAnalysisRuleSet></CodeAnalysisRuleSet>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -21,9 +22,9 @@
       FEATURE: Netstandard support.
     </PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/GuOrg/Gu.Inject</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GuOrg/Gu.Inject</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -38,5 +39,10 @@
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.0-beta-20204-02" PrivateAssets="all" />
     <PackageReference Include="ReflectionAnalyzers" Version="0.1.22-dev" PrivateAssets="all" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.205" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[3.1.0]" />
+    <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.160" PrivateAssets="all" />
   </ItemGroup>
 </Project>
