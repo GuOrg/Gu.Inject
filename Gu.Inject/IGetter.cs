@@ -1,5 +1,8 @@
 namespace Gu.Inject
 {
+    /// <summary>
+    /// A get -only view of <see cref="Kernel"/>.
+    /// </summary>
     public interface IGetter
     {
         /// <summary>

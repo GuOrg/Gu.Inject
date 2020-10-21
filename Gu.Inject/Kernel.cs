@@ -20,6 +20,11 @@
         public event EventHandler<Type> Creating;
 
         /// <summary>
+        /// This notifies after creating an instance of a type.
+        /// </summary>
+        public event EventHandler<object> Created;
+
+        /// <summary>
         /// Provide an override to the automatic mapping.
         /// </summary>
         /// <typeparam name="TInterface">The type to map.</typeparam>
@@ -279,7 +284,9 @@
             this.Creating?.Invoke(this, type);
             if (factory.ParameterTypes.Count == 0)
             {
-                return factory.Create(null);
+                var item = factory.Create(null);
+                this.Created?.Invoke(this, item);
+                return item;
             }
 
             if (visited != null)
@@ -304,7 +311,9 @@
                     args[i] = this.GetCore(factory.ParameterTypes[i], visited);
                 }
 
-                return factory.Create(args);
+                var item = factory.Create(args);
+                this.Created?.Invoke(this, item);
+                return item;
             }
             catch (ResolveException e)
             {

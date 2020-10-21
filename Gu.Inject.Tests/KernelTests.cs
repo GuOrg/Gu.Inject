@@ -108,5 +108,17 @@
                 CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
             }
         }
+
+        [Test]
+        public void NotifiesCreated()
+        {
+            using (var kernel = new Kernel())
+            {
+                var actual = new List<object>();
+                kernel.Created += (sender, item) => actual.Add(item);
+                var defaultCtor = kernel.Get<DefaultCtor>();
+                CollectionAssert.AreEqual(new[] { defaultCtor }, actual);
+            }
+        }
     }
 }
