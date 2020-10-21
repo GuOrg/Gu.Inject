@@ -20,6 +20,7 @@
     <PackageReleaseNotes>
       FEATURE: Netstandard support.
     </PackageReleaseNotes>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageLicenseUrl>http://opensource.org/licenses/MIT</PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/GuOrg/Gu.Inject</PackageProjectUrl>
     <RepositoryUrl>https://github.com/GuOrg/Gu.Inject</RepositoryUrl>
