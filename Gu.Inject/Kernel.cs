@@ -330,22 +330,22 @@
         private class Node
         {
             private readonly Type type;
-            private readonly Node previous;
+            private readonly Node? previous;
 
-            public Node(Type type)
+            internal Node(Type type)
                 : this(type, null)
             {
             }
 
-            private Node(Type type, Node previous)
+            private Node(Type type, Node? previous)
             {
                 this.type = type;
                 this.previous = previous;
             }
 
-            public Node Next(Type next) => new Node(next, this);
+            internal Node Next(Type next) => new Node(next, this);
 
-            public bool Contains(Type next)
+            internal bool Contains(Type next)
             {
                 if (this.type == next)
                 {

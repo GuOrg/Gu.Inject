@@ -26,7 +26,7 @@ namespace Gu.Inject.Benchmarks
         [Benchmark]
         public object TryDequeueEnqueue()
         {
-            if (Cache.TryDequeue(out Node result))
+            if (Cache.TryDequeue(out var result))
             {
                 Cache.Enqueue(result);
                 return result;
@@ -38,29 +38,17 @@ namespace Gu.Inject.Benchmarks
         private class Node
         {
             private readonly Type type;
-            private readonly Node previous;
+            private readonly Node? previous;
 
-            public Node(Type type)
+            internal Node(Type type)
                 : this(type, null)
             {
             }
 
-            private Node(Type type, Node previous)
+            private Node(Type type, Node? previous)
             {
                 this.type = type;
                 this.previous = previous;
-            }
-
-            public Node Next(Type type) => new Node(type, this);
-
-            public bool Contains(Type type)
-            {
-                if (this.type == type)
-                {
-                    return true;
-                }
-
-                return this.previous?.Contains(type) == true;
             }
         }
     }

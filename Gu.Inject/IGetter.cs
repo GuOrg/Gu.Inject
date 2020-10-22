@@ -1,3 +1,5 @@
+using System;
+
 namespace Gu.Inject
 {
     /// <summary>
@@ -12,5 +14,6 @@ namespace Gu.Inject
         /// <returns>The singleton instance of <typeparamref name="T"/>.</returns>
         T Get<T>()
             where T : class;
+        object Get(Type type);
     }
 }
