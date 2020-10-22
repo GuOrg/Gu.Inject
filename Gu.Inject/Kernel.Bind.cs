@@ -183,6 +183,7 @@
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="create">The factory function used to create the instance.</param>
+        /// <returns>The same instance.</returns>
         public Kernel Bind<T>(Func<T> create)
             where T : class
         {
