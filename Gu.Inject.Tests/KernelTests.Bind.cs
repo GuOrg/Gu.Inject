@@ -32,6 +32,25 @@
             }
 
             [Test]
+            public void BindTwoInterfacesThenGet()
+            {
+                using var kernel = new Kernel();
+                kernel.Bind<IWith, IWith<DefaultCtor>, With<DefaultCtor>>();
+                Assert.AreSame(kernel.Get<IWith<DefaultCtor>>(), kernel.Get<With<DefaultCtor>>());
+                Assert.AreSame(kernel.Get<IWith>(), kernel.Get<With<DefaultCtor>>());
+            }
+
+            [Test]
+            public void BindTwoInterfacesInTwoStepsThenGet()
+            {
+                using var kernel = new Kernel();
+                kernel.Bind<IWith, IWith<DefaultCtor>>();
+                kernel.Bind<IWith<DefaultCtor>, With<DefaultCtor>>();
+                Assert.AreSame(kernel.Get<IWith<DefaultCtor>>(), kernel.Get<With<DefaultCtor>>());
+                Assert.AreSame(kernel.Get<IWith>(), kernel.Get<With<DefaultCtor>>());
+            }
+
+            [Test]
             public void BindInstanceThenGet()
             {
                 using var kernel = new Kernel();
@@ -54,6 +73,16 @@
             {
                 using var kernel = new Kernel();
                 kernel.Bind<IWith, IWith<DefaultCtor>, With<DefaultCtor>>(new With<DefaultCtor>(new DefaultCtor()));
+                Assert.AreSame(kernel.Get<IWith<DefaultCtor>>(), kernel.Get<With<DefaultCtor>>());
+                Assert.AreSame(kernel.Get<IWith>(), kernel.Get<With<DefaultCtor>>());
+            }
+
+            [Test]
+            public void BindInstanceAndTwoInterfacesInTwoStepsThenGet()
+            {
+                using var kernel = new Kernel();
+                kernel.Bind<IWith, IWith<DefaultCtor>>();
+                kernel.Bind<IWith<DefaultCtor>, With<DefaultCtor>>(new With<DefaultCtor>(new DefaultCtor()));
                 Assert.AreSame(kernel.Get<IWith<DefaultCtor>>(), kernel.Get<With<DefaultCtor>>());
                 Assert.AreSame(kernel.Get<IWith>(), kernel.Get<With<DefaultCtor>>());
             }
