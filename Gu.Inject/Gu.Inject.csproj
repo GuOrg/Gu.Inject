@@ -48,4 +48,19 @@
     <PackageDownload Include="Microsoft.NETCore.App.Ref" Version="[3.1.0]" />
     <PackageReference Include="TunnelVisionLabs.ReferenceAssemblyAnnotator" Version="1.0.0-alpha.160" PrivateAssets="all" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+
+    <None Update="Kernel.Bind.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Kernel.Bind.generated.cs</LastGenOutput>
+    </None>
+
+    <Compile Update="Kernel.Bind.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Kernel.Bind.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
 </Project>
