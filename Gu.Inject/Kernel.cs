@@ -223,7 +223,7 @@
         private object GetCore(Type type, Node? visited = null)
         {
             if (this.bindings != null &&
-                this.bindings.TryGetValue(type, out object bound))
+                this.bindings.TryGetValue(type, out var bound))
             {
                 if (bound is Type boundType)
                 {

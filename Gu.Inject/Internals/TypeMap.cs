@@ -46,7 +46,7 @@
             if (type.IsGenericType)
             {
                 var typeDefinition = type.GetGenericTypeDefinition();
-                if (cache.TryGetValue(typeDefinition, out List<Type> mappeds))
+                if (cache.TryGetValue(typeDefinition, out var mappeds))
                 {
                     var mappedTypes = new List<Type>(mappeds.Count);
                     foreach (var mapped in mappeds)
@@ -125,7 +125,7 @@
                 interfaceOrBase = interfaceOrBase.GetGenericTypeDefinition();
             }
 
-            if (!map.TryGetValue(interfaceOrBase, out List<Type> types))
+            if (!map.TryGetValue(interfaceOrBase, out var types))
             {
                 map[interfaceOrBase] = types = new List<Type>();
             }
