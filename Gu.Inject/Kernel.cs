@@ -88,13 +88,13 @@
                 if (bound is Type boundType)
                 {
                     return type == boundType
-                               ? this.created.GetOrAdd(type, t => this.Create(t, Constructor.GetFactory(type), visited))
+                               ? this.created.GetOrAdd(type, t => Create(Constructor.GetFactory(type)))
                                : this.GetCore(boundType, visited);
                 }
 
                 if (bound is IFactory factory)
                 {
-                    return this.created.GetOrAdd(type, t => this.Create(t, factory, visited));
+                    return this.created.GetOrAdd(type, t => Create(factory));
                 }
 
                 return bound;
@@ -105,56 +105,57 @@
                 throw new NoBindingException(type);
             }
 
-            return this.created.GetOrAdd(type, t => this.Create(t, Constructor.GetFactory(type), visited));
-        }
+            return this.created.GetOrAdd(type, t => Create(Constructor.GetFactory(t)));
 
-        private object Create(Type type, IFactory factory, Node? visited)
-        {
-            if (factory.ParameterTypes.Any(p => p.IsArray))
+            object Create(IFactory factory)
             {
-                var message = $"Type {type.PrettyName()} has params argument which is not supported.\r\n" +
-                               "Add a binding specifying which how to create an instance.";
-                throw new ResolveException(type, message);
-            }
-
-            this.Creating?.Invoke(this, type);
-            if (factory.ParameterTypes.Count == 0)
-            {
-                var item = factory.Create(null);
-                this.Created?.Invoke(this, item);
-                return item;
-            }
-
-            if (visited != null)
-            {
-                if (visited.Contains(type))
+                if (factory.ParameterTypes.Any(p => p.IsArray))
                 {
-                    throw new CircularDependencyException(type);
+                    var message = $"Type {type.PrettyName()} has params argument which is not supported.\r\n" +
+                                  "Add a binding specifying which how to create an instance.";
+                    throw new ResolveException(type, message);
                 }
 
-                visited = visited.Next(type);
-            }
-            else
-            {
-                visited = new Node(type);
-            }
-
-            try
-            {
-                var args = new object[factory.ParameterTypes.Count];
-                for (var i = 0; i < factory.ParameterTypes.Count; i++)
+                this.Creating?.Invoke(this, type);
+                if (factory.ParameterTypes.Count == 0)
                 {
-                    args[i] = this.GetCore(factory.ParameterTypes[i], visited);
+                    var item = factory.Create(null);
+                    this.Created?.Invoke(this, item);
+                    return item;
                 }
 
-                var item = factory.Create(args);
-                this.Created?.Invoke(this, item);
-                return item;
+                if (visited != null)
+                {
+                    if (visited.Contains(type))
+                    {
+                        throw new CircularDependencyException(type);
+                    }
+
+                    visited = visited.Next(type);
+                }
+                else
+                {
+                    visited = new Node(type);
+                }
+
+                try
+                {
+                    var args = new object[factory.ParameterTypes.Count];
+                    for (var i = 0; i < factory.ParameterTypes.Count; i++)
+                    {
+                        args[i] = this.GetCore(factory.ParameterTypes[i], visited);
+                    }
+
+                    var item = factory.Create(args);
+                    this.Created?.Invoke(this, item);
+                    return item;
+                }
+                catch (ResolveException e)
+                {
+                    throw new ResolveException(type, e);
+                }
             }
-            catch (ResolveException e)
-            {
-                throw new ResolveException(type, e);
-            }
+
         }
 
         private void ThrowIfHasResolved([CallerMemberName] string? caller = null)
