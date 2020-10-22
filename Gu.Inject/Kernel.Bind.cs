@@ -12,7 +12,8 @@
         /// </summary>
         /// <param name="from">The type to map.</param>
         /// <param name="to">The mapped type.</param>
-        public void Bind(Type from, Type to)
+        /// <returns>The same instance.</returns>
+        public Kernel Bind(Type from, Type to)
         {
             if (from is null)
             {
@@ -27,6 +28,7 @@
             this.ThrowIfDisposed();
             this.ThrowIfHasResolved();
             this.BindCore(from, to);
+            return this;
         }
 
         /// <summary>
@@ -34,10 +36,12 @@
         /// </summary>
         /// <typeparam name="TInterface">The type to map.</typeparam>
         /// <typeparam name="TConcrete">The mapped type.</typeparam>
-        public void Bind<TInterface, TConcrete>()
+        /// <returns>The same instance.</returns>
+        public Kernel Bind<TInterface, TConcrete>()
             where TConcrete : TInterface
         {
             this.Bind(typeof(TInterface), typeof(TConcrete));
+            return this;
         }
 
         /// <summary>
@@ -46,11 +50,13 @@
         /// <typeparam name="TInterface1">The first type to map.</typeparam>
         /// <typeparam name="TInterface2">The second type to map.</typeparam>
         /// <typeparam name="TConcrete">The mapped type.</typeparam>
-        public void Bind<TInterface1, TInterface2, TConcrete>()
+        /// <returns>The same instance.</returns>
+        public Kernel Bind<TInterface1, TInterface2, TConcrete>()
             where TConcrete : TInterface1, TInterface2
         {
             this.Bind(typeof(TInterface1), typeof(TConcrete));
             this.Bind(typeof(TInterface2), typeof(TConcrete));
+            return this;
         }
 
         /// <summary>
@@ -60,12 +66,14 @@
         /// <typeparam name="TInterface2">The second type to map.</typeparam>
         /// <typeparam name="TInterface3">The third type to map.</typeparam>
         /// <typeparam name="TConcrete">The mapped type.</typeparam>
-        public void Bind<TInterface1, TInterface2, TInterface3, TConcrete>()
+        /// <returns>The same instance.</returns>
+        public Kernel Bind<TInterface1, TInterface2, TInterface3, TConcrete>()
             where TConcrete : TInterface1, TInterface2, TInterface3
         {
             this.Bind(typeof(TInterface1), typeof(TConcrete));
             this.Bind(typeof(TInterface2), typeof(TConcrete));
             this.Bind(typeof(TInterface3), typeof(TConcrete));
+            return this;
         }
 
         /// <summary>
@@ -74,7 +82,8 @@
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="instance">The instance to bind.</param>
-        public void Bind<T>(T instance)
+        /// <returns>The same instance.</returns>
+        public Kernel Bind<T>(T instance)
             where T : class
         {
             if (instance is null)
@@ -86,6 +95,7 @@
             this.ThrowIfHasResolved();
 
             this.BindCore(typeof(T), instance);
+            return this;
         }
 
         /// <summary>
@@ -95,7 +105,8 @@
         /// <typeparam name="TInterface">The type to map.</typeparam>
         /// <typeparam name="TConcrete">The mapped type.</typeparam>
         /// <param name="instance">The instance to bind.</param>
-        public void Bind<TInterface, TConcrete>(TConcrete instance)
+        /// <returns>The same instance.</returns>
+        public Kernel Bind<TInterface, TConcrete>(TConcrete instance)
             where TConcrete : class, TInterface
         {
             if (instance is null)
@@ -108,6 +119,7 @@
 
             this.Bind(typeof(TInterface), typeof(TConcrete));
             this.BindCore(typeof(TConcrete), instance);
+            return this;
         }
 
         /// <summary>
@@ -118,7 +130,8 @@
         /// <typeparam name="TInterface2">The second type to map.</typeparam>
         /// <typeparam name="TConcrete">The mapped type.</typeparam>
         /// <param name="instance">The instance to bind.</param>
-        public void Bind<TInterface1, TInterface2, TConcrete>(TConcrete instance)
+        /// <returns>The same instance.</returns>
+        public Kernel Bind<TInterface1, TInterface2, TConcrete>(TConcrete instance)
             where TConcrete : class, TInterface1, TInterface2
         {
             if (instance is null)
@@ -132,6 +145,7 @@
             this.Bind(typeof(TInterface1), typeof(TConcrete));
             this.Bind(typeof(TInterface2), typeof(TConcrete));
             this.BindCore(typeof(TConcrete), instance);
+            return this;
         }
 
         /// <summary>
@@ -143,7 +157,8 @@
         /// <typeparam name="TInterface3">The third type to map.</typeparam>
         /// <typeparam name="TConcrete">The mapped type.</typeparam>
         /// <param name="instance">The instance to bind.</param>
-        public void Bind<TInterface1, TInterface2, TInterface3, TConcrete>(TConcrete instance)
+        /// <returns>The same instance.</returns>
+        public Kernel Bind<TInterface1, TInterface2, TInterface3, TConcrete>(TConcrete instance)
             where TConcrete : class, TInterface1, TInterface2, TInterface3
         {
             if (instance is null)
@@ -158,6 +173,7 @@
             this.Bind(typeof(TInterface2), typeof(TConcrete));
             this.Bind(typeof(TInterface3), typeof(TConcrete));
             this.BindCore(typeof(TConcrete), instance);
+            return this;
         }
 
         /// <summary>
@@ -167,7 +183,7 @@
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="create">The factory function used to create the instance.</param>
-        public void Bind<T>(Func<T> create)
+        public Kernel Bind<T>(Func<T> create)
             where T : class
         {
             if (create is null)
@@ -179,6 +195,7 @@
 
             this.ThrowIfHasResolved();
             this.BindCore(typeof(T), new Factory<T>(create));
+            return this;
         }
 
         /// <summary>
@@ -188,7 +205,8 @@
         /// <typeparam name="TInterface">The type to map.</typeparam>
         /// <typeparam name="TConcrete">The mapped type.</typeparam>
         /// <param name="create">The factory function used to create the instance.</param>
-        public void Bind<TInterface, TConcrete>(Func<TConcrete> create)
+        /// <returns>The same instance.</returns>
+        public Kernel Bind<TInterface, TConcrete>(Func<TConcrete> create)
             where TConcrete : class, TInterface
         {
             if (create is null)
@@ -201,6 +219,7 @@
 
             this.Bind(typeof(TInterface), typeof(TConcrete));
             this.BindCore(typeof(TConcrete), new Factory<TConcrete>(create));
+            return this;
         }
 
         /// <summary>
@@ -211,7 +230,8 @@
         /// <typeparam name="TInterface2">The second type to map.</typeparam>
         /// <typeparam name="TConcrete">The mapped type.</typeparam>
         /// <param name="create">The factory function used to create the instance.</param>
-        public void Bind<TInterface1, TInterface2, TConcrete>(Func<TConcrete> create)
+        /// <returns>The same instance.</returns>
+        public Kernel Bind<TInterface1, TInterface2, TConcrete>(Func<TConcrete> create)
             where TConcrete : class, TInterface1, TInterface2
         {
             if (create is null)
@@ -225,6 +245,7 @@
             this.Bind(typeof(TInterface1), typeof(TConcrete));
             this.Bind(typeof(TInterface2), typeof(TConcrete));
             this.BindCore(typeof(TConcrete), new Factory<TConcrete>(create));
+            return this;
         }
 
         /// <summary>
@@ -236,7 +257,8 @@
         /// <typeparam name="TInterface3">The third type to map.</typeparam>
         /// <typeparam name="TConcrete">The mapped type.</typeparam>
         /// <param name="create">The factory function used to create the instance.</param>
-        public void Bind<TInterface1, TInterface2, TInterface3, TConcrete>(Func<TConcrete> create)
+        /// <returns>The same instance.</returns>
+        public Kernel Bind<TInterface1, TInterface2, TInterface3, TConcrete>(Func<TConcrete> create)
             where TConcrete : class, TInterface1, TInterface2, TInterface3
         {
             if (create is null)
@@ -251,6 +273,7 @@
             this.Bind(typeof(TInterface2), typeof(TConcrete));
             this.Bind(typeof(TInterface3), typeof(TConcrete));
             this.BindCore(typeof(TConcrete), new Factory<TConcrete>(create));
+            return this;
         }
 
         /// <summary>
@@ -260,7 +283,8 @@
         /// </summary>
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="create">The instance to bind.</param>
-        public void Bind<T>(Func<IGetter, T> create)
+        /// <returns>The same instance.</returns>
+        public Kernel Bind<T>(Func<IGetter, T> create)
             where T : class
         {
             if (create is null)
@@ -271,6 +295,7 @@
             this.ThrowIfDisposed();
             this.ThrowIfHasResolved();
             this.BindCore(typeof(T), new Factory<T>(() => create(this)));
+            return this;
         }
     }
 }
