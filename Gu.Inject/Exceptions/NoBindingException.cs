@@ -28,7 +28,7 @@ namespace Gu.Inject
 
         private static string CreateMessage(Type type)
         {
-            return $"Type {type.PrettyName()} has no bindings.";
+            return $"Type {type.PrettyName()} has no binding.";
         }
     }
 }

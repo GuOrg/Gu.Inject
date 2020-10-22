@@ -137,7 +137,7 @@
             where T : class
         {
             this.ThrowIfDisposed();
-            return (T)this.Get(typeof(T));
+            return (T)this.GetCore(typeof(T));
         }
 
         /// <summary>
@@ -199,7 +199,7 @@
                 return bound;
             }
 
-            if (type.IsInterface || type.IsAbstract)
+            if (type.IsInterface || type.IsAbstract || type.IsValueType)
             {
                 throw new NoBindingException(type);
             }

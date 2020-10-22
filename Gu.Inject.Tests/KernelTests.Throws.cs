@@ -8,6 +8,30 @@
     {
         public class Throws
         {
+            [TestCase(typeof(IWith), "Type IWith has no binding.")]
+            [TestCase(typeof(int), "Type int has no binding.")]
+            [TestCase(typeof(int?), "Type Nullable<int> has no binding.")]
+            [TestCase(typeof(IWith<int>), "Type IWith<int> has no binding.")]
+            [TestCase(typeof(IWith<int?>), "Type IWith<Nullable<int>> has no binding.")]
+            [TestCase(typeof(IWith<IWith<int>>), "Type IWith<IWith<int>> has no binding.")]
+            [TestCase(typeof(OneToMany.Abstract), "Type OneToMany.Abstract has no binding.")]
+            [TestCase(typeof(OneToMany.IAbstract), "Type OneToMany.IAbstract has no binding.")]
+            [TestCase(typeof(OneToMany.IConcrete), "Type OneToMany.IConcrete has no binding.")]
+            public void GetWhenNoBinding(Type type, string expected)
+            {
+                using var kernel = new Kernel();
+                var exception = Assert.Throws<NoBindingException>(() => kernel.Get(type));
+                Assert.AreEqual(expected, exception.Message);
+            }
+
+            [TestCase(typeof(int[]), "Int32[](\r\n  Type int has no binding.\r\n")]
+            public void GetWhenNoBindingNested(Type type, string expected)
+            {
+                using var kernel = new Kernel();
+                var exception = Assert.Throws<ResolveException>(() => kernel.Get(type));
+                Assert.AreEqual(expected, exception.Message);
+            }
+
             [TestCase(typeof(Circular1.A), "Circular1.A(\r\n  Circular1.B(\r\n    Circular1.A(... Circular dependency detected.\r\n")]
             [TestCase(typeof(Circular2.A), "Circular2.A(\r\n  Circular2.E(\r\n    Circular2.G(\r\n      Circular2.A(... Circular dependency detected.\r\n")]
             public void GetWhenCircular(Type type, string message)
@@ -17,31 +41,14 @@
                 Assert.AreEqual(message, exception.Message);
             }
 
-            [TestCase(typeof(IWith), "Type IWith has no bindings.")]
-            [TestCase(typeof(IWith<int>), "Type IWith<int> has no bindings.")]
-            [TestCase(typeof(IWith<int?>), "Type IWith<Nullable<int>> has no bindings.")]
-            [TestCase(typeof(IWith<IWith<int>>), "Type IWith<IWith<int>> has no bindings.")]
-            [TestCase(typeof(OneToMany.Abstract), "Type OneToMany.Abstract has no bindings.")]
-            [TestCase(typeof(OneToMany.IAbstract), "Type OneToMany.IAbstract has no bindings.")]
-            [TestCase(typeof(OneToMany.IConcrete), "Type OneToMany.IConcrete has no bindings.")]
-            public void GetWhenNoBinding(Type type, string expected)
-            {
-                using var kernel = new Kernel();
-                var exception = Assert.Throws<NoBindingException>(() => kernel.Get(type));
-                Assert.AreEqual(expected, exception.Message);
-            }
-
             [Test]
             public void GetWhenTwoConstructors()
             {
-                using (var kernel = new Kernel())
-                {
-                    var exception = Assert.Throws<ResolveException>(() => kernel.Get<Error.TwoCtors>());
-                    var expected = "Type Error.TwoCtors has more than one constructor.\r\n" +
-                                   "Add a binding specifying which constructor to use.";
-                    Assert.AreEqual(expected, exception.Message);
-                }
-                Assert.Inconclusive("Provide setting specifying ctors. UsePrivate, UseMostParameters etc.");
+                using var kernel = new Kernel();
+                var exception = Assert.Throws<ResolveException>(() => kernel.Get<Error.TwoCtors>());
+                var expected = "Type Error.TwoCtors has more than one constructor.\r\n" +
+                               "Add a binding specifying which constructor to use.";
+                Assert.AreEqual(expected, exception.Message);
             }
 
             [Test]

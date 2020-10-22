@@ -1,6 +1,7 @@
 ﻿namespace Gu.Inject
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
 
     /// <summary>
@@ -8,34 +9,32 @@
     /// </summary>
     internal static class TypeExt
     {
+        private static readonly Dictionary<Type, string> Map = new Dictionary<Type, string>
+        {
+            { typeof(bool), "bool" },
+            { typeof(byte), "byte" },
+            { typeof(char), "char" },
+            { typeof(decimal), "decimal" },
+            { typeof(double), "double" },
+            { typeof(float), "float" },
+            { typeof(int), "int" },
+            { typeof(long), "long" },
+            { typeof(object), "object" },
+            { typeof(sbyte), "sbyte" },
+            { typeof(short), "short" },
+            { typeof(string), "string" },
+            { typeof(uint), "uint" },
+            { typeof(ulong), "ulong" },
+        };
+
         /// <summary>
         /// Returns nicely formatted type names for generic types.
         /// </summary>
         internal static string PrettyName(this Type type)
         {
-            if (type == typeof(long))
+            if (Map.TryGetValue(type, out var mapped))
             {
-                return "long";
-            }
-
-            if (type == typeof(double))
-            {
-                return "double";
-            }
-
-            if (type == typeof(int))
-            {
-                return "int";
-            }
-
-            if (type == typeof(string))
-            {
-                return "string";
-            }
-
-            if (type == typeof(bool))
-            {
-                return "bool";
+                return mapped;
             }
 
             if (type.IsGenericType)
