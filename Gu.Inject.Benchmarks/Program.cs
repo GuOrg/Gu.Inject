@@ -7,8 +7,11 @@ namespace Gu.Inject.Benchmarks
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Text;
     using BenchmarkDotNet.Reports;
     using BenchmarkDotNet.Running;
+    using Gu.Inject.Benchmarks.Types;
+    using BindingFlags = System.Reflection.BindingFlags;
 
     public static class Program
     {
@@ -60,6 +63,19 @@ namespace Gu.Inject.Benchmarks
                                     SearchOption.AllDirectories)
                                 .Single();
             }
+        }
+
+        private static void CodeGen()
+        {
+            var builder = new StringBuilder();
+            foreach (var type in typeof(Graph500).GetNestedTypes())
+            {
+                var ctor = type.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
+                               .Single();
+                builder.AppendLine($".Bind(c => new {type.Name}({string.Join(", ", ctor.GetParameters().Select(x => $"c.Get<{x.ParameterType.Name}>()"))}))");
+            }
+
+            var code = builder.ToString();
         }
     }
 }
