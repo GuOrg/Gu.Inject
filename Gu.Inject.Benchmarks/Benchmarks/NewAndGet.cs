@@ -3,7 +3,6 @@ namespace Gu.Inject.Benchmarks
 {
     using BenchmarkDotNet.Attributes;
     using Ninject;
-    using SimpleInjector;
 
     [MemoryDiagnoser]
     public abstract class NewAndGet<T>
@@ -12,28 +11,22 @@ namespace Gu.Inject.Benchmarks
         [Benchmark]
         public object Ninject()
         {
-            using (var kernel = new Ninject.StandardKernel())
-            {
-                return kernel.Get<T>();
-            }
+            using var kernel = new Ninject.StandardKernel();
+            return kernel.Get<T>();
         }
 
         [Benchmark]
         public object SimpleInjector()
         {
-            using (var container = new Container())
-            {
-                return container.GetInstance<T>();
-            }
+            using var container = new SimpleInjector.Container();
+            return container.GetInstance<T>();
         }
 
         [Benchmark(Baseline = true)]
         public object GuInject()
         {
-            using (var kernel = new Kernel())
-            {
-                return kernel.Get<T>();
-            }
+            using var kernel = new Kernel();
+            return kernel.Get<T>();
         }
     }
 }
