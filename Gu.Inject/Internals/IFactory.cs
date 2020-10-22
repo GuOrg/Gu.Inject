@@ -7,6 +7,6 @@ namespace Gu.Inject
     {
         IReadOnlyList<Type> ParameterTypes { get; }
 
-        object Create(object[] args);
+        object Create(object[]? args);
     }
 }

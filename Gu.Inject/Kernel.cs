@@ -11,18 +11,18 @@
     /// </summary>
     public sealed class Kernel : IDisposable, IGetter
     {
-        private ConcurrentDictionary<Type, object> created = ConcurrentDictionaryPool<Type, object>.Borrow();
-        private ConcurrentDictionary<Type, object> bindings;
+        private ConcurrentDictionary<Type, object>? created = ConcurrentDictionaryPool<Type, object>.Borrow();
+        private ConcurrentDictionary<Type, object>? bindings;
 
         /// <summary>
         /// This notifies before creating an instance of a type.
         /// </summary>
-        public event EventHandler<Type> Creating;
+        public event EventHandler<Type>? Creating;
 
         /// <summary>
         /// This notifies after creating an instance of a type.
         /// </summary>
-        public event EventHandler<object> Created;
+        public event EventHandler<object>? Created;
 
         /// <summary>
         /// Provide an override to the automatic mapping.
@@ -55,12 +55,12 @@
         /// <param name="to">The mapped type.</param>
         public void Bind(Type from, Type to)
         {
-            if (from == null)
+            if (from is null)
             {
                 throw new ArgumentNullException(nameof(from));
             }
 
-            if (to == null)
+            if (to is null)
             {
                 throw new ArgumentNullException(nameof(to));
             }
@@ -79,7 +79,7 @@
         public void Bind<T>(T instance)
             where T : class
         {
-            if (instance == null)
+            if (instance is null)
             {
                 throw new ArgumentNullException(nameof(instance));
             }
@@ -99,7 +99,7 @@
         public void Bind<T>(Func<T> create)
             where T : class
         {
-            if (create == null)
+            if (create is null)
             {
                 throw new ArgumentNullException(nameof(create));
             }
@@ -119,7 +119,7 @@
         public void Bind<T>(Func<IGetter, T> create)
             where T : class
         {
-            if (create == null)
+            if (create is null)
             {
                 throw new ArgumentNullException(nameof(create));
             }
@@ -140,7 +140,7 @@
         public void Bind<TArg, T>(Func<TArg, T> create)
             where T : class
         {
-            if (create == null)
+            if (create is null)
             {
                 throw new ArgumentNullException(nameof(create));
             }
@@ -185,7 +185,7 @@
         /// <inheritdoc/>
         public void Dispose()
         {
-            if (this.created == null)
+            if (this.created is null)
             {
                 return;
             }
@@ -203,11 +203,11 @@
 
         private void BindCore(Type key, object value)
         {
-            if (this.bindings == null)
+            if (this.bindings is null)
             {
                 lock (this.created)
                 {
-                    if (this.bindings == null)
+                    if (this.bindings is null)
                     {
                         this.bindings = ConcurrentDictionaryPool<Type, object>.Borrow();
                     }
@@ -220,7 +220,7 @@
                 (type, o) => throw new InvalidOperationException($"{type.PrettyName()} already has a binding to {(o as Type)?.PrettyName() ?? o}"));
         }
 
-        private object GetCore(Type type, Node visited = null)
+        private object GetCore(Type type, Node? visited = null)
         {
             if (this.bindings != null &&
                 this.bindings.TryGetValue(type, out object bound))
@@ -321,7 +321,7 @@
             }
         }
 
-        private void ThrowIfHasResolved([CallerMemberName] string caller = null)
+        private void ThrowIfHasResolved([CallerMemberName] string? caller = null)
         {
             if (this.created.Count != 0)
             {
@@ -331,7 +331,7 @@
 
         private void ThrowIfDisposed()
         {
-            if (this.created == null)
+            if (this.created is null)
             {
                 throw new ObjectDisposedException(this.GetType().FullName);
             }
