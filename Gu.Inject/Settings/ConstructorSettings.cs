@@ -1,14 +1,27 @@
 namespace Gu.Inject
 {
-    public class ConstructorSettings
+    /// <summary>
+    /// Specify what constructors to use when resolving.
+    /// </summary>
+    public sealed class ConstructorSettings
     {
-        public static readonly ConstructorSettings Default = new ConstructorSettings(Visibility.Public);
+        /// <summary>
+        /// The default instance.
+        /// </summary>
+        public static readonly ConstructorSettings Default = new ConstructorSettings(Inject.Accessibilities.Public);
 
-        public ConstructorSettings(Visibility visibility)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ConstructorSettings"/> class.
+        /// </summary>
+        /// <param name="accessibility">Specifies the accessibility.</param>
+        public ConstructorSettings(Accessibilities accessibility)
         {
-            this.Visibility = visibility;
+            this.Accessibility = accessibility;
         }
 
-        public Visibility Visibility { get; }
+        /// <summary>
+        /// Specifies the accessibility.
+        /// </summary>
+        public Accessibilities Accessibility { get; }
     }
 }

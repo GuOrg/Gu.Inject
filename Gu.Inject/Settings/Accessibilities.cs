@@ -7,7 +7,7 @@ namespace Gu.Inject
     /// </summary>
     [Serializable]
     [Flags]
-    public enum Visibility
+    public enum Accessibilities
     {
         /// <summary>
         /// Public member.
