@@ -130,27 +130,6 @@
         }
 
         /// <summary>
-        /// Provide an override for the automatic mapping.
-        /// The kernel will keep <paramref name="create"/> alive until disposed.
-        /// <paramref name="create"/> is disposed by the kernel if disposable.
-        /// </summary>
-        /// <typeparam name="TArg">The type of the argument. The container will resolve the argument and inject it. </typeparam>
-        /// <typeparam name="T">The mapped type.</typeparam>
-        /// <param name="create">The instance to bind.</param>
-        public void Bind<TArg, T>(Func<TArg, T> create)
-            where T : class
-        {
-            if (create is null)
-            {
-                throw new ArgumentNullException(nameof(create));
-            }
-
-            this.ThrowIfDisposed();
-            this.ThrowIfHasResolved();
-            this.BindCore(typeof(T), new Factory<TArg, T>(create));
-        }
-
-        /// <summary>
         /// Get the singleton instance of <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The type to resolve.</typeparam>

@@ -96,16 +96,6 @@
             }
 
             [Test]
-            public void BindFactoryWithArgument()
-            {
-                using var kernel = new Kernel();
-                kernel.Bind((DefaultCtor x) => new With<DefaultCtor>(x));
-                var actual = kernel.Get<With<DefaultCtor>>();
-                Assert.AreSame(actual, kernel.Get<With<DefaultCtor>>());
-                Assert.AreSame(actual.Value, kernel.Get<DefaultCtor>());
-            }
-
-            [Test]
             public void BindFactoryWithGetter()
             {
                 using var kernel = new Kernel();
@@ -113,20 +103,6 @@
                 var actual = kernel.Get<With<DefaultCtor>>();
                 Assert.AreSame(actual, kernel.Get<With<DefaultCtor>>());
                 Assert.AreSame(actual.Value, kernel.Get<DefaultCtor>());
-            }
-
-            [Test]
-            public void BindFactoryWithArgumentDisposed()
-            {
-                DisposableWith<DefaultCtor> actual;
-                using (var kernel = new Kernel())
-                {
-                    kernel.Bind((DefaultCtor x) => new DisposableWith<DefaultCtor>(x));
-                    actual = kernel.Get<DisposableWith<DefaultCtor>>();
-                    Assert.AreSame(actual.Value, kernel.Get<DefaultCtor>());
-                }
-
-                Assert.AreEqual(1, actual.Disposed);
             }
         }
     }
