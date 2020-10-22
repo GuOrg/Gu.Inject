@@ -9,13 +9,13 @@
     [MemoryDiagnoser]
     public class Constructor
     {
-        private static readonly ConstructorInfo ConstructorInfo = typeof(Foo).GetConstructors()[0];
-        private static readonly Func<Foo> ConstructorDelegate = CreateDelegate();
+        private static readonly ConstructorInfo ConstructorInfo = typeof(Simple).GetConstructors()[0];
+        private static readonly Func<Simple> ConstructorDelegate = CreateDelegate();
 
         [Benchmark(Baseline = true)]
         public object New()
         {
-            return new Foo();
+            return new Simple();
         }
 
         [Benchmark]
@@ -39,13 +39,13 @@
         [Benchmark]
         public object ActivatorCreateInstance()
         {
-            return Activator.CreateInstance<Foo>();
+            return Activator.CreateInstance<Simple>();
         }
 
-        private static Func<Foo> CreateDelegate()
+        private static Func<Simple> CreateDelegate()
         {
             // http://stackoverflow.com/a/10593806/1069200
-            var type = typeof(Foo);
+            var type = typeof(Simple);
             var dynamic = new DynamicMethod(
                 string.Empty,
                 type,
@@ -58,7 +58,7 @@
             il.Emit(OpCodes.Ldloc_0);
             il.Emit(OpCodes.Ret);
 
-            return (Func<Foo>)dynamic.CreateDelegate(typeof(Func<Foo>));
+            return (Func<Simple>)dynamic.CreateDelegate(typeof(Func<Simple>));
         }
     }
 }

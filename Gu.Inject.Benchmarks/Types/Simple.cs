@@ -1,6 +1,6 @@
 ﻿namespace Gu.Inject.Benchmarks.Types
 {
-    public class Foo
+    public class Simple
     {
     }
 }

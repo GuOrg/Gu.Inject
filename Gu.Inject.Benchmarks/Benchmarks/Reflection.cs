@@ -8,18 +8,18 @@
     [MemoryDiagnoser]
     public class Reflection
     {
-        private static readonly ConstructorInfo Ctor = typeof(Foo).GetConstructors()[0];
+        private static readonly ConstructorInfo Ctor = typeof(Simple).GetConstructors()[0];
 
         [Benchmark]
         public object GetConstructors()
         {
-            return typeof(Foo).GetConstructors()[0];
+            return typeof(Simple).GetConstructors()[0];
         }
 
         [Benchmark]
         public object GetConstructorsGetParameters()
         {
-            return typeof(Foo).GetConstructors()[0].GetParameters();
+            return typeof(Simple).GetConstructors()[0].GetParameters();
         }
 
         [Benchmark]
@@ -31,13 +31,13 @@
         [Benchmark]
         public object ActivatorCreateInstance()
         {
-            return Activator.CreateInstance<Foo>();
+            return Activator.CreateInstance<Simple>();
         }
 
         [Benchmark]
         public object GetConstructorInvoke()
         {
-            return typeof(Foo).GetConstructors()[0].Invoke(null);
+            return typeof(Simple).GetConstructors()[0].Invoke(null);
         }
     }
 }
