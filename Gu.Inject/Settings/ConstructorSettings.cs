@@ -2,16 +2,13 @@ namespace Gu.Inject
 {
     public class ConstructorSettings
     {
-        public static readonly ConstructorSettings Default = new ConstructorSettings(Visibility.Public, Constructor.AllowOnlyOne);
+        public static readonly ConstructorSettings Default = new ConstructorSettings(Visibility.Public);
 
-        public ConstructorSettings(Visibility visibility, Constructor use)
+        public ConstructorSettings(Visibility visibility)
         {
             this.Visibility = visibility;
-            this.Use = use;
         }
 
         public Visibility Visibility { get; }
-
-        public Constructor Use { get; }
     }
 }
