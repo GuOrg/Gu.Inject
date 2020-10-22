@@ -58,7 +58,7 @@
         /// <typeparam name="TInterface3">The third type to map.</typeparam>
         /// <typeparam name="TConcrete">The mapped type.</typeparam>
         public void Bind<TInterface1, TInterface2, TInterface3, TConcrete>()
-            where TConcrete : TInterface1, TInterface2
+            where TConcrete : TInterface1, TInterface2, TInterface3
         {
             this.Bind(typeof(TInterface1), typeof(TConcrete));
             this.Bind(typeof(TInterface2), typeof(TConcrete));
@@ -81,7 +81,80 @@
 
             this.ThrowIfDisposed();
             this.ThrowIfHasResolved();
+
             this.BindCore(typeof(T), instance);
+        }
+
+        /// <summary>
+        /// Provide an override for the automatic mapping.
+        /// If the <paramref name="instance"/> implements IDisposable, the responsibility to dispose it remains the caller's, disposing the kernel doesn't do that.
+        /// </summary>
+        /// <typeparam name="TInterface">The type to map.</typeparam>
+        /// <typeparam name="TConcrete">The mapped type.</typeparam>
+        /// <param name="instance">The instance to bind.</param>
+        public void Bind<TInterface, TConcrete>(TConcrete instance)
+            where TConcrete : class, TInterface
+        {
+            if (instance is null)
+            {
+                throw new ArgumentNullException(nameof(instance));
+            }
+
+            this.ThrowIfDisposed();
+            this.ThrowIfHasResolved();
+
+            this.Bind(typeof(TInterface), typeof(TConcrete));
+            this.BindCore(typeof(TConcrete), instance);
+        }
+
+        /// <summary>
+        /// Provide an override for the automatic mapping.
+        /// If the <paramref name="instance"/> implements IDisposable, the responsibility to dispose it remains the caller's, disposing the kernel doesn't do that.
+        /// </summary>
+        /// <typeparam name="TInterface1">The first type to map.</typeparam>
+        /// <typeparam name="TInterface2">The second type to map.</typeparam>
+        /// <typeparam name="TConcrete">The mapped type.</typeparam>
+        /// <param name="instance">The instance to bind.</param>
+        public void Bind<TInterface1, TInterface2, TConcrete>(TConcrete instance)
+            where TConcrete : class, TInterface1, TInterface2
+        {
+            if (instance is null)
+            {
+                throw new ArgumentNullException(nameof(instance));
+            }
+
+            this.ThrowIfDisposed();
+            this.ThrowIfHasResolved();
+
+            this.Bind(typeof(TInterface1), typeof(TConcrete));
+            this.Bind(typeof(TInterface2), typeof(TConcrete));
+            this.BindCore(typeof(TConcrete), instance);
+        }
+
+        /// <summary>
+        /// Provide an override for the automatic mapping.
+        /// If the <paramref name="instance"/> implements IDisposable, the responsibility to dispose it remains the caller's, disposing the kernel doesn't do that.
+        /// </summary>
+        /// <typeparam name="TInterface1">The first type to map.</typeparam>
+        /// <typeparam name="TInterface2">The second type to map.</typeparam>
+        /// <typeparam name="TInterface3">The third type to map.</typeparam>
+        /// <typeparam name="TConcrete">The mapped type.</typeparam>
+        /// <param name="instance">The instance to bind.</param>
+        public void Bind<TInterface1, TInterface2, TInterface3, TConcrete>(TConcrete instance)
+            where TConcrete : class, TInterface1, TInterface2, TInterface3
+        {
+            if (instance is null)
+            {
+                throw new ArgumentNullException(nameof(instance));
+            }
+
+            this.ThrowIfDisposed();
+            this.ThrowIfHasResolved();
+
+            this.Bind(typeof(TInterface1), typeof(TConcrete));
+            this.Bind(typeof(TInterface2), typeof(TConcrete));
+            this.Bind(typeof(TInterface3), typeof(TConcrete));
+            this.BindCore(typeof(TConcrete), instance);
         }
 
         /// <summary>
@@ -100,6 +173,7 @@
             }
 
             this.ThrowIfDisposed();
+
             this.ThrowIfHasResolved();
             this.BindCore(typeof(T), new Factory<T>(create));
         }
