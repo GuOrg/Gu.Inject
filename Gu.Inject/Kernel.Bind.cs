@@ -183,6 +183,78 @@
 
         /// <summary>
         /// Provide an override for the automatic mapping.
+        /// The instance is created lazily by <paramref name="create"/> and is cached for subsequent calls to .Get().
+        /// </summary>
+        /// <typeparam name="TInterface">The type to map.</typeparam>
+        /// <typeparam name="TConcrete">The mapped type.</typeparam>
+        /// <param name="create">The factory function used to create the instance.</param>
+        public void Bind<TInterface, TConcrete>(Func<TConcrete> create)
+            where TConcrete : class, TInterface
+        {
+            if (create is null)
+            {
+                throw new ArgumentNullException(nameof(create));
+            }
+
+            this.ThrowIfDisposed();
+            this.ThrowIfHasResolved();
+
+            this.Bind(typeof(TInterface), typeof(TConcrete));
+            this.BindCore(typeof(TConcrete), new Factory<TConcrete>(create));
+        }
+
+        /// <summary>
+        /// Provide an override for the automatic mapping.
+        /// The instance is created lazily by <paramref name="create"/> and is cached for subsequent calls to .Get().
+        /// </summary>
+        /// <typeparam name="TInterface1">The first type to map.</typeparam>
+        /// <typeparam name="TInterface2">The second type to map.</typeparam>
+        /// <typeparam name="TConcrete">The mapped type.</typeparam>
+        /// <param name="create">The factory function used to create the instance.</param>
+        public void Bind<TInterface1, TInterface2, TConcrete>(Func<TConcrete> create)
+            where TConcrete : class, TInterface1, TInterface2
+        {
+            if (create is null)
+            {
+                throw new ArgumentNullException(nameof(create));
+            }
+
+            this.ThrowIfDisposed();
+            this.ThrowIfHasResolved();
+
+            this.Bind(typeof(TInterface1), typeof(TConcrete));
+            this.Bind(typeof(TInterface2), typeof(TConcrete));
+            this.BindCore(typeof(TConcrete), new Factory<TConcrete>(create));
+        }
+
+        /// <summary>
+        /// Provide an override for the automatic mapping.
+        /// The instance is created lazily by <paramref name="create"/> and is cached for subsequent calls to .Get().
+        /// </summary>
+        /// <typeparam name="TInterface1">The first type to map.</typeparam>
+        /// <typeparam name="TInterface2">The second type to map.</typeparam>
+        /// <typeparam name="TInterface3">The third type to map.</typeparam>
+        /// <typeparam name="TConcrete">The mapped type.</typeparam>
+        /// <param name="create">The factory function used to create the instance.</param>
+        public void Bind<TInterface1, TInterface2, TInterface3, TConcrete>(Func<TConcrete> create)
+            where TConcrete : class, TInterface1, TInterface2, TInterface3
+        {
+            if (create is null)
+            {
+                throw new ArgumentNullException(nameof(create));
+            }
+
+            this.ThrowIfDisposed();
+            this.ThrowIfHasResolved();
+
+            this.Bind(typeof(TInterface1), typeof(TConcrete));
+            this.Bind(typeof(TInterface2), typeof(TConcrete));
+            this.Bind(typeof(TInterface3), typeof(TConcrete));
+            this.BindCore(typeof(TConcrete), new Factory<TConcrete>(create));
+        }
+
+        /// <summary>
+        /// Provide an override for the automatic mapping.
         /// The kernel will keep <paramref name="create"/> alive until disposed.
         /// <paramref name="create"/> is disposed by the kernel if disposable.
         /// </summary>
