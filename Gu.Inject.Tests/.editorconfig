@@ -23,3 +23,6 @@ dotnet_diagnostic.CA1040.severity = none
 
 # CA1825: Avoid zero-length array allocations
 dotnet_diagnostic.CA1825.severity = none
+
+# CA1716: Identifiers should not match keywords
+dotnet_diagnostic.CA1716.severity = none

@@ -159,7 +159,7 @@
 
         private void ThrowIfHasResolved([CallerMemberName] string? caller = null)
         {
-            if (this.created.Count != 0)
+            if (!this.created.IsEmpty)
             {
                 throw new InvalidOperationException($"{caller} not allowed after Get.");
             }

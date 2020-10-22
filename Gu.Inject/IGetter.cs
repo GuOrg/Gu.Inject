@@ -1,3 +1,4 @@
+#pragma warning disable CA1716 // Identifiers should not match keywords
 namespace Gu.Inject
 {
     using System;
@@ -18,7 +19,7 @@ namespace Gu.Inject
         /// <summary>
         /// Get the singleton instance of <paramref name="type"/>.
         /// </summary>
-        /// <typeparam name="T">The type to resolve.</typeparam>
+        /// <param name="type">The type to resolve.</param>
         /// <returns>The singleton instance of <paramref name="type"/>.</returns>
         object Get(Type type);
     }

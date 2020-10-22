@@ -45,7 +45,7 @@
 
             public IReadOnlyList<Type> ParameterTypes { get; }
 
-            public object Create(object[]? args)
+            public object Create(object?[]? args)
             {
                 return this.ctor.Invoke(args);
             }

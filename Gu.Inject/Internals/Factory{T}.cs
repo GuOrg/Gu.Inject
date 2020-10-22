@@ -20,10 +20,10 @@ namespace Gu.Inject
 
         public IReadOnlyList<Type> ParameterTypes => Empty;
 
-        public object Create(object[]? args)
+        public object Create(object?[]? args)
         {
             Debug.Assert((args?.Length ?? 0) == 0, "args?.Length ??0 ==0");
-            return this.creator();
+            return this.creator()!;
         }
     }
 }
