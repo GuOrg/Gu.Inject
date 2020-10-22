@@ -20,3 +20,6 @@ dotnet_diagnostic.CA1720.severity = none
 
 # CA1040: Avoid empty interfaces
 dotnet_diagnostic.CA1040.severity = none
+
+# CA1825: Avoid zero-length array allocations
+dotnet_diagnostic.CA1825.severity = none

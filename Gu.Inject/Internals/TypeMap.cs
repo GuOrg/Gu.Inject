@@ -138,7 +138,7 @@
 
         private static HashSet<Assembly> RecursiveReferencedAssemblies(this Assembly assembly, HashSet<Assembly> assemblies = null)
         {
-            assemblies = assemblies ?? new HashSet<Assembly>();
+            assemblies ??= new HashSet<Assembly>();
             if (assemblies.Add(assembly))
             {
                 foreach (var referencedAssemblyName in assembly.GetReferencedAssemblies())
