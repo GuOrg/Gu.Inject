@@ -77,7 +77,7 @@
             public void BindWhenHasResolved()
             {
                 using var kernel = new Kernel();
-                kernel.Get<DefaultCtor>();
+                _ = kernel.Get<DefaultCtor>();
                 var exception = Assert.Throws<InvalidOperationException>(() => kernel.Bind<IWith, With<DefaultCtor>>());
                 Assert.AreEqual("Bind not allowed after Get.", exception.Message);
             }
