@@ -95,7 +95,7 @@
                 CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
                 return new DefaultCtor();
             });
-            kernel.Get<DefaultCtor>();
+            _ = kernel.Get<DefaultCtor>();
             CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
         }
 
