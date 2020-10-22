@@ -3,7 +3,7 @@ namespace Gu.Inject
     using System;
     using System.Collections.Generic;
 
-    interface IFactory
+    internal interface IFactory
     {
         IReadOnlyList<Type> ParameterTypes { get; }
 
