@@ -158,6 +158,7 @@
         public T Get<T>()
             where T : class
         {
+            this.ThrowIfDisposed();
             if (!TypeMap.IsInitialized)
             {
                 TypeMap.Initialize(Assembly.GetCallingAssembly());
