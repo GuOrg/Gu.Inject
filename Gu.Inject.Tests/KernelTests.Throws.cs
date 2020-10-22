@@ -17,18 +17,22 @@
                 Assert.AreEqual(message, exception.Message);
             }
 
-            [TestCase(typeof(IWith))]
-            public void GetWhenNoBinding(Type type)
+            [TestCase(typeof(IWith), "Type IWith has no bindings.")]
+            [TestCase(typeof(IWith<int>), "Type IWith<int> has no bindings.")]
+            [TestCase(typeof(IWith<int?>), "Type IWith<Nullable<int>> has no bindings.")]
+            [TestCase(typeof(IWith<IWith<int>>), "Type IWith<IWith<int>> has no bindings.")]
+            [TestCase(typeof(OneToMany.Abstract), "Type OneToMany.Abstract has no bindings.")]
+            [TestCase(typeof(OneToMany.IAbstract), "Type OneToMany.IAbstract has no bindings.")]
+            [TestCase(typeof(OneToMany.IConcrete), "Type OneToMany.IConcrete has no bindings.")]
+            public void GetWhenNoBinding(Type type, string expected)
             {
                 using var kernel = new Kernel();
-                var exception = Assert.Throws<AmbiguousGenericBindingException>(() => kernel.Get(type));
-                var expected = "Type IWith has binding to a generic type: With<>.\r\n" +
-                               "Add a binding specifying what type argument to use.";
+                var exception = Assert.Throws<NoBindingException>(() => kernel.Get(type));
                 Assert.AreEqual(expected, exception.Message);
             }
 
             [Test]
-            public void GetWhenTwoCtors()
+            public void GetWhenTwoConstructors()
             {
                 using (var kernel = new Kernel())
                 {
@@ -37,7 +41,6 @@
                                    "Add a binding specifying which constructor to use.";
                     Assert.AreEqual(expected, exception.Message);
                 }
-
                 Assert.Inconclusive("Provide setting specifying ctors. UsePrivate, UseMostParameters etc.");
             }
 
@@ -49,28 +52,6 @@
                 var expected = "Type Error.ParamsCtor has params argument which is not supported.\r\n" +
                                "Add a binding specifying which how to create an instance.";
                 Assert.AreEqual(expected, exception.Message);
-            }
-
-            [TestCase(typeof(OneToMany.Abstract), "Type OneToMany.Abstract has more than one binding: OneToMany.Concrete1, OneToMany.Concrete2.")]
-            [TestCase(typeof(OneToMany.IAbstract), "Type OneToMany.IAbstract has more than one binding: OneToMany.Concrete1, OneToMany.Concrete2.")]
-            [TestCase(typeof(OneToMany.IConcrete), "Type OneToMany.IConcrete has more than one binding: OneToMany.Concrete1, OneToMany.Concrete2.")]
-            public void GetWhenAmbiguous(Type type, string expected)
-            {
-                using var kernel = new Kernel();
-                var exception = Assert.Throws<AmbiguousBindingException>(() => kernel.Get(type));
-                Assert.AreEqual(expected, exception.Message);
-            }
-
-            [Test]
-            public void GetWhenAmbiguousNonAbstract()
-            {
-                using (var kernel = new Kernel())
-                {
-                    var exception = Assert.Throws<AmbiguousBindingException>(() => kernel.Get<InheritNonAbstract.Foo>());
-                    Assert.AreEqual("Type InheritNonAbstract.Foo has more than one binding: InheritNonAbstract.FooDerived.", exception.Message);
-                }
-
-                Assert.Inconclusive("Provide setting specifying ctors. RequireExplicit");
             }
 
             [Test]

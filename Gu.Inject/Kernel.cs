@@ -138,11 +138,6 @@
             where T : class
         {
             this.ThrowIfDisposed();
-            if (!TypeMap.IsInitialized)
-            {
-                TypeMap.Initialize(Assembly.GetCallingAssembly());
-            }
-
             return (T)this.Get(typeof(T));
         }
 
@@ -154,11 +149,6 @@
         public object Get(Type type)
         {
             this.ThrowIfDisposed();
-            if (!TypeMap.IsInitialized)
-            {
-                TypeMap.Initialize(Assembly.GetCallingAssembly());
-            }
-
             return this.GetCore(type);
         }
 
@@ -212,31 +202,7 @@
 
             if (type.IsInterface || type.IsAbstract)
             {
-                var mapped = TypeMap.GetMapped(type);
-                if (mapped.Count == 0)
-                {
-                    throw new NoBindingException(type, mapped);
-                }
-
-                if (mapped.Count > 1)
-                {
-                    throw new AmbiguousBindingException(type, mapped);
-                }
-
-                if (mapped[0].IsGenericType && !type.IsGenericType)
-                {
-                    throw new AmbiguousGenericBindingException(type, mapped);
-                }
-
-                return this.GetCore(mapped[0], visited);
-            }
-            else
-            {
-                var mapped = TypeMap.GetMapped(type);
-                if (mapped.Count != 0)
-                {
-                    throw new AmbiguousBindingException(type, mapped);
-                }
+                throw new NoBindingException(type);
             }
 
             return this.created.GetOrAdd(type, t => this.Create(t, Ctor.GetFactory(type), visited));

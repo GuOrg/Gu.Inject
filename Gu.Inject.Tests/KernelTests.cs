@@ -8,13 +8,42 @@
 
     public partial class KernelTests
     {
+        [TestCase(typeof(DefaultCtor))]
+        [TestCase(typeof(With<DefaultCtor>))]
+        [TestCase(typeof(WithTwo<DefaultCtor, DefaultCtor>))]
+        [TestCase(typeof(WithTwo<DefaultCtor, With<DefaultCtor>>))]
+        [TestCase(typeof(OneToOne.Concrete))]
+        [TestCase(typeof(OneToOneGeneric.GenericOfDefaultCtor))]
+        [TestCase(typeof(InheritNonAbstract.FooDerived))]
+        [TestCase(typeof(ManyToOne.Foo))]
+        public void Get(Type type)
+        {
+            using var kernel = new Kernel();
+            var actual = kernel.Get(type);
+            Assert.AreSame(actual, kernel.Get(type));
+        }
+
+        [Test]
+        public void GetSubclassesReturnsDifferentByDefault()
+        {
+            using var kernel = new Kernel();
+            Assert.AreNotSame(kernel.Get<InheritNonAbstract.Foo>(), kernel.Get<InheritNonAbstract.FooDerived>());
+        }
+
+        [Test]
+        public void GetSubclassesReturnsSameWithBindings()
+        {
+            using var kernel = new Kernel();
+            kernel.Bind<InheritNonAbstract.Foo, InheritNonAbstract.FooDerived>();
+            Assert.AreSame(kernel.Get<InheritNonAbstract.Foo>(), kernel.Get<InheritNonAbstract.FooDerived>());
+        }
+
         [TestCase(typeof(DefaultCtor), typeof(DefaultCtor))]
         [TestCase(typeof(IDefaultCtor), typeof(DefaultCtor))]
         [TestCase(typeof(With<DefaultCtor>), typeof(With<DefaultCtor>))]
         [TestCase(typeof(IWith<DefaultCtor>), typeof(With<DefaultCtor>))]
         [TestCase(typeof(WithTwo<DefaultCtor, DefaultCtor>), typeof(WithTwo<DefaultCtor, DefaultCtor>))]
         [TestCase(typeof(WithTwo<DefaultCtor, With<DefaultCtor>>), typeof(WithTwo<DefaultCtor, With<DefaultCtor>>))]
-        [TestCase(typeof(WithTwo<WithTwo<ManyToOne.IFoo, ManyToOne.IFooBase1>, With<DefaultCtor>>), typeof(WithTwo<WithTwo<ManyToOne.IFoo, ManyToOne.IFooBase1>, With<DefaultCtor>>))]
         [TestCase(typeof(OneToOne.Concrete), typeof(OneToOne.Concrete))]
         [TestCase(typeof(OneToOne.Abstract), typeof(OneToOne.Concrete))]
         [TestCase(typeof(OneToOne.IAbstract), typeof(OneToOne.Concrete))]
@@ -34,20 +63,13 @@
         [TestCase(typeof(ManyToOne.IGenericFoo2<int>), typeof(ManyToOne.Foo))]
         [TestCase(typeof(ManyToOne.IFooFoo), typeof(ManyToOne.Foo))]
         [TestCase(typeof(ManyToOne.IFoo), typeof(ManyToOne.Foo))]
-        public void Get(Type type, Type expected)
+        public void BindThenGet(Type type, Type expected)
         {
             using var kernel = new Kernel();
+            kernel.Bind(type, expected);
             var actual = kernel.Get(type);
             Assert.AreEqual(expected.PrettyName(), actual.GetType().PrettyName());
             Assert.AreSame(actual, kernel.Get(expected));
-        }
-
-        [Test]
-        public void InjectsSingletons2()
-        {
-            using var kernel = new Kernel();
-            var actual = kernel.Get<WithTwo<WithTwo<ManyToOne.IFoo, ManyToOne.IFooBase1>, With<DefaultCtor>>>();
-            Assert.AreSame(actual.Value1.Value1, actual.Value1.Value2);
         }
 
         [Test]
@@ -56,6 +78,16 @@
             using var kernel = new Kernel();
             var actual = kernel.Get<WithTwo<DefaultCtor, DefaultCtor>>();
             Assert.AreSame(actual.Value1, actual.Value2);
+        }
+
+        [Test]
+        public void InjectsSingletonsWithBindings()
+        {
+            using var kernel = new Kernel();
+            kernel.Bind<ManyToOne.IFoo, ManyToOne.Foo>();
+            kernel.Bind<ManyToOne.IFooBase1, ManyToOne.Foo>();
+            var actual = kernel.Get<WithTwo<WithTwo<ManyToOne.IFoo, ManyToOne.IFooBase1>, With<DefaultCtor>>>();
+            Assert.AreSame(actual.Value1.Value1, actual.Value1.Value2);
         }
 
         [Test]

@@ -57,10 +57,5 @@
 
             return type.Name;
         }
-
-        internal static bool IsStatic(this Type type)
-        {
-            return type.IsAbstract && type.IsSealed;
-        }
     }
 }

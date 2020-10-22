@@ -4,7 +4,7 @@ namespace Gu.Inject.Tests.Types
     {
         public abstract class AbstractGeneric<T>
         {
-            public AbstractGeneric(T value)
+            protected AbstractGeneric(T value)
             {
                 this.Value = value;
             }
