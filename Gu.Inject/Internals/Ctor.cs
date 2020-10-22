@@ -8,11 +8,11 @@
 
     internal static class Ctor
     {
-        private static readonly ConcurrentDictionary<Type, IFactory> Ctors = new ConcurrentDictionary<Type, IFactory>();
+        private static readonly ConcurrentDictionary<Type, IFactory> ConstructorMap = new ConcurrentDictionary<Type, IFactory>();
 
         internal static IFactory GetFactory(Type type)
         {
-            return Ctors.GetOrAdd(type, Create);
+            return ConstructorMap.GetOrAdd(type, Create);
         }
 
         private static IFactory Create(Type type)
@@ -42,7 +42,7 @@
         {
             private readonly ConstructorInfo ctor;
 
-            public Factory(ConstructorInfo ctor, IReadOnlyList<Type> parameterTypes)
+            internal Factory(ConstructorInfo ctor, IReadOnlyList<Type> parameterTypes)
             {
                 this.ctor = ctor;
                 this.ParameterTypes = parameterTypes;
@@ -60,13 +60,13 @@
         {
             private readonly Type type;
 
-            public CreateInstanceFactory(Type type, IReadOnlyList<Type> parameterTypes)
+            internal CreateInstanceFactory(Type type, IReadOnlyList<Type> parameterTypes)
             {
                 this.type = type;
                 this.ParameterTypes = parameterTypes;
             }
 
-            public IReadOnlyList<Type> ParameterTypes { get; } 
+            public IReadOnlyList<Type> ParameterTypes { get; }
 
             public object Create(object[] args)
             {
