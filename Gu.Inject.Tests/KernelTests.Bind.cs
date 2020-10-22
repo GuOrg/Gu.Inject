@@ -97,6 +97,23 @@
             }
 
             [Test]
+            public void BindFactoryAndInterfaceThenGet()
+            {
+                using var kernel = new Kernel();
+                kernel.Bind<IWith<DefaultCtor>, With<DefaultCtor>>(() => new With<DefaultCtor>(new DefaultCtor()));
+                Assert.AreSame(kernel.Get<IWith<DefaultCtor>>(), kernel.Get<With<DefaultCtor>>());
+            }
+
+            [Test]
+            public void BindFactoryAndTwoInterfacesThenGet()
+            {
+                using var kernel = new Kernel();
+                kernel.Bind<IWith, IWith<DefaultCtor>, With<DefaultCtor>>(() => new With<DefaultCtor>(new DefaultCtor()));
+                Assert.AreSame(kernel.Get<IWith<DefaultCtor>>(), kernel.Get<With<DefaultCtor>>());
+                Assert.AreSame(kernel.Get<IWith>(), kernel.Get<With<DefaultCtor>>());
+            }
+
+            [Test]
             public void BindFactoryWithGetter()
             {
                 using var kernel = new Kernel();
