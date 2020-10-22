@@ -136,7 +136,7 @@
             }
         }
 
-        private static HashSet<Assembly> RecursiveReferencedAssemblies(this Assembly assembly, HashSet<Assembly> assemblies = null)
+        private static HashSet<Assembly> RecursiveReferencedAssemblies(this Assembly assembly, HashSet<Assembly>? assemblies = null)
         {
             assemblies ??= new HashSet<Assembly>();
             if (assemblies.Add(assembly))
@@ -144,9 +144,24 @@
                 foreach (var referencedAssemblyName in assembly.GetReferencedAssemblies())
                 {
                     var referencedAssembly = AppDomain.CurrentDomain.GetAssemblies()
-                                                                    .SingleOrDefault(x => x.GetName() == referencedAssemblyName) ??
-                                             AppDomain.CurrentDomain.Load(referencedAssemblyName);
-                    RecursiveReferencedAssemblies(referencedAssembly, assemblies);
+                                                                    .SingleOrDefault(x => x.GetName() == referencedAssemblyName);
+
+                    if (referencedAssembly is null)
+                    {
+                        try
+                        {
+                            referencedAssembly = AppDomain.CurrentDomain.Load(referencedAssemblyName);
+                        }
+                        catch
+                        {
+                            // IO can always go wrong.
+                        }
+                    }
+
+                    if (referencedAssembly is { })
+                    {
+                        RecursiveReferencedAssemblies(referencedAssembly, assemblies);
+                    }
                 }
             }
 
