@@ -38,4 +38,14 @@
     <PackageReference Include="SimpleInjector" Version="5.0.4" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.205" PrivateAssets="all" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+
+    <None Update="Types\Graph.generated.txt">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Graph.tt</DependentUpon>
+    </None>
+  </ItemGroup>
 </Project>

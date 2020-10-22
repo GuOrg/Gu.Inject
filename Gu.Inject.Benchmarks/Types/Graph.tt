@@ -9,10 +9,10 @@
 namespace Gu.Inject.Benchmarks.Types
 {
     using System.Collections.Generic;
-	using System.Linq;
+    using System.Linq;
     
 <#  var size = 5; #>
-	public static class Graph<#= size #>
+    public static class Graph<#= size #>
     {
 <#    var rand = new Random();
     for (var i = 1; i < size; ++i)
@@ -34,19 +34,19 @@ namespace Gu.Inject.Benchmarks.Types
 <#      } #>
             {
                 this.Children = new INode[]
-			    {
-				<#
+                {
+                <#
         for (var j = 0; j < children.Length; j++)
         {
             var child = children[j]; #>
                     node<#= child #><#= j == children.Length - 1 ? "" :"," #>
 <#      } #>
-			    };
+                };
             }
 
-		    public IReadOnlyList<INode> Children { get; }
+            public IReadOnlyList<INode> Children { get; }
 
-			public IEnumerable<INode> AllChildren => this.Children.Concat(this.Children.SelectMany(c => c.AllChildren));
+            public IEnumerable<INode> AllChildren => this.Children.Concat(this.Children.SelectMany(c => c.AllChildren));
         }
 <#  } #>
     }
@@ -57,7 +57,7 @@ private static IEnumerable<int> Children(int i, int size, Random rand)
     for (var j = 1; j < size; ++j)
     {
         if (i != j &&
-			j % i == 0 && 
+            j % i == 0 && 
             rand.Next(0, 1000) < 200)
         {
             yield return j;

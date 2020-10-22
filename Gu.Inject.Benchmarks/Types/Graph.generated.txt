@@ -4,9 +4,9 @@
 namespace Gu.Inject.Benchmarks.Types
 {
     using System.Collections.Generic;
-	using System.Linq;
+    using System.Linq;
     
-	public static class Graph5
+    public static class Graph5
     {
         public class Node1 : INode
         {
@@ -14,14 +14,14 @@ namespace Gu.Inject.Benchmarks.Types
                 Node2 node2)
             {
                 this.Children = new INode[]
-			    {
-				                    node2
-			    };
+                {
+                                    node2
+                };
             }
 
-		    public IReadOnlyList<INode> Children { get; }
+            public IReadOnlyList<INode> Children { get; }
 
-			public IEnumerable<INode> AllChildren => this.Children.Concat(this.Children.SelectMany(c => c.AllChildren));
+            public IEnumerable<INode> AllChildren => this.Children.Concat(this.Children.SelectMany(c => c.AllChildren));
         }
 
         public class Node2 : INode
@@ -29,13 +29,13 @@ namespace Gu.Inject.Benchmarks.Types
             public Node2()
             {
                 this.Children = new INode[]
-			    {
-							    };
+                {
+                                };
             }
 
-		    public IReadOnlyList<INode> Children { get; }
+            public IReadOnlyList<INode> Children { get; }
 
-			public IEnumerable<INode> AllChildren => this.Children.Concat(this.Children.SelectMany(c => c.AllChildren));
+            public IEnumerable<INode> AllChildren => this.Children.Concat(this.Children.SelectMany(c => c.AllChildren));
         }
 
         public class Node3 : INode
@@ -43,13 +43,13 @@ namespace Gu.Inject.Benchmarks.Types
             public Node3()
             {
                 this.Children = new INode[]
-			    {
-							    };
+                {
+                                };
             }
 
-		    public IReadOnlyList<INode> Children { get; }
+            public IReadOnlyList<INode> Children { get; }
 
-			public IEnumerable<INode> AllChildren => this.Children.Concat(this.Children.SelectMany(c => c.AllChildren));
+            public IEnumerable<INode> AllChildren => this.Children.Concat(this.Children.SelectMany(c => c.AllChildren));
         }
 
         public class Node4 : INode
@@ -57,13 +57,13 @@ namespace Gu.Inject.Benchmarks.Types
             public Node4()
             {
                 this.Children = new INode[]
-			    {
-							    };
+                {
+                                };
             }
 
-		    public IReadOnlyList<INode> Children { get; }
+            public IReadOnlyList<INode> Children { get; }
 
-			public IEnumerable<INode> AllChildren => this.Children.Concat(this.Children.SelectMany(c => c.AllChildren));
+            public IEnumerable<INode> AllChildren => this.Children.Concat(this.Children.SelectMany(c => c.AllChildren));
         }
     }
 }
