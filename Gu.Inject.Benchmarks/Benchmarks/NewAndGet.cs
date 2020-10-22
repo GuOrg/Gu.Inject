@@ -2,7 +2,9 @@
 namespace Gu.Inject.Benchmarks
 {
     using BenchmarkDotNet.Attributes;
+    using DryIoc;
     using Ninject;
+    using SimpleInjector;
 
     [MemoryDiagnoser]
     public abstract class NewAndGet<T>
@@ -18,8 +20,23 @@ namespace Gu.Inject.Benchmarks
         [Benchmark]
         public object SimpleInjector()
         {
-            using var container = new SimpleInjector.Container();
+            using var container = new SimpleInjector.Container
+            {
+                Options =
+                {
+                    ResolveUnregisteredConcreteTypes = true,
+                    DefaultLifestyle = Lifestyle.Singleton,
+                },
+            };
             return container.GetInstance<T>();
+        }
+
+        [Benchmark]
+        public object DryIoc()
+        {
+            using var container = new DryIoc.Container(x => x.WithConcreteTypeDynamicRegistrations()
+                                                                  .WithDefaultReuse(Reuse.Singleton));
+            return container.Resolve<T>();
         }
 
         [Benchmark(Baseline = true)]

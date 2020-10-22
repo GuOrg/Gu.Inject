@@ -1,14 +1,16 @@
 ``` ini
 
-BenchmarkDotNet=v0.11.3, OS=Windows 10.0.17763.503 (1809/October2018Update/Redstone5)
+BenchmarkDotNet=v0.12.1, OS=Windows 10.0.19041.508 (2004/?/20H1)
 Intel Xeon CPU E5-2637 v4 3.50GHz, 2 CPU, 16 logical and 8 physical cores
-  [Host]     : .NET Framework 4.7.2 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.3416.0
-  DefaultJob : .NET Framework 4.7.2 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.3416.0
+.NET Core SDK=3.1.403
+  [Host]     : .NET Core 3.1.9 (CoreCLR 4.700.20.47201, CoreFX 4.700.20.47203), X64 RyuJIT
+  DefaultJob : .NET Core 3.1.9 (CoreCLR 4.700.20.47201, CoreFX 4.700.20.47203), X64 RyuJIT
 
 
 ```
-|         Method |     Mean |     Error |    StdDev |   Median | Ratio | RatioSD | Gen 0/1k Op | Gen 1/1k Op | Gen 2/1k Op | Allocated Memory/Op |
-|--------------- |---------:|----------:|----------:|---------:|------:|--------:|------------:|------------:|------------:|--------------------:|
-|        Ninject | 1.389 us | 0.0275 us | 0.0503 us | 1.385 us |  0.46 |    0.06 |      0.1755 |           - |           - |              1112 B |
-| SimpleInjector | 5.435 us | 0.0111 us | 0.0087 us | 5.433 us |  1.78 |    0.28 |      1.7014 |      0.0763 |           - |             10744 B |
-|       GuInject | 2.990 us | 0.1625 us | 0.4280 us | 2.800 us |  1.00 |    0.00 |           - |           - |           - |                   - |
+|         Method |        Mean |      Error |       StdDev |      Median | Ratio | RatioSD |  Gen 0 | Gen 1 | Gen 2 | Allocated |
+|--------------- |------------:|-----------:|-------------:|------------:|------:|--------:|-------:|------:|------:|----------:|
+|        Ninject | 1,264.38 ns |  12.720 ns |    11.276 ns | 1,261.58 ns | 0.258 |    0.05 | 0.1354 |     - |     - |    1064 B |
+| SimpleInjector |    39.85 ns |   0.766 ns |     1.049 ns |    39.79 ns | 0.009 |    0.00 |      - |     - |     - |         - |
+|         DryIoc | 2,851.17 ns |  56.740 ns |   102.313 ns | 2,848.90 ns | 0.652 |    0.13 | 0.3738 |     - |     - |    2960 B |
+|       GuInject | 4,281.40 ns | 368.973 ns | 1,003.818 ns | 3,800.00 ns | 1.000 |    0.00 |      - |     - |     - |     168 B |

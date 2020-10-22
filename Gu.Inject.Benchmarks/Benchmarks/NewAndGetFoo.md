@@ -1,14 +1,16 @@
 ``` ini
 
-BenchmarkDotNet=v0.11.3, OS=Windows 10.0.17763.503 (1809/October2018Update/Redstone5)
+BenchmarkDotNet=v0.12.1, OS=Windows 10.0.19041.508 (2004/?/20H1)
 Intel Xeon CPU E5-2637 v4 3.50GHz, 2 CPU, 16 logical and 8 physical cores
-  [Host]     : .NET Framework 4.7.2 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.3416.0
-  DefaultJob : .NET Framework 4.7.2 (CLR 4.0.30319.42000), 64bit RyuJIT-v4.7.3416.0
+.NET Core SDK=3.1.403
+  [Host]     : .NET Core 3.1.9 (CoreCLR 4.700.20.47201, CoreFX 4.700.20.47203), X64 RyuJIT
+  DefaultJob : .NET Core 3.1.9 (CoreCLR 4.700.20.47201, CoreFX 4.700.20.47203), X64 RyuJIT
 
 
 ```
-|         Method |       Mean |      Error |     StdDev |  Ratio | RatioSD | Gen 0/1k Op | Gen 1/1k Op | Gen 2/1k Op | Allocated Memory/Op |
-|--------------- |-----------:|-----------:|-----------:|-------:|--------:|------------:|------------:|------------:|--------------------:|
-|        Ninject | 496.883 us | 13.0313 us | 38.0129 us | 475.26 |   44.44 |      5.8594 |      1.9531 |           - |             40945 B |
-| SimpleInjector | 216.128 us |  2.2669 us |  1.7699 us | 203.46 |    6.64 |      8.3008 |      2.6855 |           - |             52735 B |
-|       GuInject |   1.068 us |  0.0211 us |  0.0374 us |   1.00 |    0.00 |      0.1297 |      0.0038 |           - |               829 B |
+|         Method |       Mean |      Error |     StdDev |  Ratio | RatioSD |  Gen 0 |  Gen 1 | Gen 2 | Allocated |
+|--------------- |-----------:|-----------:|-----------:|-------:|--------:|-------:|-------:|------:|----------:|
+|        Ninject | 867.210 μs | 17.0758 μs | 38.1924 μs | 104.93 |    4.40 | 3.9063 | 1.9531 |     - |   31706 B |
+| SimpleInjector | 334.798 μs |  6.6291 μs | 12.7721 μs |  41.59 |    1.92 | 9.2773 | 2.9297 |     - |   74556 B |
+|         DryIoc |   3.936 μs |  0.0770 μs |  0.1503 μs |   0.48 |    0.02 | 0.5569 |      - |     - |    4384 B |
+|       GuInject |   8.173 μs |  0.1101 μs |  0.1352 μs |   1.00 |    0.00 |      - |      - |     - |     816 B |
