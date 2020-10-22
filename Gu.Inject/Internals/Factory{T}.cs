@@ -10,14 +10,14 @@ namespace Gu.Inject
 
         private readonly Func<T> creator;
 
-        public Factory(Func<T> creator)
+        internal Factory(Func<T> creator)
         {
             this.creator = creator;
         }
 
         public IReadOnlyList<Type> ParameterTypes => Empty;
 
-        public object Create(object[] args)
+        public object Create(object[]? args)
         {
             Debug.Assert((args?.Length ?? 0) == 0, "args?.Length ??0 ==0");
             return this.creator();

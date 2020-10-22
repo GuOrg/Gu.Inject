@@ -203,18 +203,8 @@
 
         private void BindCore(Type key, object value)
         {
-            if (this.bindings is null)
-            {
-                lock (this.created)
-                {
-                    if (this.bindings is null)
-                    {
-                        this.bindings = ConcurrentDictionaryPool<Type, object>.Borrow();
-                    }
-                }
-            }
-
-            this.bindings.AddOrUpdate(
+            this.bindings ??= ConcurrentDictionaryPool<Type, object>.Borrow();
+            _ = this.bindings.AddOrUpdate(
                 key,
                 t => value,
                 (type, o) => throw new InvalidOperationException($"{type.PrettyName()} already has a binding to {(o as Type)?.PrettyName() ?? o}"));

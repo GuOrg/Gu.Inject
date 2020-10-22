@@ -3,7 +3,7 @@
     using System.Collections.Concurrent;
 
     internal static class ConcurrentDictionaryPool<TKey, TValue>
-        where TKey: notnull
+        where TKey : notnull
     {
         private static readonly ConcurrentQueue<ConcurrentDictionary<TKey, TValue>> Cache = new ConcurrentQueue<ConcurrentDictionary<TKey, TValue>>();
 
