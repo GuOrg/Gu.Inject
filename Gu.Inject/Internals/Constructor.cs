@@ -6,7 +6,7 @@
     using System.Linq;
     using System.Reflection;
 
-    internal static class Ctor
+    internal static class Constructor
     {
         private static readonly ConcurrentDictionary<Type, IFactory> ConstructorMap = new ConcurrentDictionary<Type, IFactory>();
 
@@ -30,11 +30,6 @@
                                  .Select(x => x.ParameterType)
                                  .ToArray();
 
-            //if (ctor.IsPublic)
-            //{
-            //    return new CreateInstanceFactory(type, parameters);
-            //}
-
             return new Factory(ctor, parameters);
         }
 
@@ -53,24 +48,6 @@
             public object Create(object[] args)
             {
                 return this.ctor.Invoke(args);
-            }
-        }
-
-        internal class CreateInstanceFactory : IFactory
-        {
-            private readonly Type type;
-
-            internal CreateInstanceFactory(Type type, IReadOnlyList<Type> parameterTypes)
-            {
-                this.type = type;
-                this.ParameterTypes = parameterTypes;
-            }
-
-            public IReadOnlyList<Type> ParameterTypes { get; }
-
-            public object Create(object[] args)
-            {
-                return Activator.CreateInstance(this.type, args);
             }
         }
     }

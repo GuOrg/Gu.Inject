@@ -88,7 +88,7 @@
                 if (bound is Type boundType)
                 {
                     return type == boundType
-                               ? this.created.GetOrAdd(type, t => this.Create(t, Ctor.GetFactory(type), visited))
+                               ? this.created.GetOrAdd(type, t => this.Create(t, Constructor.GetFactory(type), visited))
                                : this.GetCore(boundType, visited);
                 }
 
@@ -105,7 +105,7 @@
                 throw new NoBindingException(type);
             }
 
-            return this.created.GetOrAdd(type, t => this.Create(t, Ctor.GetFactory(type), visited));
+            return this.created.GetOrAdd(type, t => this.Create(t, Constructor.GetFactory(type), visited));
         }
 
         private object Create(Type type, IFactory factory, Node? visited)

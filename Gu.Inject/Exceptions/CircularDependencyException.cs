@@ -14,7 +14,7 @@ namespace Gu.Inject
         /// </summary>
         /// <param name="type">The type to resolve.</param>
         public CircularDependencyException(Type type)
-            : base(type, $"{type.PrettyName()}(... Circular dependency detected.")
+            : base(type, $"{type?.PrettyName()}(... Circular dependency detected.")
         {
         }
 
