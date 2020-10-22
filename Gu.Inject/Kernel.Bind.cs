@@ -2,6 +2,9 @@
 {
     using System;
 
+    /// <summary>
+    /// Bind overloads.
+    /// </summary>
     public sealed partial class Kernel
     {
         /// <summary>

@@ -1,5 +1,5 @@
-﻿// ReSharper disable UnusedParameter.Local
-// ReSharper disable UnusedMember.Global
+﻿// ReSharper disable All
+#pragma warning disable CA1801 // Review unused parameters
 namespace Gu.Inject.Tests.Types
 {
    public static class Error

@@ -9,10 +9,12 @@ namespace Gu.Inject.Benchmarks
     using SimpleInjector;
 
     [MemoryDiagnoser]
-    public abstract class Get<T>
+    public abstract class AbstractGet<T>
         where T : class
     {
+#pragma warning disable IDISP004 // Don't ignore created IDisposable.
         private static readonly Ninject.StandardKernel StandardKernel = new Ninject.StandardKernel(new Module());
+#pragma warning restore IDISP004 // Don't ignore created IDisposable.
         private static readonly SimpleInjector.Container SimpleInjectorContainer = new SimpleInjector.Container
         {
             Options =

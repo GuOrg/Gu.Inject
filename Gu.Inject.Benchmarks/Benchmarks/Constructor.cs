@@ -52,7 +52,7 @@
                 Type.EmptyTypes,
                 type);
             var il = dynamic.GetILGenerator();
-            il.DeclareLocal(type);
+            _ = il.DeclareLocal(type);
             il.Emit(OpCodes.Newobj, ConstructorInfo);
             il.Emit(OpCodes.Stloc_0);
             il.Emit(OpCodes.Ldloc_0);

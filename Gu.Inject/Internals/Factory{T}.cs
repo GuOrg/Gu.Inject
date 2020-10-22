@@ -6,7 +6,10 @@ namespace Gu.Inject
 
     internal class Factory<T> : IFactory
     {
+#pragma warning disable CA1825 // Avoid zero-length array allocations
+        // ReSharper disable once StaticMemberInGenericType
         private static readonly IReadOnlyList<Type> Empty = new Type[0];
+#pragma warning restore CA1825 // Avoid zero-length array allocations
 
         private readonly Func<T> creator;
 

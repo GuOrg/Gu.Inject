@@ -4,7 +4,7 @@ namespace Gu.Inject.Benchmarks
     using Gu.Inject.Benchmarks.Types;
 
     [MemoryDiagnoser]
-    public class GetGraph50 : Get<Graph50.Node1>
+    public class GetGraph50 : AbstractGet<Graph50.Node1>
     {
     }
 }

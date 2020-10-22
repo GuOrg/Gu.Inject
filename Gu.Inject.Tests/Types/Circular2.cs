@@ -1,4 +1,4 @@
-﻿// ReSharper disable UnusedParameter.Local
+﻿// ReSharper disable All
 #pragma warning disable CA1801 // Review unused parameters
 #pragma warning disable IDE0060 // Remove unused parameter
 namespace Gu.Inject.Tests.Types

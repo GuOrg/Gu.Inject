@@ -4,7 +4,7 @@
     using Gu.Inject.Benchmarks.Types;
 
     [MemoryDiagnoser]
-    public class GetFoo : Get<Foo>
+    public class GetFoo : AbstractGet<Foo>
     {
     }
 }
