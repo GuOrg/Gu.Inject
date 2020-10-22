@@ -8,9 +8,9 @@
     /// <summary>
     /// A factory for resolving object graphs.
     /// </summary>
-    public sealed class Kernel : IDisposable, IGetter
+    public sealed partial class Kernel : IDisposable, IGetter
     {
-        private ConcurrentDictionary<Type, object>? created = ConcurrentDictionaryPool<Type, object>.Borrow();
+        private ConcurrentDictionary<Type, object> created = ConcurrentDictionaryPool<Type, object>.Borrow();
         private ConcurrentDictionary<Type, object>? bindings;
 
         /// <summary>
@@ -22,111 +22,6 @@
         /// This notifies after creating an instance of a type.
         /// </summary>
         public event EventHandler<object>? Created;
-
-        /// <summary>
-        /// Provide an override to the automatic mapping.
-        /// </summary>
-        /// <typeparam name="TInterface">The type to map.</typeparam>
-        /// <typeparam name="TConcrete">The mapped type.</typeparam>
-        public void Bind<TInterface, TConcrete>()
-            where TConcrete : TInterface
-        {
-            this.Bind(typeof(TInterface), typeof(TConcrete));
-        }
-
-        /// <summary>
-        /// Provide an override to the automatic mapping.
-        /// </summary>
-        /// <typeparam name="TInterface1">The first type to map.</typeparam>
-        /// <typeparam name="TInterface2">The second type to map.</typeparam>
-        /// <typeparam name="TConcrete">The mapped type.</typeparam>
-        public void Bind<TInterface1, TInterface2, TConcrete>()
-            where TConcrete : TInterface1, TInterface2
-        {
-            this.Bind(typeof(TInterface1), typeof(TConcrete));
-            this.Bind(typeof(TInterface2), typeof(TConcrete));
-        }
-
-        /// <summary>
-        /// Provide an override to the automatic mapping.
-        /// </summary>
-        /// <param name="from">The type to map.</param>
-        /// <param name="to">The mapped type.</param>
-        public void Bind(Type from, Type to)
-        {
-            if (from is null)
-            {
-                throw new ArgumentNullException(nameof(from));
-            }
-
-            if (to is null)
-            {
-                throw new ArgumentNullException(nameof(to));
-            }
-
-            this.ThrowIfDisposed();
-            this.ThrowIfHasResolved();
-            this.BindCore(from, to);
-        }
-
-        /// <summary>
-        /// Provide an override for the automatic mapping.
-        /// If the <paramref name="instance"/> implements IDisposable, the responsibility to dispose it remains the caller's, disposing the kernel doesn't do that.
-        /// </summary>
-        /// <typeparam name="T">The mapped type.</typeparam>
-        /// <param name="instance">The instance to bind.</param>
-        public void Bind<T>(T instance)
-            where T : class
-        {
-            if (instance is null)
-            {
-                throw new ArgumentNullException(nameof(instance));
-            }
-
-            this.ThrowIfDisposed();
-            this.ThrowIfHasResolved();
-            this.BindCore(typeof(T), instance);
-        }
-
-        /// <summary>
-        /// Provide an override for the automatic mapping.
-        /// The instance is created lazily by <paramref name="create"/> and is cached for subsequent calls to .Get().
-        /// The instance is owned by the kernel, that is, calling .Dispose() on the kernel disposes the instance, if its type implements IDisposable.
-        /// </summary>
-        /// <typeparam name="T">The mapped type.</typeparam>
-        /// <param name="create">The factory function used to create the instance.</param>
-        public void Bind<T>(Func<T> create)
-            where T : class
-        {
-            if (create is null)
-            {
-                throw new ArgumentNullException(nameof(create));
-            }
-
-            this.ThrowIfDisposed();
-            this.ThrowIfHasResolved();
-            this.BindCore(typeof(T), new Factory<T>(create));
-        }
-
-        /// <summary>
-        /// Provide an override for the automatic mapping.
-        /// The kernel will keep <paramref name="create"/> alive until disposed.
-        /// <paramref name="create"/> is disposed by the kernel if disposable.
-        /// </summary>
-        /// <typeparam name="T">The mapped type.</typeparam>
-        /// <param name="create">The instance to bind.</param>
-        public void Bind<T>(Func<IGetter, T> create)
-            where T : class
-        {
-            if (create is null)
-            {
-                throw new ArgumentNullException(nameof(create));
-            }
-
-            this.ThrowIfDisposed();
-            this.ThrowIfHasResolved();
-            this.BindCore(typeof(T), new Factory<T>(() => create(this)));
-        }
 
         /// <summary>
         /// Get the singleton instance of <typeparamref name="T"/>.
@@ -147,6 +42,11 @@
         /// <returns>The singleton instance of <paramref name="type"/>.</returns>
         public object Get(Type type)
         {
+            if (type is null)
+            {
+                throw new ArgumentNullException(nameof(type));
+            }
+
             this.ThrowIfDisposed();
             return this.GetCore(type);
         }
@@ -154,13 +54,14 @@
         /// <inheritdoc/>
         public void Dispose()
         {
+            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
             if (this.created is null)
             {
                 return;
             }
 
             var local = this.created;
-            this.created = null;
+            this.created = null!;
             foreach (var kvp in local)
             {
                 (kvp.Value as IDisposable)?.Dispose();
@@ -207,7 +108,7 @@
             return this.created.GetOrAdd(type, t => this.Create(t, Ctor.GetFactory(type), visited));
         }
 
-        private object Create(Type type, IFactory factory, Node visited)
+        private object Create(Type type, IFactory factory, Node? visited)
         {
             if (factory.ParameterTypes.Any(p => p.IsArray))
             {
@@ -268,7 +169,7 @@
         {
             if (this.created is null)
             {
-                throw new ObjectDisposedException(this.GetType().FullName);
+                throw new ObjectDisposedException(nameof(Kernel));
             }
         }
 
