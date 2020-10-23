@@ -86,6 +86,9 @@ using var kernel = new Kernel()
 
 # Benchmark
 
+Creating a container and resolving a graph with 50 types.
+https://github.com/GuOrg/Gu.Inject/blob/master/Gu.Inject.Benchmarks/Benchmarks/GetGraph50.cs
+
 ```
 |         Method |        Mean |  Ratio | Allocated |
 |--------------- |------------:|-------:|----------:|
@@ -93,5 +96,4 @@ using var kernel = new Kernel()
 | SimpleInjector | 3,467.61 μs | 308.75 | 201.13 KB |
 |         DryIoc |    79.06 μs |   7.01 |  73.59 KB |
 |       GuInject |    11.22 μs |   1.00 |   11.2 KB |
-|  GuInjectBound |    21.52 μs |   1.91 |  22.33 KB |
 ```
