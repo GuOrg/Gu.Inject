@@ -38,7 +38,7 @@ namespace Gu.Inject.Benchmarks
                 return;
             }
 
-            var pattern = $"*{name}-report-github.md";
+            var pattern = $"Gu.Inject.Benchmarks.{name}-report-github.md";
             var sourceFileName = Directory.EnumerateFiles(summary.ResultsDirectoryPath, pattern)
                                           .SingleOrDefault();
             if (sourceFileName is null)
