@@ -10,8 +10,8 @@ Intel Xeon CPU E5-2637 v4 3.50GHz, 2 CPU, 16 logical and 8 physical cores
 ```
 |                       Method |      Mean |    Error |   StdDev |  Gen 0 | Gen 1 | Gen 2 | Allocated |
 |----------------------------- |----------:|---------:|---------:|-------:|------:|------:|----------:|
-|              GetConstructors |  36.61 ns | 0.174 ns | 0.146 ns | 0.0041 |     - |     - |      32 B |
-| GetConstructorsGetParameters |  40.15 ns | 0.871 ns | 0.856 ns | 0.0041 |     - |     - |      32 B |
-|                   InvokeCtor |  91.84 ns | 1.247 ns | 1.042 ns | 0.0030 |     - |     - |      24 B |
-|      ActivatorCreateInstance |  35.82 ns | 0.781 ns | 1.389 ns | 0.0030 |     - |     - |      24 B |
-|         GetConstructorInvoke | 150.26 ns | 3.030 ns | 5.615 ns | 0.0069 |     - |     - |      56 B |
+|              GetConstructors |  36.56 ns | 0.222 ns | 0.197 ns | 0.0041 |     - |     - |      32 B |
+| GetConstructorsGetParameters |  40.33 ns | 0.847 ns | 1.008 ns | 0.0041 |     - |     - |      32 B |
+|                   InvokeCtor |  91.59 ns | 1.795 ns | 1.679 ns | 0.0030 |     - |     - |      24 B |
+|      ActivatorCreateInstance |  33.34 ns | 0.745 ns | 0.995 ns | 0.0030 |     - |     - |      24 B |
+|         GetConstructorInvoke | 148.11 ns | 3.019 ns | 3.594 ns | 0.0069 |     - |     - |      56 B |

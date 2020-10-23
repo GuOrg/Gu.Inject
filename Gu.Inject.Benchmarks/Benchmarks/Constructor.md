@@ -8,10 +8,10 @@ Intel Xeon CPU E5-2637 v4 3.50GHz, 2 CPU, 16 logical and 8 physical cores
 
 
 ```
-|                    Method |         Mean |      Error |      StdDev |    Ratio | RatioSD |  Gen 0 |  Gen 1 |  Gen 2 | Allocated |
-|-------------------------- |-------------:|-----------:|------------:|---------:|--------:|-------:|-------:|-------:|----------:|
-|                       New |     2.713 ns |  0.0299 ns |   0.0249 ns |     1.00 |    0.00 | 0.0031 |      - |      - |      24 B |
-| ConstructorDelegateInvoke |     4.422 ns |  0.1595 ns |   0.2530 ns |     1.69 |    0.11 | 0.0031 |      - |      - |      24 B |
-| CreateConstructorDelegate | 4,087.580 ns | 86.5553 ns | 255.2102 ns | 1,513.31 |   82.97 | 0.1564 | 0.0763 | 0.0229 |    1232 B |
-|     ConstructorInfoInvoke |    93.045 ns |  1.8878 ns |   1.9386 ns |    34.33 |    0.79 | 0.0030 |      - |      - |      24 B |
-|   ActivatorCreateInstance |    33.821 ns |  0.7750 ns |   1.3161 ns |    12.52 |    0.57 | 0.0030 |      - |      - |      24 B |
+|                    Method |         Mean |       Error |      StdDev |    Ratio | RatioSD |  Gen 0 |  Gen 1 |  Gen 2 | Allocated |
+|-------------------------- |-------------:|------------:|------------:|---------:|--------:|-------:|-------:|-------:|----------:|
+|                       New |     2.654 ns |   0.0443 ns |   0.0346 ns |     1.00 |    0.00 | 0.0031 |      - |      - |      24 B |
+| ConstructorDelegateInvoke |     4.243 ns |   0.0787 ns |   0.0698 ns |     1.60 |    0.03 | 0.0031 |      - |      - |      24 B |
+| CreateConstructorDelegate | 4,098.108 ns | 102.6304 ns | 299.3777 ns | 1,570.75 |  106.28 | 0.1564 | 0.0763 | 0.0191 |    1232 B |
+|     ConstructorInfoInvoke |    97.390 ns |   2.0170 ns |   3.3699 ns |    37.17 |    1.37 | 0.0030 |      - |      - |      24 B |
+|   ActivatorCreateInstance |    34.328 ns |   0.6203 ns |   0.5802 ns |    12.96 |    0.28 | 0.0030 |      - |      - |      24 B |

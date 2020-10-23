@@ -2,14 +2,13 @@
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Runtime.CompilerServices;
 
     /// <summary>
     /// A factory for resolving object graphs.
     /// </summary>
     public sealed partial class Kernel : IDisposable, IGetter
     {
-        private ConcurrentDictionary<Type, Binding>? map = ConcurrentDictionaryPool<Type, Binding>.Borrow();
+        private ConcurrentDictionary<Type, Binding>? map = new ConcurrentDictionary<Type, Binding>();
         private bool hasResolved;
 
         /// <summary>
@@ -76,8 +75,6 @@
 #pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
                 }
             }
-
-            ConcurrentDictionaryPool<Type, Binding>.Return(local);
         }
 
         private void BindCore(Type key, Binding binding)
