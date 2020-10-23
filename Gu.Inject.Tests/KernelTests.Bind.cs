@@ -20,9 +20,7 @@
             [TestCase(typeof(OneToMany.IConcrete), typeof(OneToMany.Concrete2))]
             [TestCase(typeof(With<OneToMany.IConcrete>), typeof(With<OneToMany.Concrete2>))]
             [TestCase(typeof(IWith<OneToMany.IConcrete>), typeof(With<OneToMany.Concrete2>))]
-            [TestCase(typeof(InheritNonAbstract.FooDerived), typeof(InheritNonAbstract.FooDerived))]
             [TestCase(typeof(InheritNonAbstract.Foo), typeof(InheritNonAbstract.FooDerived))]
-            [TestCase(typeof(InheritNonAbstract.Foo), typeof(InheritNonAbstract.Foo))]
             public void BindThenGet(Type from, Type to)
             {
                 using var kernel = new Kernel();

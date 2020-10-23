@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Linq;
     using System.Runtime.CompilerServices;
 
     /// <summary>
@@ -10,8 +9,8 @@
     /// </summary>
     public sealed partial class Kernel : IDisposable, IGetter
     {
-        private ConcurrentDictionary<Type, object> created = ConcurrentDictionaryPool<Type, object>.Borrow();
-        private ConcurrentDictionary<Type, object>? bindings;
+        private ConcurrentDictionary<Type, Binding>? map = ConcurrentDictionaryPool<Type, Binding>.Borrow();
+        private bool hasResolved;
 
         /// <summary>
         /// This notifies before creating an instance of a type.
@@ -29,11 +28,8 @@
         /// <typeparam name="T">The type to resolve.</typeparam>
         /// <returns>The singleton instance of <typeparamref name="T"/>.</returns>
         public T Get<T>()
-            where T : class
-        {
-            this.ThrowIfDisposed();
-            return (T)this.GetCore(typeof(T));
-        }
+            where T : class =>
+            (T)this.GetCore(typeof(T));
 
         /// <summary>
         /// Get the singleton instance of <paramref name="type"/>.
@@ -47,162 +43,126 @@
                 throw new ArgumentNullException(nameof(type));
             }
 
-            this.ThrowIfDisposed();
             return this.GetCore(type);
         }
 
         /// <inheritdoc/>
         public void Dispose()
         {
-            // ReSharper disable once ConditionIsAlwaysTrueOrFalse
-            if (this.created is null)
+            if (this.map is null)
             {
                 return;
             }
 
-            var local = this.created;
-            this.created = null!;
+            var local = this.map;
+            this.map = null!;
             foreach (var kvp in local)
             {
-                (kvp.Value as IDisposable)?.Dispose();
+                switch (kvp.Value.Kind)
+                {
+                    case BindingKind.Func:
+                    case BindingKind.ResolverFunc:
+                    case BindingKind.Instance:
+                    case BindingKind.Map:
+                    case BindingKind.Mapped:
+                        break;
+                    case BindingKind.Created:
+                    case BindingKind.Resolved:
+                        (kvp.Value.Value as IDisposable)?.Dispose();
+                        break;
+                    default:
+#pragma warning disable CA1065 // Do not raise exceptions in unexpected locations
+                        throw new InvalidOperationException($"Not handling dispose of Kind: {kvp.Value.Kind}, Value: {kvp.Value.Value ?? "null"} ");
+#pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
+                }
             }
 
-            ConcurrentDictionaryPool<Type, object>.Return(local);
-            ConcurrentDictionaryPool<Type, object>.Return(this.bindings);
+            ConcurrentDictionaryPool<Type, Binding>.Return(local);
         }
 
-        private void BindCore(Type key, object value)
+        private void BindCore(Type key, Binding binding)
         {
-            this.bindings ??= ConcurrentDictionaryPool<Type, object>.Borrow();
-            _ = this.bindings.AddOrUpdate(
+            if (this.hasResolved)
+            {
+                throw new InvalidOperationException("Bind not allowed after resolving. This could create hard to track down graph bugs.");
+            }
+
+            if (this.map is null)
+            {
+                throw new ObjectDisposedException(nameof(Kernel));
+            }
+
+            if (binding is { Kind: BindingKind.Map, Value: Type to } &&
+                key == to)
+            {
+                throw new InvalidOperationException("Trying to bind to the same type.");
+            }
+
+            _ = this.map.AddOrUpdate(
                 key,
-                t => value,
-                (type, o) => throw new InvalidOperationException($"{type.PrettyName()} already has a binding to {(o as Type)?.PrettyName() ?? o}"));
+                t => binding,
+                (t, b) => b.Kind switch
+                {
+                    BindingKind.Func => throw new InvalidOperationException($"{t.PrettyName()} already has a binding. It is bound to the func {b.Value ?? "null"}"),
+                    BindingKind.ResolverFunc => throw new InvalidOperationException($"{t.PrettyName()} already has a binding. It is bound to the resolver func {b.Value ?? "null"}"),
+                    BindingKind.Map => throw new InvalidOperationException($"{t.PrettyName()} already has a binding. It is mapped to the type {((Type)b.Value)?.PrettyName() ?? "null"}"),
+                    BindingKind.Instance => throw new InvalidOperationException($"{t.PrettyName()} already has a binding. It is bound to the instance {b.Value ?? "null"}"),
+                    BindingKind.Created => throw new InvalidOperationException($"{t.PrettyName()} already has a binding. It is bound to the created instance {b.Value ?? "null"}"),
+                    BindingKind.Resolved => throw new InvalidOperationException($"{t.PrettyName()} already has a binding. It is bound to the resolved instance {b.Value ?? "null"}"),
+                    BindingKind.Mapped => throw new InvalidOperationException($"{t.PrettyName()} already has a binding. It is bound to the mapped instance {b.Value ?? "null"}"),
+                    _ => throw new InvalidOperationException($"Not handling binding error for Kind: {b.Kind}, Value: {b.Value ?? "null"} "),
+                });
         }
 
-        private object GetCore(Type type, Node? visited = null)
+        private object GetCore(Type type)
         {
-            if (this.bindings != null &&
-                this.bindings.TryGetValue(type, out var bound))
+            if (this.map is null)
             {
-                return bound switch
-                {
-                    Type boundType => type == boundType
-                        ? this.created.GetOrAdd(type, t => Create(Constructor.GetFactory(type)))
-                        : this.GetCore(boundType, visited),
-                    IFactory factory => this.created.GetOrAdd(type, _ => Create(factory)),
-                    FuncBinding binding => this.created.GetOrAdd(type, _ => CreateFromFunc(binding.Func)),
-                    _ => bound,
-                };
+                throw new ObjectDisposedException(nameof(Kernel));
             }
 
-            if (type.IsInterface || type.IsAbstract || type.IsValueType)
-            {
-                throw new NoBindingException(type);
-            }
-
-            return this.created.GetOrAdd(type, t => Create(Constructor.GetFactory(t)));
-
-            object Create(IFactory factory)
-            {
-                if (factory.ParameterTypes.Any(p => p.IsArray))
+            return this.map.AddOrUpdate(
+                type,
+                t => t switch
                 {
-                    var message = $"Type {type.PrettyName()} has params argument which is not supported.\r\n" +
-                                  "Add a binding specifying which how to create an instance.";
-                    throw new ResolveException(type, message);
-                }
+                    { IsInterface: true } => throw new NoBindingException(t),
+                    { IsAbstract: true } => throw new NoBindingException(t),
+                    { IsValueType: true } => throw new NoBindingException(t),
+                    { IsArray: true } => throw new NoBindingException(t),
+                    _ => Resolve(Constructor.GetResolver(t)),
+                },
+                (t, v) => v switch
+                {
+                    { Kind: BindingKind.Resolved } => v,
+                    { Kind: BindingKind.Instance } => v,
+                    { Kind: BindingKind.Created } => v,
+                    { Kind: BindingKind.Mapped } => v,
+                    { Kind: BindingKind.Func } => Create((Func<object>)v.Value),
+                    { Kind: BindingKind.ResolverFunc } => Resolve((Func<IGetter, object>)v.Value),
+                    { Kind: BindingKind.Map } => Map((Type)v.Value),
+                    _ => throw new ResolveException(type, ""),
+                }).Value;
 
+            Binding Resolve(Func<IGetter, object> resolve)
+            {
+                this.hasResolved = true;
                 this.Creating?.Invoke(this, type);
-                if (factory.ParameterTypes.Count == 0)
-                {
-                    var item = factory.Create(null);
-                    this.Created?.Invoke(this, item);
-                    return item;
-                }
-
-                if (visited != null)
-                {
-                    if (visited.Contains(type))
-                    {
-                        throw new CircularDependencyException(type);
-                    }
-
-                    visited = visited.Next(type);
-                }
-                else
-                {
-                    visited = new Node(type);
-                }
-
-                try
-                {
-                    var args = new object[factory.ParameterTypes.Count];
-                    for (var i = 0; i < factory.ParameterTypes.Count; i++)
-                    {
-                        args[i] = this.GetCore(factory.ParameterTypes[i], visited);
-                    }
-
-                    var item = factory.Create(args);
-                    this.Created?.Invoke(this, item);
-                    return item;
-                }
-                catch (ResolveException e)
-                {
-                    throw new ResolveException(type, e);
-                }
+                var item = resolve(this);
+                this.Created?.Invoke(this, item);
+                return new Binding(item, BindingKind.Created);
             }
 
-            object CreateFromFunc(Func<object> create)
+            Binding Create(Func<object> create)
             {
                 this.Creating?.Invoke(this, type);
                 var item = create();
                 this.Created?.Invoke(this, item);
-                return item;
-            }
-        }
-
-        private void ThrowIfHasResolved([CallerMemberName] string? caller = null)
-        {
-            if (!this.created.IsEmpty)
-            {
-                throw new InvalidOperationException($"{caller} not allowed after Get.");
-            }
-        }
-
-        private void ThrowIfDisposed()
-        {
-            if (this.created is null)
-            {
-                throw new ObjectDisposedException(nameof(Kernel));
-            }
-        }
-
-        private class Node
-        {
-            private readonly Type type;
-            private readonly Node? previous;
-
-            internal Node(Type type)
-                : this(type, null)
-            {
+                return new Binding(item, BindingKind.Created);
             }
 
-            private Node(Type type, Node? previous)
+            Binding Map(Type to)
             {
-                this.type = type;
-                this.previous = previous;
-            }
-
-            internal Node Next(Type next) => new Node(next, this);
-
-            internal bool Contains(Type next)
-            {
-                if (this.type == next)
-                {
-                    return true;
-                }
-
-                return this.previous?.Contains(next) == true;
+                return new Binding(this.GetCore(to), BindingKind.Mapped);
             }
         }
     }

@@ -37,7 +37,15 @@
                 return mapped;
             }
 
-            if (type.IsGenericType)
+            return type switch
+            {
+                { IsGenericType: true } => Generic(),
+                { IsArray: true } => type.GetElementType().PrettyName() + "[]",
+                { DeclaringType: { } declaringType } => $"{declaringType.PrettyName()}.{type.Name}",
+                _ => type.Name,
+            };
+
+            string Generic()
             {
                 var arguments = string.Join(", ", type.GenericTypeArguments.Select(PrettyName));
 
@@ -48,13 +56,6 @@
 
                 return $"{type.Name.Split('`').First()}<{arguments}>";
             }
-
-            if (type.DeclaringType != null)
-            {
-                return $"{type.DeclaringType.PrettyName()}.{type.Name}";
-            }
-
-            return type.Name;
         }
     }
 }

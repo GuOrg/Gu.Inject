@@ -25,9 +25,7 @@
                 throw new ArgumentNullException(nameof(to));
             }
 
-            this.ThrowIfDisposed();
-            this.ThrowIfHasResolved();
-            this.BindCore(from, to);
+            this.BindCore(from, new Binding(to, BindingKind.Map));
             return this;
         }
 
@@ -91,10 +89,7 @@
                 throw new ArgumentNullException(nameof(instance));
             }
 
-            this.ThrowIfDisposed();
-            this.ThrowIfHasResolved();
-
-            this.BindCore(typeof(T), instance);
+            this.BindCore(typeof(T), new Binding(instance, BindingKind.Instance));
             return this;
         }
 
@@ -114,11 +109,8 @@
                 throw new ArgumentNullException(nameof(instance));
             }
 
-            this.ThrowIfDisposed();
-            this.ThrowIfHasResolved();
-
             this.Bind(typeof(TInterface), typeof(TConcrete));
-            this.BindCore(typeof(TConcrete), instance);
+            this.BindCore(typeof(TConcrete), new Binding(instance, BindingKind.Instance));
             return this;
         }
 
@@ -139,12 +131,9 @@
                 throw new ArgumentNullException(nameof(instance));
             }
 
-            this.ThrowIfDisposed();
-            this.ThrowIfHasResolved();
-
             this.Bind(typeof(TInterface1), typeof(TConcrete));
             this.Bind(typeof(TInterface2), typeof(TConcrete));
-            this.BindCore(typeof(TConcrete), instance);
+            this.BindCore(typeof(TConcrete), new Binding(instance, BindingKind.Instance));
             return this;
         }
 
@@ -166,13 +155,10 @@
                 throw new ArgumentNullException(nameof(instance));
             }
 
-            this.ThrowIfDisposed();
-            this.ThrowIfHasResolved();
-
             this.Bind(typeof(TInterface1), typeof(TConcrete));
             this.Bind(typeof(TInterface2), typeof(TConcrete));
             this.Bind(typeof(TInterface3), typeof(TConcrete));
-            this.BindCore(typeof(TConcrete), instance);
+            this.BindCore(typeof(TConcrete), new Binding(instance, BindingKind.Instance));
             return this;
         }
 
@@ -192,10 +178,7 @@
                 throw new ArgumentNullException(nameof(create));
             }
 
-            this.ThrowIfDisposed();
-
-            this.ThrowIfHasResolved();
-            this.BindCore(typeof(T), new FuncBinding(create));
+            this.BindCore(typeof(T), new Binding(create, BindingKind.Func));
             return this;
         }
 
@@ -215,11 +198,8 @@
                 throw new ArgumentNullException(nameof(create));
             }
 
-            this.ThrowIfDisposed();
-            this.ThrowIfHasResolved();
-
             this.Bind(typeof(TInterface), typeof(TConcrete));
-            this.BindCore(typeof(TConcrete), new FuncBinding(create));
+            this.BindCore(typeof(TConcrete), new Binding(create, BindingKind.Func));
             return this;
         }
 
@@ -240,12 +220,9 @@
                 throw new ArgumentNullException(nameof(create));
             }
 
-            this.ThrowIfDisposed();
-            this.ThrowIfHasResolved();
-
             this.Bind(typeof(TInterface1), typeof(TConcrete));
             this.Bind(typeof(TInterface2), typeof(TConcrete));
-            this.BindCore(typeof(TConcrete), new FuncBinding(create));
+            this.BindCore(typeof(TConcrete), new Binding(create, BindingKind.Func));
             return this;
         }
 
@@ -267,13 +244,10 @@
                 throw new ArgumentNullException(nameof(create));
             }
 
-            this.ThrowIfDisposed();
-            this.ThrowIfHasResolved();
-
             this.Bind(typeof(TInterface1), typeof(TConcrete));
             this.Bind(typeof(TInterface2), typeof(TConcrete));
             this.Bind(typeof(TInterface3), typeof(TConcrete));
-            this.BindCore(typeof(TConcrete), new FuncBinding(create));
+            this.BindCore(typeof(TConcrete), new Binding(create, BindingKind.Func));
             return this;
         }
 
@@ -293,9 +267,7 @@
                 throw new ArgumentNullException(nameof(create));
             }
 
-            this.ThrowIfDisposed();
-            this.ThrowIfHasResolved();
-            this.BindCore(typeof(T), new Factory<T>(() => create(this)));
+            this.BindCore(typeof(T), new Binding(create, BindingKind.ResolverFunc));
             return this;
         }
     }

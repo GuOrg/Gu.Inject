@@ -2,53 +2,44 @@
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
 
     internal static class Constructor
     {
-        private static readonly ConcurrentDictionary<Type, IFactory> ConstructorMap = new ConcurrentDictionary<Type, IFactory>();
+        private static readonly ConcurrentDictionary<Type, Func<IGetter, object>> ConstructorMap = new ConcurrentDictionary<Type, Func<IGetter, object>>();
 
-        internal static IFactory GetFactory(Type type)
+        internal static Func<IGetter, object> GetResolver(Type type)
         {
             return ConstructorMap.GetOrAdd(type, Create);
         }
 
-        private static IFactory Create(Type type)
+        private static Func<IGetter, object> Create(Type type)
         {
             var ctors = type.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             if (ctors.Length > 1)
             {
                 var message = $"Type {type.PrettyName()} has more than one constructor.\r\n" +
-                              "Add a binding specifying which constructor to use.";
+                                     "Add a binding specifying which constructor to use.";
                 throw new ResolveException(type, message);
             }
 
             var ctor = ctors[0];
-            var parameters = ctor.GetParameters()
-                                 .Select(x => x.ParameterType)
-                                 .ToArray();
-
-            return new Factory(ctor, parameters);
-        }
-
-        internal class Factory : IFactory
-        {
-            private readonly ConstructorInfo ctor;
-
-            internal Factory(ConstructorInfo ctor, IReadOnlyList<Type> parameterTypes)
+            var parameters = ctor.GetParameters();
+            if (parameters.Length == 0)
             {
-                this.ctor = ctor;
-                this.ParameterTypes = parameterTypes;
+                return x => ctor.Invoke(null);
             }
 
-            public IReadOnlyList<Type> ParameterTypes { get; }
-
-            public object Create(object?[]? args)
+            if (parameters.Last() is { CustomAttributes: { } attributes } &&
+                attributes.Any(x => x.AttributeType == typeof(System.ParamArrayAttribute)))
             {
-                return this.ctor.Invoke(args);
+                var message = $"Type {type.PrettyName()} has params parameter which is not supported.\r\n" +
+                                     "Add a binding specifying how to create an instance.";
+                return x => throw new ResolveException(type, message);
             }
+
+            return x => ctor.Invoke(parameters.Select(p => x.Get(p.ParameterType)).ToArray());
         }
     }
 }
