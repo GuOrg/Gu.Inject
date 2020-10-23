@@ -40,7 +40,7 @@
             return type switch
             {
                 { IsGenericType: true } => Generic(),
-                { IsArray: true } => type.GetElementType().PrettyName() + "[]",
+                { IsArray: true } => type.GetElementType()!.PrettyName() + "[]",
                 { DeclaringType: { } declaringType } => $"{declaringType.PrettyName()}.{type.Name}",
                 _ => type.Name,
             };

@@ -136,16 +136,16 @@
                     { IsArray: true } => throw new NoBindingException(t),
                     _ => Resolve(Constructor.GetResolver(t)),
                 },
-                (t, v) => v switch
+                (t, b) => b.Kind switch
                 {
-                    { Kind: BindingKind.Resolved } => v,
-                    { Kind: BindingKind.Instance } => v,
-                    { Kind: BindingKind.Created } => v,
-                    { Kind: BindingKind.Mapped } => v,
-                    { Kind: BindingKind.Func } => Create((Func<object>)v.Value),
-                    { Kind: BindingKind.ResolverFunc } => Resolve((Func<IGetter, object>)v.Value),
-                    { Kind: BindingKind.Map } => Map((Type)v.Value),
-                    _ => throw new ResolveException(type, ""),
+                    BindingKind.Resolved => b,
+                    BindingKind.Instance => b,
+                    BindingKind.Created => b,
+                    BindingKind.Mapped => b,
+                    BindingKind.Func => Create((Func<object>)b.Value),
+                    BindingKind.ResolverFunc => Resolve((Func<IGetter, object>)b.Value),
+                    BindingKind.Map => Map((Type)b.Value),
+                    _ => throw new InvalidOperationException($"Not handling resolve Kind: {b.Kind}, Value: {b.Value ?? "null"} "),
                 }).Value;
 
             Binding Resolve(Func<IGetter, object> resolve)
