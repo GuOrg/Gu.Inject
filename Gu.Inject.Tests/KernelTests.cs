@@ -120,13 +120,7 @@
         {
             using var kernel = new Kernel();
             var actual = new List<Type>();
-            kernel.Creating += (sender, type) => actual.Add(type);
-            kernel.Bind(() =>
-            {
-                // check that we notify before creating.
-                CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
-                return new DefaultCtor();
-            });
+            kernel.Creating += (sender, item) => actual.Add(item);
             _ = kernel.Get<DefaultCtor>();
             CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
         }
@@ -139,6 +133,32 @@
             kernel.Created += (sender, item) => actual.Add(item);
             var defaultCtor = kernel.Get<DefaultCtor>();
             CollectionAssert.AreEqual(new[] { defaultCtor }, actual);
+        }
+
+        [Test]
+        public void NotifiesCreatingFunc()
+        {
+            using var kernel = new Kernel();
+            var actual = new List<Type>();
+            kernel.Creating += (sender, type) => actual.Add(type);
+            kernel.Bind(() =>
+            {
+                // check that we notify before creating.
+                CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
+                return new DefaultCtor();
+            });
+            _ = kernel.Get<DefaultCtor>();
+            CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
+        }
+
+        [Test]
+        public void NotifiesFuncCreatedFunc()
+        {
+            using var kernel = new Kernel();
+            var actual = new List<Type>();
+            kernel.Creating += (sender, type) => actual.Add(type);
+            _ = kernel.Get<DefaultCtor>();
+            CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
         }
     }
 }

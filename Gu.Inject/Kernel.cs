@@ -85,19 +85,15 @@
             if (this.bindings != null &&
                 this.bindings.TryGetValue(type, out var bound))
             {
-                if (bound is Type boundType)
+                return bound switch
                 {
-                    return type == boundType
-                               ? this.created.GetOrAdd(type, t => Create(Constructor.GetFactory(type)))
-                               : this.GetCore(boundType, visited);
-                }
-
-                if (bound is IFactory factory)
-                {
-                    return this.created.GetOrAdd(type, t => Create(factory));
-                }
-
-                return bound;
+                    Type boundType => type == boundType
+                        ? this.created.GetOrAdd(type, t => Create(Constructor.GetFactory(type)))
+                        : this.GetCore(boundType, visited),
+                    IFactory factory => this.created.GetOrAdd(type, _ => Create(factory)),
+                    FuncBinding binding => this.created.GetOrAdd(type, _ => CreateFromFunc(binding.Func)),
+                    _ => bound,
+                };
             }
 
             if (type.IsInterface || type.IsAbstract || type.IsValueType)
@@ -156,6 +152,13 @@
                 }
             }
 
+            object CreateFromFunc(Func<object> create)
+            {
+                this.Creating?.Invoke(this, type);
+                var item = create();
+                this.Created?.Invoke(this, item);
+                return item;
+            }
         }
 
         private void ThrowIfHasResolved([CallerMemberName] string? caller = null)

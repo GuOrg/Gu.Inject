@@ -195,7 +195,7 @@
             this.ThrowIfDisposed();
 
             this.ThrowIfHasResolved();
-            this.BindCore(typeof(T), new Factory<T>(create));
+            this.BindCore(typeof(T), new FuncBinding(create));
             return this;
         }
 
@@ -219,7 +219,7 @@
             this.ThrowIfHasResolved();
 
             this.Bind(typeof(TInterface), typeof(TConcrete));
-            this.BindCore(typeof(TConcrete), new Factory<TConcrete>(create));
+            this.BindCore(typeof(TConcrete), new FuncBinding(create));
             return this;
         }
 
@@ -245,7 +245,7 @@
 
             this.Bind(typeof(TInterface1), typeof(TConcrete));
             this.Bind(typeof(TInterface2), typeof(TConcrete));
-            this.BindCore(typeof(TConcrete), new Factory<TConcrete>(create));
+            this.BindCore(typeof(TConcrete), new FuncBinding(create));
             return this;
         }
 
@@ -273,7 +273,7 @@
             this.Bind(typeof(TInterface1), typeof(TConcrete));
             this.Bind(typeof(TInterface2), typeof(TConcrete));
             this.Bind(typeof(TInterface3), typeof(TConcrete));
-            this.BindCore(typeof(TConcrete), new Factory<TConcrete>(create));
+            this.BindCore(typeof(TConcrete), new FuncBinding(create));
             return this;
         }
 
