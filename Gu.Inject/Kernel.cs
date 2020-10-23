@@ -12,6 +12,14 @@
         private bool hasResolved;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Kernel"/> class.
+        /// </summary>
+        public Kernel()
+        {
+            this.BindCore(typeof(IGetter), new Binding(this, BindingKind.Instance));
+        }
+
+        /// <summary>
         /// This notifies before creating an instance of a type.
         /// </summary>
         public event EventHandler<Type>? Creating;

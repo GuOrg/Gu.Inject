@@ -3,11 +3,14 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using Gu.Inject.Tests.Types;
+
     using NUnit.Framework;
 
     public partial class KernelTests
     {
+        [TestCase(typeof(IGetter))]
         [TestCase(typeof(DefaultCtor))]
         [TestCase(typeof(StaticConstructor))]
         [TestCase(typeof(With<DefaultCtor>))]
