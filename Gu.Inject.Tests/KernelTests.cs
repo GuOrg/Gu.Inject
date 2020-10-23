@@ -9,6 +9,7 @@
     public partial class KernelTests
     {
         [TestCase(typeof(DefaultCtor))]
+        [TestCase(typeof(StaticConstructor))]
         [TestCase(typeof(With<DefaultCtor>))]
         [TestCase(typeof(WithTwo<DefaultCtor, DefaultCtor>))]
         [TestCase(typeof(WithTwo<DefaultCtor, With<DefaultCtor>>))]
