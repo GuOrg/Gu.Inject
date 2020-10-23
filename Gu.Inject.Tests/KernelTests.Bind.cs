@@ -51,7 +51,6 @@
             [TestCase(typeof(C), typeof(I2))]
             [TestCase(typeof(I1), typeof(C))]
             [TestCase(typeof(I2), typeof(C))]
-            [TestCase(typeof(I1), typeof(C))]
             [TestCase(typeof(I1), typeof(I1))]
             [TestCase(typeof(I1), typeof(I2))]
             [TestCase(typeof(I2), typeof(I1))]
@@ -69,7 +68,6 @@
             [TestCase(typeof(C), typeof(I2))]
             [TestCase(typeof(I1), typeof(C))]
             [TestCase(typeof(I2), typeof(C))]
-            [TestCase(typeof(I1), typeof(C))]
             [TestCase(typeof(I1), typeof(I1))]
             [TestCase(typeof(I1), typeof(I2))]
             [TestCase(typeof(I2), typeof(I1))]
@@ -83,36 +81,71 @@
                 Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
             }
 
-            [Test]
-            public void BindConcreteAndThreeInterfacesThenGet()
+            [TestCase(typeof(C), typeof(C))]
+            [TestCase(typeof(C), typeof(I1))]
+            [TestCase(typeof(C), typeof(I2))]
+            [TestCase(typeof(C), typeof(I3))]
+            [TestCase(typeof(I1), typeof(C))]
+            [TestCase(typeof(I2), typeof(C))]
+            [TestCase(typeof(I3), typeof(C))]
+            [TestCase(typeof(I1), typeof(I1))]
+            [TestCase(typeof(I1), typeof(I2))]
+            [TestCase(typeof(I2), typeof(I1))]
+            [TestCase(typeof(I2), typeof(I2))]
+            [TestCase(typeof(I3), typeof(I2))]
+            [TestCase(typeof(I3), typeof(I3))]
+            public void BindConcreteAndThreeInterfacesThenGet(Type type1, Type type2)
             {
                 using var kernel = new Kernel();
                 kernel.Bind<I1, I2, I3, C>();
-                Assert.AreSame(kernel.Get<I1>(), kernel.Get<C>());
-                Assert.AreSame(kernel.Get<I2>(), kernel.Get<C>());
-                Assert.AreSame(kernel.Get<I3>(), kernel.Get<C>());
+                Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
+                Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
             }
 
-            [Test]
-            public void BindConcreteAndThreeInterfacesInTwoStepsThenGet()
+            [TestCase(typeof(C), typeof(C))]
+            [TestCase(typeof(C), typeof(I1))]
+            [TestCase(typeof(C), typeof(I2))]
+            [TestCase(typeof(C), typeof(I3))]
+            [TestCase(typeof(I1), typeof(C))]
+            [TestCase(typeof(I2), typeof(C))]
+            [TestCase(typeof(I3), typeof(C))]
+            [TestCase(typeof(I1), typeof(I1))]
+            [TestCase(typeof(I1), typeof(I2))]
+            [TestCase(typeof(I2), typeof(I1))]
+            [TestCase(typeof(I2), typeof(I2))]
+            [TestCase(typeof(I3), typeof(I2))]
+            [TestCase(typeof(I3), typeof(I3))]
+            public void BindConcreteAndThreeInterfacesInTwoStepsThenGet(Type type1, Type type2)
             {
                 using var kernel = new Kernel();
                 kernel.Bind<I1, C>();
                 kernel.Bind<I2, C>();
                 kernel.Bind<I3, C>();
-                Assert.AreSame(kernel.Get<I1>(), kernel.Get<C>());
-                Assert.AreSame(kernel.Get<I2>(), kernel.Get<C>());
+                Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
+                Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
             }
 
-            [Test]
-            public void BindConcreteAndThreeInterfacesRecursiveThenGet()
+            [TestCase(typeof(C), typeof(C))]
+            [TestCase(typeof(C), typeof(I1))]
+            [TestCase(typeof(C), typeof(I2))]
+            [TestCase(typeof(C), typeof(I3))]
+            [TestCase(typeof(I1), typeof(C))]
+            [TestCase(typeof(I2), typeof(C))]
+            [TestCase(typeof(I3), typeof(C))]
+            [TestCase(typeof(I1), typeof(I1))]
+            [TestCase(typeof(I1), typeof(I2))]
+            [TestCase(typeof(I2), typeof(I1))]
+            [TestCase(typeof(I2), typeof(I2))]
+            [TestCase(typeof(I3), typeof(I2))]
+            [TestCase(typeof(I3), typeof(I3))]
+            public void BindConcreteAndThreeInterfacesRecursiveThenGet(Type type1, Type type2)
             {
                 using var kernel = new Kernel();
                 kernel.Bind<I3, C>();
                 kernel.Bind<I1, I2>();
                 kernel.Bind<I2, I3>();
-                Assert.AreSame(kernel.Get<I1>(), kernel.Get<C>());
-                Assert.AreSame(kernel.Get<I2>(), kernel.Get<C>());
+                Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
+                Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
             }
 
             [Test]
@@ -143,6 +176,7 @@
                 using var kernel = new Kernel();
                 kernel.Bind<I1>(new C());
                 Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
+                Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
             }
 
             [TestCase(typeof(C), typeof(C))]
@@ -154,6 +188,7 @@
                 using var kernel = new Kernel();
                 kernel.Bind<I1, C>(new C());
                 Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
+                Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
             }
 
             [TestCase(typeof(C), typeof(C))]
@@ -161,7 +196,6 @@
             [TestCase(typeof(C), typeof(I2))]
             [TestCase(typeof(I1),typeof(C))]
             [TestCase(typeof(I2), typeof(C))]
-            [TestCase(typeof(I1), typeof(C))]
             [TestCase(typeof(I1), typeof(I1))]
             [TestCase(typeof(I1), typeof(I2))]
             [TestCase(typeof(I2), typeof(I1))]
@@ -171,6 +205,7 @@
                 using var kernel = new Kernel();
                 kernel.Bind<I1, I2>(new C());
                 Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
+                Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
             }
 
             [TestCase(typeof(C), typeof(C))]
@@ -178,7 +213,6 @@
             [TestCase(typeof(C), typeof(I2))]
             [TestCase(typeof(I1), typeof(C))]
             [TestCase(typeof(I2), typeof(C))]
-            [TestCase(typeof(I1), typeof(C))]
             [TestCase(typeof(I1), typeof(I1))]
             [TestCase(typeof(I1), typeof(I2))]
             [TestCase(typeof(I2), typeof(I1))]
@@ -188,6 +222,7 @@
                 using var kernel = new Kernel();
                 kernel.Bind<I1, I2, C>(new C());
                 Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
+                Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
             }
 
             [TestCase(typeof(C), typeof(C))]
@@ -195,7 +230,6 @@
             [TestCase(typeof(C), typeof(I2))]
             [TestCase(typeof(I1), typeof(C))]
             [TestCase(typeof(I2), typeof(C))]
-            [TestCase(typeof(I1), typeof(C))]
             [TestCase(typeof(I1), typeof(I1))]
             [TestCase(typeof(I1), typeof(I2))]
             [TestCase(typeof(I2), typeof(I1))]
@@ -206,35 +240,7 @@
                 kernel.Bind<I1, C>(new C());
                 kernel.Bind<I2, C>(new C());
                 Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
-            }
-
-            [Test]
-            public void BoundInstanceIsNotDisposed()
-            {
-                using var disposable = new Disposable();
-                using (var kernel = new Kernel())
-                {
-                    kernel.Bind(disposable);
-                    var actual = kernel.Get<Disposable>();
-                    Assert.AreSame(actual, disposable);
-                }
-
-                Assert.AreEqual(0, disposable.Disposed);
-            }
-
-            [Test]
-            public void BindFactory()
-            {
-                Mock<IDisposable> mock;
-                using (var kernel = new Kernel())
-                {
-                    kernel.Bind(Mock.Of<IDisposable>);
-                    var actual = kernel.Get<IDisposable>();
-                    mock = Mock.Get(actual);
-                    mock.Setup(x => x.Dispose());
-                }
-
-                mock.Verify(x => x.Dispose(), Times.Once);
+                Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
             }
 
             [Test]
