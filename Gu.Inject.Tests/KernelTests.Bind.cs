@@ -34,27 +34,57 @@
                 Assert.AreSame(actual, kernel.Get(to));
             }
 
-            [Test]
-            public void BindTwoInterfacesThenGet()
+            [TestCase(typeof(C), typeof(C))]
+            [TestCase(typeof(C), typeof(I1))]
+            [TestCase(typeof(I1), typeof(C))]
+            [TestCase(typeof(I1), typeof(I1))]
+            public void BindConcreteAndInterfaceThenGet(Type type1, Type type2)
+            {
+                using var kernel = new Kernel();
+                kernel.Bind<I1, C>();
+                Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
+                Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
+            }
+
+            [TestCase(typeof(C), typeof(C))]
+            [TestCase(typeof(C), typeof(I1))]
+            [TestCase(typeof(C), typeof(I2))]
+            [TestCase(typeof(I1), typeof(C))]
+            [TestCase(typeof(I2), typeof(C))]
+            [TestCase(typeof(I1), typeof(C))]
+            [TestCase(typeof(I1), typeof(I1))]
+            [TestCase(typeof(I1), typeof(I2))]
+            [TestCase(typeof(I2), typeof(I1))]
+            [TestCase(typeof(I2), typeof(I2))]
+            public void BindConcreteAndTwoInterfacesThenGet(Type type1, Type type2)
             {
                 using var kernel = new Kernel();
                 kernel.Bind<I1, I2, C>();
-                Assert.AreSame(kernel.Get<I1>(), kernel.Get<C>());
-                Assert.AreSame(kernel.Get<I2>(), kernel.Get<C>());
+                Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
+                Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
             }
 
-            [Test]
-            public void BindTwoInterfacesInTwoStepsThenGet()
+            [TestCase(typeof(C), typeof(C))]
+            [TestCase(typeof(C), typeof(I1))]
+            [TestCase(typeof(C), typeof(I2))]
+            [TestCase(typeof(I1), typeof(C))]
+            [TestCase(typeof(I2), typeof(C))]
+            [TestCase(typeof(I1), typeof(C))]
+            [TestCase(typeof(I1), typeof(I1))]
+            [TestCase(typeof(I1), typeof(I2))]
+            [TestCase(typeof(I2), typeof(I1))]
+            [TestCase(typeof(I2), typeof(I2))]
+            public void BindConcreteAndTwoInterfacesInTwoStepsThenGet(Type type1, Type type2)
             {
                 using var kernel = new Kernel();
                 kernel.Bind<I1, C>();
                 kernel.Bind<I2, C>();
-                Assert.AreSame(kernel.Get<I1>(), kernel.Get<C>());
-                Assert.AreSame(kernel.Get<I2>(), kernel.Get<C>());
+                Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
+                Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
             }
 
             [Test]
-            public void BindThreeInterfacesThenGet()
+            public void BindConcreteAndThreeInterfacesThenGet()
             {
                 using var kernel = new Kernel();
                 kernel.Bind<I1, I2, I3, C>();
@@ -64,7 +94,7 @@
             }
 
             [Test]
-            public void BindThreeInterfacesInTwoStepsThenGet()
+            public void BindConcreteAndThreeInterfacesInTwoStepsThenGet()
             {
                 using var kernel = new Kernel();
                 kernel.Bind<I1, C>();
@@ -75,7 +105,7 @@
             }
 
             [Test]
-            public void BindThreeInterfacesRecursiveThenGet()
+            public void BindConcreteAndThreeInterfacesRecursiveThenGet()
             {
                 using var kernel = new Kernel();
                 kernel.Bind<I3, C>();
@@ -83,6 +113,15 @@
                 kernel.Bind<I2, I3>();
                 Assert.AreSame(kernel.Get<I1>(), kernel.Get<C>());
                 Assert.AreSame(kernel.Get<I2>(), kernel.Get<C>());
+            }
+
+            [Test]
+            public void BindGenericAndTwoInterfacesThenGet()
+            {
+                using var kernel = new Kernel();
+                kernel.Bind<IWith, IWith<DefaultCtor>, With<DefaultCtor>>();
+                Assert.AreSame(kernel.Get<IWith<DefaultCtor>>(), kernel.Get<With<DefaultCtor>>());
+                Assert.AreSame(kernel.Get<IWith>(), kernel.Get<With<DefaultCtor>>());
             }
 
             [Test]
@@ -95,57 +134,78 @@
                 Assert.AreSame(actual, instance);
             }
 
-            [Test]
-            public void BindInstanceAndInterfaceThenGet()
+            [TestCase(typeof(C), typeof(C))]
+            [TestCase(typeof(C), typeof(I1))]
+            [TestCase(typeof(I1), typeof(C))]
+            [TestCase(typeof(I1), typeof(I1))]
+            public void BindInstanceAndInterfaceThenGet(Type type1, Type type2)
             {
                 using var kernel = new Kernel();
                 kernel.Bind<I1>(new C());
-                Assert.AreSame(kernel.Get<I1>(), kernel.Get<C>());
+                Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
             }
 
-            [Test]
-            public void BindInstanceAndInterfaceExplicitThenGet()
+            [TestCase(typeof(C), typeof(C))]
+            [TestCase(typeof(C), typeof(I1))]
+            [TestCase(typeof(I1), typeof(C))]
+            [TestCase(typeof(I1), typeof(I1))]
+            public void BindInstanceAndInterfaceExplicitThenGet(Type type1, Type type2)
             {
                 using var kernel = new Kernel();
                 kernel.Bind<I1, C>(new C());
-                Assert.AreSame(kernel.Get<I1>(), kernel.Get<C>());
+                Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
             }
 
-            [Test]
-            public void BindInstanceAndTwoInterfacesThenGet()
+            [TestCase(typeof(C), typeof(C))]
+            [TestCase(typeof(C), typeof(I1))]
+            [TestCase(typeof(C), typeof(I2))]
+            [TestCase(typeof(I1),typeof(C))]
+            [TestCase(typeof(I2), typeof(C))]
+            [TestCase(typeof(I1), typeof(C))]
+            [TestCase(typeof(I1), typeof(I1))]
+            [TestCase(typeof(I1), typeof(I2))]
+            [TestCase(typeof(I2), typeof(I1))]
+            [TestCase(typeof(I2), typeof(I2))]
+            public void BindInstanceAndTwoInterfacesThenGet(Type type1, Type type2)
             {
                 using var kernel = new Kernel();
                 kernel.Bind<I1, I2>(new C());
-                Assert.AreSame(kernel.Get<I1>(), kernel.Get<C>());
-                Assert.AreSame(kernel.Get<I2>(), kernel.Get<C>());
+                Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
             }
 
-            [Test]
-            public void BindInstanceAndTwoInterfacesExplicitThenGet()
+            [TestCase(typeof(C), typeof(C))]
+            [TestCase(typeof(C), typeof(I1))]
+            [TestCase(typeof(C), typeof(I2))]
+            [TestCase(typeof(I1), typeof(C))]
+            [TestCase(typeof(I2), typeof(C))]
+            [TestCase(typeof(I1), typeof(C))]
+            [TestCase(typeof(I1), typeof(I1))]
+            [TestCase(typeof(I1), typeof(I2))]
+            [TestCase(typeof(I2), typeof(I1))]
+            [TestCase(typeof(I2), typeof(I2))]
+            public void BindInstanceAndTwoInterfacesExplicitThenGet(Type type1, Type type2)
             {
                 using var kernel = new Kernel();
                 kernel.Bind<I1, I2, C>(new C());
-                Assert.AreSame(kernel.Get<I1>(), kernel.Get<C>());
-                Assert.AreSame(kernel.Get<I2>(), kernel.Get<C>());
+                Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
             }
 
-            [Test]
-            public void BindInstanceAndTwoInterfacesInStepsThenGet()
+            [TestCase(typeof(C), typeof(C))]
+            [TestCase(typeof(C), typeof(I1))]
+            [TestCase(typeof(C), typeof(I2))]
+            [TestCase(typeof(I1), typeof(C))]
+            [TestCase(typeof(I2), typeof(C))]
+            [TestCase(typeof(I1), typeof(C))]
+            [TestCase(typeof(I1), typeof(I1))]
+            [TestCase(typeof(I1), typeof(I2))]
+            [TestCase(typeof(I2), typeof(I1))]
+            [TestCase(typeof(I2), typeof(I2))]
+            public void BindInstanceAndTwoInterfacesInStepsThenGet(Type type1, Type type2)
             {
                 using var kernel = new Kernel();
                 kernel.Bind<I1, C>(new C());
                 kernel.Bind<I2, C>(new C());
-                Assert.AreSame(kernel.Get<I1>(), kernel.Get<C>());
-                Assert.AreSame(kernel.Get<I2>(), kernel.Get<C>());
-            }
-
-            [Test]
-            public void BindTwoThenGet()
-            {
-                using var kernel = new Kernel();
-                kernel.Bind<IWith, IWith<DefaultCtor>, With<DefaultCtor>>();
-                Assert.AreSame(kernel.Get<IWith<DefaultCtor>>(), kernel.Get<With<DefaultCtor>>());
-                Assert.AreSame(kernel.Get<IWith>(), kernel.Get<With<DefaultCtor>>());
+                Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
             }
 
             [Test]
