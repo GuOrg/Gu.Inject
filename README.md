@@ -15,6 +15,7 @@ A dependency injection library with no features. The lack of features is the mai
 - Everything from the container is singleton.
 - Constructor injection only unless providing custom factory functions.
 - Require explicit bindings for interfaces and abstract types. Only one binding per type.
+- Bind not allowed after resolving. Throws exception.
 - Rebind shipped in a separate nuget to enforce that it is only used by tests.
 - Dispose all things created by the container.
 
@@ -40,12 +41,20 @@ using var kernel = new Kernel()
     .Bind<IFoo, Bar>(); // throws binding IFoo a second time.
 ```
 
+Also note:
+
+```cs
+using var kernel = new Kernel();
+var root = kernel.Get<RootType>();
+```
+
 ## Bind factory
 
 ```cs
 using var kernel = new Kernel()
     .Bind(() => Foo.Create()); // this instance is disposed when the container is disposed
 var root = kernel.Get<RootType>();
+kernel.Bind<IFoo, Foo>(); // throws as we did Get<RootType> meaning bind no longer allowed.
 ```
 
 Also allowed:
