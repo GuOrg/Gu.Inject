@@ -29,10 +29,7 @@ namespace Gu.Inject.Benchmarks
         private static readonly Kernel Kernel = new Kernel();
 
         private static readonly Kernel BoundKernel = new Kernel()
-                               .Bind(c => new Node1(c.Get<Node7>(), c.Get<Node8>(), c.Get<Node20>(), c.Get<Node26>(),
-                                   c.Get<Node29>(), c.Get<Node34>(), c.Get<Node37>(), c.Get<Node49>(), c.Get<Node50>(),
-                                   c.Get<Node57>(), c.Get<Node60>(), c.Get<Node63>(), c.Get<Node72>(), c.Get<Node79>(),
-                                   c.Get<Node83>(), c.Get<Node93>(), c.Get<Node96>(), c.Get<Node101>(),
+                               .Bind(c => new Node1(c.Get<Node7>(), c.Get<Node8>(), c.Get<Node20>(), c.Get<Node26>(), c.Get<Node29>(), c.Get<Node34>(), c.Get<Node37>(), c.Get<Node49>(), c.Get<Node50>(), c.Get<Node57>(), c.Get<Node60>(), c.Get<Node63>(), c.Get<Node72>(), c.Get<Node79>(), c.Get<Node83>(), c.Get<Node93>(), c.Get<Node96>(), c.Get<Node101>(),
                                    c.Get<Node109>(), c.Get<Node113>(), c.Get<Node116>(), c.Get<Node118>(),
                                    c.Get<Node121>(), c.Get<Node124>(), c.Get<Node127>(), c.Get<Node135>(),
                                    c.Get<Node136>(), c.Get<Node144>(), c.Get<Node154>(), c.Get<Node156>(),
@@ -110,12 +107,8 @@ namespace Gu.Inject.Benchmarks
                                .Bind(c => new Node11(c.Get<Node33>(), c.Get<Node99>(), c.Get<Node110>(),
                                    c.Get<Node275>(), c.Get<Node374>(), c.Get<Node385>(), c.Get<Node418>()))
                                .Bind(c => new Node12(c.Get<Node60>(), c.Get<Node96>(), c.Get<Node420>()))
-                               .Bind(c => new Node13(c.Get<Node78>(), c.Get<Node221>(), c.Get<Node364>(),
-                                   c.Get<Node403>(), c.Get<Node455>()))
-                               .Bind(c => new Node14(c.Get<Node28>(), c.Get<Node84>(), c.Get<Node98>(),
-                                   c.Get<Node112>(), c.Get<Node154>(), c.Get<Node196>(), c.Get<Node238>(),
-                                   c.Get<Node252>(), c.Get<Node280>(), c.Get<Node322>(), c.Get<Node378>(),
-                                   c.Get<Node420>()))
+                               .Bind(c => new Node13(c.Get<Node78>(), c.Get<Node221>(), c.Get<Node364>(), c.Get<Node403>(), c.Get<Node455>()))
+                               .Bind(c => new Node14(c.Get<Node28>(), c.Get<Node84>(), c.Get<Node98>(), c.Get<Node112>(), c.Get<Node154>(), c.Get<Node196>(), c.Get<Node238>(), c.Get<Node252>(), c.Get<Node280>(), c.Get<Node322>(), c.Get<Node378>(), c.Get<Node420>()))
                                .Bind(c => new Node15(c.Get<Node330>(), c.Get<Node405>(), c.Get<Node465>()))
                                .Bind(c => new Node16(c.Get<Node176>(), c.Get<Node384>(), c.Get<Node416>(),
                                    c.Get<Node448>()))

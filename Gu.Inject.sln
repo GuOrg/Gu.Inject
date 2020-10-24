@@ -8,6 +8,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".sln", ".sln", "{8DE2AA93-D
 		.editorconfig = .editorconfig
 		appveyor.yml = appveyor.yml
 		azure-pipelines.yml = azure-pipelines.yml
+		README.md = README.md
+		stylecop.json = stylecop.json
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Inject", "Gu.Inject\Gu.Inject.csproj", "{8953C8E1-0819-4EB8-B10C-5286DEB0E079}"
@@ -15,6 +17,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Inject.Tests", "Gu.Inject.Tests\Gu.Inject.Tests.csproj", "{C30669FC-D159-488F-8FF8-BDCD4622C325}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Inject.Benchmarks", "Gu.Inject.Benchmarks\Gu.Inject.Benchmarks.csproj", "{A92D6209-5247-4ADC-84B8-46F44F66BF42}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.Inject.Rebind", "Gu.Inject.Rebind\Gu.Inject.Rebind.csproj", "{593C45DE-33D3-47C7-B04D-9A24D4690B6D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,6 +38,10 @@ Global
 		{A92D6209-5247-4ADC-84B8-46F44F66BF42}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A92D6209-5247-4ADC-84B8-46F44F66BF42}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A92D6209-5247-4ADC-84B8-46F44F66BF42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{593C45DE-33D3-47C7-B04D-9A24D4690B6D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{593C45DE-33D3-47C7-B04D-9A24D4690B6D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{593C45DE-33D3-47C7-B04D-9A24D4690B6D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{593C45DE-33D3-47C7-B04D-9A24D4690B6D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

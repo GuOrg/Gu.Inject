@@ -604,6 +604,5 @@
                                .Bind(c => new Node499());
             return kernel.Get<Node1>();
         }
-
     }
 }

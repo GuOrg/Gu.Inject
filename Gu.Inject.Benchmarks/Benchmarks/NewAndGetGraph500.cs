@@ -153,31 +153,24 @@ namespace Gu.Inject.Benchmarks
                                .Bind(c => new Node21(c.Get<Node147>(), c.Get<Node210>(), c.Get<Node483>()))
                                .Bind(c => new Node22(c.Get<Node198>(), c.Get<Node220>(), c.Get<Node264>(),
                                    c.Get<Node308>()))
-                               .Bind(c => new Node23(c.Get<Node115>(), c.Get<Node276>(), c.Get<Node299>(),
-                                   c.Get<Node368>()))
+                               .Bind(c => new Node23(c.Get<Node115>(), c.Get<Node276>(), c.Get<Node299>(), c.Get<Node368>()))
                                .Bind(c => new Node24(c.Get<Node96>(), c.Get<Node240>(), c.Get<Node384>()))
-                               .Bind(c => new Node25(c.Get<Node50>(), c.Get<Node100>(), c.Get<Node175>(),
-                                   c.Get<Node350>()))
-                               .Bind(c => new Node26(c.Get<Node104>(), c.Get<Node260>(), c.Get<Node338>(),
-                                   c.Get<Node364>(), c.Get<Node390>()))
+                               .Bind(c => new Node25(c.Get<Node50>(), c.Get<Node100>(), c.Get<Node175>(), c.Get<Node350>()))
+                               .Bind(c => new Node26(c.Get<Node104>(), c.Get<Node260>(), c.Get<Node338>(), c.Get<Node364>(), c.Get<Node390>()))
                                .Bind(c => new Node27(c.Get<Node81>(), c.Get<Node378>()))
                                .Bind(c => new Node28(c.Get<Node112>(), c.Get<Node420>()))
                                .Bind(c => new Node29(c.Get<Node261>(), c.Get<Node406>()))
-                               .Bind(c => new Node30(c.Get<Node150>(), c.Get<Node210>(), c.Get<Node270>(),
-                                   c.Get<Node480>()))
-                               .Bind(c => new Node31(c.Get<Node62>(), c.Get<Node93>(), c.Get<Node341>(),
-                                   c.Get<Node372>(), c.Get<Node403>(), c.Get<Node434>()))
+                               .Bind(c => new Node30(c.Get<Node150>(), c.Get<Node210>(), c.Get<Node270>(), c.Get<Node480>()))
+                               .Bind(c => new Node31(c.Get<Node62>(), c.Get<Node93>(), c.Get<Node341>(), c.Get<Node372>(), c.Get<Node403>(), c.Get<Node434>()))
                                .Bind(c => new Node32(c.Get<Node256>()))
                                .Bind(c => new Node33(c.Get<Node198>(), c.Get<Node330>()))
                                .Bind(c => new Node34(c.Get<Node68>(), c.Get<Node340>(), c.Get<Node476>()))
-                               .Bind(c => new Node35(c.Get<Node175>(), c.Get<Node210>(), c.Get<Node280>(),
-                                   c.Get<Node350>(), c.Get<Node455>()))
+                               .Bind(c => new Node35(c.Get<Node175>(), c.Get<Node210>(), c.Get<Node280>(), c.Get<Node350>(), c.Get<Node455>()))
                                .Bind(c => new Node36(c.Get<Node108>(), c.Get<Node180>(), c.Get<Node360>()))
                                .Bind(c => new Node37(c.Get<Node74>(), c.Get<Node370>()))
                                .Bind(c => new Node38(c.Get<Node76>(), c.Get<Node266>(), c.Get<Node380>()))
                                .Bind(c => new Node39())
-                               .Bind(c => new Node40(c.Get<Node80>(), c.Get<Node160>(), c.Get<Node200>(),
-                                   c.Get<Node360>(), c.Get<Node480>()))
+                               .Bind(c => new Node40(c.Get<Node80>(), c.Get<Node160>(), c.Get<Node200>(), c.Get<Node360>(), c.Get<Node480>()))
                                .Bind(c => new Node41(c.Get<Node123>(), c.Get<Node246>(), c.Get<Node328>()))
                                .Bind(c => new Node42())
                                .Bind(c => new Node43())
@@ -186,8 +179,7 @@ namespace Gu.Inject.Benchmarks
                                .Bind(c => new Node46(c.Get<Node92>(), c.Get<Node230>(), c.Get<Node322>()))
                                .Bind(c => new Node47(c.Get<Node329>()))
                                .Bind(c => new Node48(c.Get<Node144>(), c.Get<Node288>(), c.Get<Node336>()))
-                               .Bind(c => new Node49(c.Get<Node147>(), c.Get<Node196>(), c.Get<Node441>(),
-                                   c.Get<Node490>()))
+                               .Bind(c => new Node49(c.Get<Node147>(), c.Get<Node196>(), c.Get<Node441>(), c.Get<Node490>()))
                                .Bind(c => new Node50())
                                .Bind(c => new Node51(c.Get<Node204>()))
                                .Bind(c => new Node52())
@@ -197,8 +189,7 @@ namespace Gu.Inject.Benchmarks
                                .Bind(c => new Node56())
                                .Bind(c => new Node57(c.Get<Node285>()))
                                .Bind(c => new Node58())
-                               .Bind(c => new Node59(c.Get<Node177>(), c.Get<Node236>(), c.Get<Node354>(),
-                                   c.Get<Node472>()))
+                               .Bind(c => new Node59(c.Get<Node177>(), c.Get<Node236>(), c.Get<Node354>(), c.Get<Node472>()))
                                .Bind(c => new Node60(c.Get<Node480>()))
                                .Bind(c => new Node61(c.Get<Node122>()))
                                .Bind(c => new Node62(c.Get<Node248>(), c.Get<Node310>()))
