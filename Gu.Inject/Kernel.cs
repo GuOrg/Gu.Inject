@@ -152,12 +152,29 @@
 
             Binding AutoResolve(Type candidate)
             {
-                var resolve = Constructor.GetResolver(candidate);
+                var constructor = Constructor.Get(candidate);
                 this.hasResolved = true;
                 this.Creating?.Invoke(this, type);
-                var item = resolve(this);
+                var item = constructor.ConstructorInfo.Invoke(Arguments());
                 this.Created?.Invoke(this, item);
                 return Binding.AutoResolved(item);
+
+                object[]? Arguments()
+                {
+                    if (constructor.Parameters is { } parameters)
+                    {
+                        var values = new object[constructor.Parameters.Length];
+
+                        for (var i = 0; i < parameters.Length; i++)
+                        {
+                            values[i] = this.GetCore(parameters[i].ParameterType);
+                        }
+
+                        return values;
+                    }
+
+                    return null;
+                }
             }
 
             Binding Create(Func<object> create)
