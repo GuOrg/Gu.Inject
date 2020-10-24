@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Concurrent;
+    using System.Reflection;
+    using System.Text;
 
     /// <summary>
     /// A factory for resolving object graphs.
@@ -163,11 +165,20 @@
                     this.Created?.Invoke(this, item);
                     return Binding.AutoResolved(item);
                 }
-                else
+
+                var messageBuilder = new StringBuilder();
+                var padding = "  ";
+                messageBuilder.AppendLine($"{candidate.PrettyName()}(");
+                foreach (var parameter in Constructor.Cycle(candidate))
                 {
-                    var message = $"{type?.PrettyName()}(... Circular dependency detected.\r\nPotential solution: BindUninitialized<{type?.PrettyName()}>()\r\nNote that when using BindUninitialized() types taking {type?.PrettyName()} as constructor parameter get an uninitialized instance while in the constructor.";
-                    throw new CircularDependencyException(candidate, message);
+                    messageBuilder.AppendLine($"{padding}{parameter.ParameterType.PrettyName()}(");
+                    padding += "  ";
                 }
+
+                messageBuilder.AppendLine($"{padding}{candidate.PrettyName()}(... Circular dependency detected.");
+                ////messageBuilder.AppendLine($"Potential solution: {nameof(this.BindUninitialized)}<{type?.PrettyName()}>()")
+                ////              .AppendLine($"Note that when using {nameof(this.BindUninitialized)}<{type?.PrettyName()}>() types taking {type?.PrettyName()} as constructor parameter get an uninitialized instance while in the constructor.");
+                throw new CircularDependencyException(candidate, messageBuilder.ToString());
             }
 
             Binding Initialize(object obj)

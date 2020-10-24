@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
 
@@ -20,6 +21,10 @@
             this.arguments = parameters is null ? null : new object[parameters.Length];
         }
 
+        /// <summary>
+        /// Setting this.arguments[last] = this.arguments; when resolving.
+        /// Reason for this hack is silly optimization.
+        /// </summary>
         private bool IsBusy
         {
             get => this.arguments is { } && this.arguments?[this.arguments.Length - 1] == this.arguments;
@@ -40,6 +45,23 @@
             }
 
             return ctor;
+        }
+
+        internal static IEnumerable<ParameterInfo> Cycle(Type candidate)
+        {
+            var parameter = Find(candidate);
+            while (parameter.ParameterType != candidate)
+            {
+                yield return parameter;
+                parameter = Find(parameter.ParameterType);
+            }
+
+            yield break;
+
+            static ParameterInfo Find(Type current)
+            {
+                return Cache[current].parameters!.First(p => Cache[p.ParameterType].IsBusy);
+            }
         }
 
         internal object Invoke(object? obj, Func<Type, object> resolve)
