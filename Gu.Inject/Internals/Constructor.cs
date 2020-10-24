@@ -1,6 +1,7 @@
 ﻿namespace Gu.Inject
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Linq;
     using System.Reflection;
 
@@ -8,6 +9,8 @@
     {
         internal readonly ConstructorInfo ConstructorInfo;
         internal readonly ParameterInfo[]? Parameters;
+
+        private static readonly ConcurrentDictionary<Type, Constructor> Cache = new ConcurrentDictionary<Type, Constructor>();
 
         private Constructor(ConstructorInfo constructorInfo, ParameterInfo[]? parameters)
         {
@@ -17,11 +20,16 @@
 
         internal static Constructor Get(Type type)
         {
+            return Cache.GetOrAdd(type, t => Create(t));
+        }
+
+        private static Constructor Create(Type type)
+        {
             var constructors = type.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             if (constructors.Length > 1)
             {
                 var message = $"Type {type.PrettyName()} has more than one constructor.\r\n" +
-                                     "Add a binding specifying which constructor to use.";
+                              "Add a binding specifying which constructor to use.";
                 throw new ResolveException(type, message);
             }
 
