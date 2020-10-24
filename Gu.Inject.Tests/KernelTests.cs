@@ -33,12 +33,33 @@
         public void GetCircularSimple()
         {
             using var kernel = new Kernel();
-            kernel.BindCircular<Circular1.A>();
-            kernel.BindCircular<Circular1.B>();
+            kernel.BindUninitialized<Circular1.A>();
             var a = kernel.Get<Circular1.A>();
             var b = kernel.Get<Circular1.B>();
             Assert.AreSame(a.B, b);
             Assert.AreSame(a, b.A);
+        }
+
+        [Test]
+        public void GetCircularComplex()
+        {
+            using var kernel = new Kernel();
+            kernel.BindUninitialized<Circular2.A>();
+            var a = kernel.Get<Circular2.A>();
+            var b = kernel.Get<Circular2.B>();
+            var c = kernel.Get<Circular2.C>();
+            var d = kernel.Get<Circular2.D>();
+            var e = kernel.Get<Circular2.E>();
+            var f = kernel.Get<Circular2.F>();
+            var g = kernel.Get<Circular2.G>();
+            Assert.AreSame(a.B, b);
+            Assert.AreSame(a.E, e);
+            Assert.AreSame(b.C, c);
+            Assert.AreSame(b.D, d);
+            Assert.AreSame(c, kernel.Get<Circular2.C>());
+            Assert.AreSame(d, kernel.Get<Circular2.D>());
+            Assert.AreSame(e.F, f);
+            Assert.AreSame(e.G, g);
         }
 
         [Test]
@@ -172,6 +193,34 @@
             kernel.Creating += (sender, type) => actual.Add(type);
             _ = kernel.Get<DefaultCtor>();
             CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
+        }
+
+        [Test]
+        public void NotifiesCreatingCircular()
+        {
+            var actual = new List<Type>();
+            using var kernel = new Kernel();
+            kernel.Creating += (sender, type) => actual.Add(type);
+            kernel.BindUninitialized<Circular1.A>();
+            var a = kernel.Get<Circular1.A>();
+            var b = kernel.Get<Circular1.B>();
+            Assert.AreSame(a.B, b);
+            Assert.AreSame(a, b.A);
+            CollectionAssert.AreEqual(new[] { typeof(Circular1.A), typeof(Circular1.B) }, actual);
+        }
+
+        [Test]
+        public void NotifiesCreatedCircular()
+        {
+            var actual = new List<object>();
+            using var kernel = new Kernel();
+            kernel.Created += (sender, type) => actual.Add(type);
+            kernel.BindUninitialized<Circular1.A>();
+            var a = kernel.Get<Circular1.A>();
+            var b = kernel.Get<Circular1.B>();
+            Assert.AreSame(a.B, b);
+            Assert.AreSame(a, b.A);
+            CollectionAssert.AreEqual(new object[] { b, a }, actual);
         }
     }
 }

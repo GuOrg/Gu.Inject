@@ -32,11 +32,12 @@ namespace Gu.Inject
         }
 
         /// <summary>
-        /// Provide an override to the automatic mapping.
+        /// Use this binding when there are circular dependencies.
+        /// This binds an FormatterServices.GetUninitializedObject() that is used when creating the graph.
         /// </summary>
         /// <typeparam name="T">The type to map.</typeparam>
         /// <returns>The same instance.</returns>
-        public Kernel BindCircular<T>()
+        public Kernel BindUninitialized<T>()
             where T : class
         {
             this.BindCore(typeof(T), Binding.Uninitialized<T>());
