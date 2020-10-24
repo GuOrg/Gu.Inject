@@ -6,6 +6,8 @@ namespace Gu.Inject
         ResolverFunc,
         Map,
         Instance,
+        Uninitialized,
+        Initialized,
         AutoResolved,
         Created,
         Resolved,

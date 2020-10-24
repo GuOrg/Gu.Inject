@@ -76,6 +76,7 @@
                     case BindingKind.Created:
                     case BindingKind.Resolved:
                     case BindingKind.AutoResolved:
+                    case BindingKind.Initialized:
                         (kvp.Value.Value as IDisposable)?.Dispose();
                         break;
                     default:
@@ -139,11 +140,13 @@
                 },
                 (t, b) => b.Kind switch
                 {
+                    BindingKind.Initialized => b,
                     BindingKind.AutoResolved => b,
                     BindingKind.Resolved => b,
                     BindingKind.Instance => b,
                     BindingKind.Created => b,
                     BindingKind.Mapped => b,
+                    BindingKind.Uninitialized => Initialize(b.Value),
                     BindingKind.Func => Create((Func<object>)b.Value),
                     BindingKind.ResolverFunc => Resolve((Func<IGetter, object>)b.Value),
                     BindingKind.Map => Map((Type)b.Value),
@@ -155,26 +158,23 @@
                 var constructor = Constructor.Get(candidate);
                 this.hasResolved = true;
                 this.Creating?.Invoke(this, type);
-                var item = constructor.ConstructorInfo.Invoke(Arguments());
+                var item = constructor.Invoke(null, x => ResolveParameter(x));
                 this.Created?.Invoke(this, item);
                 return Binding.AutoResolved(item);
+            }
 
-                object[]? Arguments()
+            Binding Initialize(object obj)
+            {
+                if (Constructor.GetOrNull(obj.GetType()) is { } constructor)
                 {
-                    if (constructor.Parameters is { } parameters)
-                    {
-                        var values = new object[constructor.Parameters.Length];
-
-                        for (var i = 0; i < parameters.Length; i++)
-                        {
-                            values[i] = this.GetCore(parameters[i].ParameterType);
-                        }
-
-                        return values;
-                    }
-
-                    return null;
+                    this.hasResolved = true;
+                    this.Creating?.Invoke(this, type);
+                    var item = constructor.Invoke(obj, x => ResolveParameter(x));
+                    this.Created?.Invoke(this, item);
+                    return Binding.Initialized(item);
                 }
+
+                return Binding.Initialized(obj);
             }
 
             Binding Create(Func<object> create)
@@ -238,6 +238,8 @@
             {
                 return Binding.Mapped(this.GetCore(to));
             }
+
+            object ResolveParameter(Type parameterType) => this.GetCore(parameterType);
         }
     }
 }

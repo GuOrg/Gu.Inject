@@ -34,6 +34,18 @@ namespace Gu.Inject
         /// <summary>
         /// Provide an override to the automatic mapping.
         /// </summary>
+        /// <typeparam name="T">The type to map.</typeparam>
+        /// <returns>The same instance.</returns>
+        public Kernel BindCircular<T>()
+            where T : class
+        {
+            this.BindCore(typeof(T), Binding.Uninitialized<T>());
+            return this;
+        }
+
+        /// <summary>
+        /// Provide an override to the automatic mapping.
+        /// </summary>
         /// <typeparam name="TInterface">The type to map.</typeparam>
         /// <typeparam name="TConcrete">The mapped type.</typeparam>
         /// <returns>The same instance.</returns>

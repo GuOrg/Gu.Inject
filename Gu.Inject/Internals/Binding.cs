@@ -2,6 +2,7 @@ namespace Gu.Inject
 {
     using System;
     using System.Diagnostics;
+    using System.Runtime.Serialization;
 
     [DebuggerDisplay("{this.DebuggerDisplayString}")]
     internal readonly struct Binding
@@ -30,6 +31,14 @@ namespace Gu.Inject
         internal static Binding Created<T>(T instance) => new Binding(instance!, BindingKind.Created);
 
         internal static Binding Resolved<T>(T instance) => new Binding(instance!, BindingKind.Resolved);
+
+        internal static Binding Uninitialized<T>()
+            where T : class
+        {
+            return new Binding(FormatterServices.GetUninitializedObject(typeof(T)), BindingKind.Uninitialized);
+        }
+
+        internal static Binding Initialized(object obj) => new Binding(obj, BindingKind.Initialized);
 
         internal static Binding AutoResolved<T>(T instance) => new Binding(instance!, BindingKind.AutoResolved);
 

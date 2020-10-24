@@ -30,6 +30,18 @@
         }
 
         [Test]
+        public void GetCircularSimple()
+        {
+            using var kernel = new Kernel();
+            kernel.BindCircular<Circular1.A>();
+            kernel.BindCircular<Circular1.B>();
+            var a = kernel.Get<Circular1.A>();
+            var b = kernel.Get<Circular1.B>();
+            Assert.AreSame(a.B, b);
+            Assert.AreSame(a, b.A);
+        }
+
+        [Test]
         public void GetSubclassesReturnsDifferentByDefault()
         {
             using var kernel = new Kernel();
