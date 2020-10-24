@@ -1,4 +1,6 @@
-﻿namespace Gu.Inject
+﻿// ReSharper disable RedundantTypeArgumentsOfMethod
+#pragma warning disable IDE0001
+namespace Gu.Inject
 {
     using System;
 
@@ -38,7 +40,7 @@
         public Kernel Bind<TInterface, TConcrete>()
             where TConcrete : TInterface
         {
-            this.Bind(typeof(TInterface), typeof(TConcrete));
+            this.BindCore(typeof(TInterface), new Binding(typeof(TConcrete), BindingKind.Map));
             return this;
         }
 
@@ -52,8 +54,8 @@
         public Kernel Bind<TInterface1, TInterface2, TConcrete>()
             where TConcrete : TInterface1, TInterface2
         {
-            this.Bind(typeof(TInterface1), typeof(TConcrete));
-            this.Bind(typeof(TInterface2), typeof(TConcrete));
+            this.BindCore(typeof(TInterface1), new Binding(typeof(TConcrete), BindingKind.Map));
+            this.BindCore(typeof(TInterface2), new Binding(typeof(TConcrete), BindingKind.Map));
             return this;
         }
 
@@ -68,9 +70,9 @@
         public Kernel Bind<TInterface1, TInterface2, TInterface3, TConcrete>()
             where TConcrete : TInterface1, TInterface2, TInterface3
         {
-            this.Bind(typeof(TInterface1), typeof(TConcrete));
-            this.Bind(typeof(TInterface2), typeof(TConcrete));
-            this.Bind(typeof(TInterface3), typeof(TConcrete));
+            this.BindCore(typeof(TInterface1), new Binding(typeof(TConcrete), BindingKind.Map));
+            this.BindCore(typeof(TInterface2), new Binding(typeof(TConcrete), BindingKind.Map));
+            this.BindCore(typeof(TInterface3), new Binding(typeof(TConcrete), BindingKind.Map));
             return this;
         }
 
@@ -89,7 +91,16 @@
                 throw new ArgumentNullException(nameof(instance));
             }
 
-            this.BindCore(typeof(T), new Binding(instance, BindingKind.Instance));
+            if (typeof(T) == instance.GetType())
+            {
+                this.BindCore(typeof(T), new Binding(instance, BindingKind.Instance));
+            }
+            else
+            {
+                this.BindCore(typeof(T), new Binding(instance, BindingKind.Mapped));
+                this.BindCore(instance.GetType(), new Binding(instance, BindingKind.Instance));
+            }
+
             return this;
         }
 
@@ -109,8 +120,8 @@
                 throw new ArgumentNullException(nameof(instance));
             }
 
-            this.Bind(typeof(TInterface), typeof(TConcrete));
-            this.BindCore(typeof(TConcrete), new Binding(instance, BindingKind.Instance));
+            this.Bind<TConcrete>(instance);
+            this.BindCore(typeof(TInterface), new Binding(instance, BindingKind.Mapped));
             return this;
         }
 
@@ -131,9 +142,9 @@
                 throw new ArgumentNullException(nameof(instance));
             }
 
-            this.Bind(typeof(TInterface1), typeof(TConcrete));
-            this.Bind(typeof(TInterface2), typeof(TConcrete));
-            this.BindCore(typeof(TConcrete), new Binding(instance, BindingKind.Instance));
+            this.Bind<TConcrete>(instance);
+            this.BindCore(typeof(TInterface1), new Binding(instance, BindingKind.Mapped));
+            this.BindCore(typeof(TInterface2), new Binding(instance, BindingKind.Mapped));
             return this;
         }
 
@@ -155,10 +166,10 @@
                 throw new ArgumentNullException(nameof(instance));
             }
 
-            this.Bind(typeof(TInterface1), typeof(TConcrete));
-            this.Bind(typeof(TInterface2), typeof(TConcrete));
-            this.Bind(typeof(TInterface3), typeof(TConcrete));
-            this.BindCore(typeof(TConcrete), new Binding(instance, BindingKind.Instance));
+            this.Bind<TConcrete>(instance);
+            this.BindCore(typeof(TInterface1), new Binding(instance, BindingKind.Mapped));
+            this.BindCore(typeof(TInterface2), new Binding(instance, BindingKind.Mapped));
+            this.BindCore(typeof(TInterface3), new Binding(instance, BindingKind.Mapped));
             return this;
         }
 

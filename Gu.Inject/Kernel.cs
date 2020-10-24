@@ -100,7 +100,7 @@
             if (binding is { Kind: BindingKind.Map, Value: Type to } &&
                 key == to)
             {
-                throw new InvalidOperationException("Trying to bind to the same type.");
+                throw new InvalidOperationException("Trying to bind to the same type.\r\n This is the equivalent of kernel.Bind<SomeType, SomeType>() which is not strictly wrong but redundant and could indicate a real error hence this exception.");
             }
 
             _ = this.map.AddOrUpdate(
