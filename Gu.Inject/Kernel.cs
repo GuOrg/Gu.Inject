@@ -160,21 +160,61 @@
                 return Binding.AutoResolved(item);
             }
 
+            Binding Create(Func<object> create)
+            {
+                this.Creating?.Invoke(this, type);
+                var item = create();
+                this.Created?.Invoke(this, item);
+                //// ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                if (item is null ||
+                    type == item?.GetType())
+                {
+                    return Binding.Created(item);
+                }
+
+                if (this.map!.TryAdd(item!.GetType(), Binding.Created(item)))
+                {
+                    return Binding.Mapped(item);
+                }
+
+                var message = "There was already an instance created.\r\n" +
+                                    "This can happen by doing:\r\n" +
+                                    "1. Bind<I>(() => new C())" +
+                                    "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
+                                    "3. Get<I>() this creates an instance of C using the func and then detects there is already an instance.\r\n" +
+                                    "Solution:\r\n" +
+                                    "Specify explicit binding for the concrete type.\r\n" +
+                                    "For example by: Bind<I, C>(() => new C())";
+                throw new ResolveException(type, message);
+            }
+
             Binding Resolve(Func<IGetter, object> resolve)
             {
                 this.hasResolved = true;
                 this.Creating?.Invoke(this, type);
                 var item = resolve(this);
                 this.Created?.Invoke(this, item);
-                return Binding.Resolved(item);
-            }
+                //// ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                if (item is null ||
+                    type == item?.GetType())
+                {
+                    return Binding.Resolved(item);
+                }
 
-            Binding Create(Func<object> create)
-            {
-                this.Creating?.Invoke(this, type);
-                var item = create();
-                this.Created?.Invoke(this, item);
-                return Binding.Created(item);
+                if (this.map!.TryAdd(item!.GetType(), Binding.Resolved(item)))
+                {
+                    return Binding.Mapped(item);
+                }
+
+                var message = "There was already an instance created.\r\n" +
+                                    "This can happen by doing:\r\n" +
+                                    "1. Bind<I>(x => new C())" +
+                                    "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
+                                    "3. Get<I>() this creates an instance of C using the func and then detects there is already an instance.\r\n" +
+                                    "Solution:\r\n" +
+                                    "Specify explicit binding for the concrete type.\r\n" +
+                                    "For example by: Bind<I, C>(x => new C())";
+                throw new ResolveException(type, message);
             }
 
             Binding Map(Type to)

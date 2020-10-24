@@ -1,7 +1,9 @@
 ﻿namespace Gu.Inject.Tests
 {
     using System;
+
     using Gu.Inject.Tests.Types;
+
     using NUnit.Framework;
 
     public partial class KernelTests
@@ -99,6 +101,48 @@
                 var instance = new With<DefaultCtor>(new DefaultCtor());
                 var exception = Assert.Throws<InvalidOperationException>(() => kernel.Bind<IWith>(instance));
                 Assert.AreEqual("IWith already has a binding. It is mapped to the type With<DefaultCtor>", exception.Message);
+            }
+
+            [Test]
+            public void BindFactoryAndInterfaceThenGetTypeFirst()
+            {
+                using var kernel = new Kernel();
+                kernel.Bind<I1>(() => new C());
+
+                _ = kernel.Get<C>(); // This works as it resolves using reflection and constructor.
+
+                // Next get fails as there is already an instance created. Solution is Bind<I1, C>(() => new C())
+                Assert.AreEqual(
+                    "There was already an instance created.\r\n" +
+                    "This can happen by doing:\r\n" +
+                    "1. Bind<I>(() => new C())" +
+                    "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
+                    "3. Get<I>() this creates an instance of C using the func and then detects there is already an instance.\r\n" +
+                    "Solution:\r\n" +
+                    "Specify explicit binding for the concrete type.\r\n" +
+                    "For example by: Bind<I, C>(() => new C())",
+                    Assert.Throws<ResolveException>(() => kernel.Get<I1>()).Message);
+            }
+
+            [Test]
+            public void BindGetterFactoryAndInterfaceThenGetTypeFirst()
+            {
+                using var kernel = new Kernel();
+                kernel.Bind<I1>(c => new C());
+
+                _ = kernel.Get<C>(); // This works as it resolves using reflection and constructor.
+
+                // Next get fails as there is already an instance created. Solution is Bind<I1, C>(c => new C())
+                Assert.AreEqual(
+                    "There was already an instance created.\r\n" +
+                    "This can happen by doing:\r\n" +
+                    "1. Bind<I>(x => new C())" +
+                    "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
+                    "3. Get<I>() this creates an instance of C using the func and then detects there is already an instance.\r\n" +
+                    "Solution:\r\n" +
+                    "Specify explicit binding for the concrete type.\r\n" +
+                    "For example by: Bind<I, C>(x => new C())",
+                    Assert.Throws<ResolveException>(() => kernel.Get<I1>()).Message);
             }
         }
     }

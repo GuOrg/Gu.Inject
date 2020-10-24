@@ -213,8 +213,25 @@
             {
                 using var kernel = new Kernel();
                 kernel.Bind<I1>(() => new C());
-                Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
-                Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
+                if (type1.IsClass && type2.IsInterface)
+                {
+                    _ = kernel.Get(type1);
+                    Assert.AreEqual(
+                        "There was already an instance created.\r\n" +
+                        "This can happen by doing:\r\n" +
+                        "1. Bind<I>(() => new C())" +
+                        "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
+                        "3. Get<I>() this creates an instance of C using the func and then detects there is already an instance.\r\n" +
+                        "Solution:\r\n" +
+                        "Specify explicit binding for the concrete type.\r\n" +
+                        "For example by: Bind<I, C>(() => new C())",
+                        Assert.Throws<ResolveException>(() => kernel.Get(type2)).Message);
+                }
+                else
+                {
+                    Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
+                    Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
+                }
             }
 
             [TestCaseSource(nameof(ConcreteAndInterface))]
@@ -231,8 +248,25 @@
             {
                 using var kernel = new Kernel();
                 kernel.Bind<I1, I2>(() => new C());
-                Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
-                Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
+                if (type1.IsClass && type2.IsInterface)
+                {
+                    _ = kernel.Get(type1);
+                    Assert.AreEqual(
+                        "There was already an instance created.\r\n" +
+                        "This can happen by doing:\r\n" +
+                        "1. Bind<I>(() => new C())" +
+                        "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
+                        "3. Get<I>() this creates an instance of C using the func and then detects there is already an instance.\r\n" +
+                        "Solution:\r\n" +
+                        "Specify explicit binding for the concrete type.\r\n" +
+                        "For example by: Bind<I, C>(() => new C())",
+                        Assert.Throws<ResolveException>(() => kernel.Get(type2)).Message);
+                }
+                else
+                {
+                    Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
+                    Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
+                }
             }
 
             [TestCaseSource(nameof(ConcreteAndTwoInterfaces))]
@@ -267,8 +301,25 @@
             {
                 using var kernel = new Kernel();
                 kernel.Bind<I1>(c => new C());
-                Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
-                Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
+                if (type1.IsClass && type2.IsInterface)
+                {
+                    _ = kernel.Get(type1);
+                    Assert.AreEqual(
+                        "There was already an instance created.\r\n" +
+                        "This can happen by doing:\r\n" +
+                        "1. Bind<I>(x => new C())" +
+                        "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
+                        "3. Get<I>() this creates an instance of C using the func and then detects there is already an instance.\r\n" +
+                        "Solution:\r\n" +
+                        "Specify explicit binding for the concrete type.\r\n" +
+                        "For example by: Bind<I, C>(x => new C())",
+                        Assert.Throws<ResolveException>(() => kernel.Get(type2)).Message);
+                }
+                else
+                {
+                    Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
+                    Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
+                }
             }
 
             [TestCaseSource(nameof(ConcreteAndInterface))]
@@ -295,8 +346,25 @@
             {
                 using var kernel = new Kernel();
                 kernel.Bind<I1, I2>(c => new C());
-                Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
-                Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
+                if (type1.IsClass && type2.IsInterface)
+                {
+                    _ = kernel.Get(type1);
+                    Assert.AreEqual(
+                        "There was already an instance created.\r\n" +
+                        "This can happen by doing:\r\n" +
+                        "1. Bind<I>(x => new C())" +
+                        "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
+                        "3. Get<I>() this creates an instance of C using the func and then detects there is already an instance.\r\n" +
+                        "Solution:\r\n" +
+                        "Specify explicit binding for the concrete type.\r\n" +
+                        "For example by: Bind<I, C>(x => new C())",
+                        Assert.Throws<ResolveException>(() => kernel.Get(type2)).Message);
+                }
+                else
+                {
+                    Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
+                    Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
+                }
             }
 
             [TestCaseSource(nameof(ConcreteAndTwoInterfaces))]
