@@ -222,5 +222,15 @@
             Assert.AreSame(a, b.A);
             CollectionAssert.AreEqual(new object[] { b, a }, actual);
         }
+
+        [Test]
+        public void FuncTypes()
+        {
+            using var kernel = new Kernel();
+            kernel.Bind<Func<FuncTypes.A>>(() => kernel.Get<FuncTypes.A>());
+            kernel.Bind<Func<FuncTypes.B>>(() => kernel.Get<FuncTypes.B>());
+            Assert.AreSame(kernel.Get<FuncTypes.A>(), kernel.Get<FuncTypes.A>());
+            Assert.AreSame(kernel.Get<FuncTypes.B>(), kernel.Get<FuncTypes.B>());
+        }
     }
 }
