@@ -27,7 +27,7 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(to));
             }
 
-            this.BindCore(from, new Binding(to, BindingKind.Map));
+            this.BindCore(from, Binding.Map(to));
             return this;
         }
 
@@ -40,7 +40,7 @@ namespace Gu.Inject
         public Kernel Bind<TInterface, TConcrete>()
             where TConcrete : TInterface
         {
-            this.BindCore(typeof(TInterface), new Binding(typeof(TConcrete), BindingKind.Map));
+            this.BindCore(typeof(TInterface), Binding.Map<TConcrete>());
             return this;
         }
 
@@ -54,8 +54,8 @@ namespace Gu.Inject
         public Kernel Bind<TInterface1, TInterface2, TConcrete>()
             where TConcrete : TInterface1, TInterface2
         {
-            this.BindCore(typeof(TInterface1), new Binding(typeof(TConcrete), BindingKind.Map));
-            this.BindCore(typeof(TInterface2), new Binding(typeof(TConcrete), BindingKind.Map));
+            this.BindCore(typeof(TInterface1), Binding.Map<TConcrete>());
+            this.BindCore(typeof(TInterface2), Binding.Map<TConcrete>());
             return this;
         }
 
@@ -70,9 +70,9 @@ namespace Gu.Inject
         public Kernel Bind<TInterface1, TInterface2, TInterface3, TConcrete>()
             where TConcrete : TInterface1, TInterface2, TInterface3
         {
-            this.BindCore(typeof(TInterface1), new Binding(typeof(TConcrete), BindingKind.Map));
-            this.BindCore(typeof(TInterface2), new Binding(typeof(TConcrete), BindingKind.Map));
-            this.BindCore(typeof(TInterface3), new Binding(typeof(TConcrete), BindingKind.Map));
+            this.BindCore(typeof(TInterface1), Binding.Map<TConcrete>());
+            this.BindCore(typeof(TInterface2), Binding.Map<TConcrete>());
+            this.BindCore(typeof(TInterface3), Binding.Map<TConcrete>());
             return this;
         }
 
@@ -93,12 +93,12 @@ namespace Gu.Inject
 
             if (typeof(T) == instance.GetType())
             {
-                this.BindCore(typeof(T), new Binding(instance, BindingKind.Instance));
+                this.BindCore(typeof(T), Binding.Instance(instance));
             }
             else
             {
-                this.BindCore(typeof(T), new Binding(instance, BindingKind.Mapped));
-                this.BindCore(instance.GetType(), new Binding(instance, BindingKind.Instance));
+                this.BindCore(typeof(T), Binding.Mapped(instance));
+                this.BindCore(instance.GetType(), Binding.Instance(instance));
             }
 
             return this;
@@ -121,7 +121,7 @@ namespace Gu.Inject
             }
 
             this.Bind<TConcrete>(instance);
-            this.BindCore(typeof(TInterface), new Binding(instance, BindingKind.Mapped));
+            this.BindCore(typeof(TInterface), Binding.Mapped(instance));
             return this;
         }
 
@@ -143,8 +143,8 @@ namespace Gu.Inject
             }
 
             this.Bind<TConcrete>(instance);
-            this.BindCore(typeof(TInterface1), new Binding(instance, BindingKind.Mapped));
-            this.BindCore(typeof(TInterface2), new Binding(instance, BindingKind.Mapped));
+            this.BindCore(typeof(TInterface1), Binding.Mapped(instance));
+            this.BindCore(typeof(TInterface2), Binding.Mapped(instance));
             return this;
         }
 
@@ -167,9 +167,9 @@ namespace Gu.Inject
             }
 
             this.Bind<TConcrete>(instance);
-            this.BindCore(typeof(TInterface1), new Binding(instance, BindingKind.Mapped));
-            this.BindCore(typeof(TInterface2), new Binding(instance, BindingKind.Mapped));
-            this.BindCore(typeof(TInterface3), new Binding(instance, BindingKind.Mapped));
+            this.BindCore(typeof(TInterface1), Binding.Mapped(instance));
+            this.BindCore(typeof(TInterface2), Binding.Mapped(instance));
+            this.BindCore(typeof(TInterface3), Binding.Mapped(instance));
             return this;
         }
 
@@ -189,7 +189,7 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(create));
             }
 
-            this.BindCore(typeof(T), new Binding(create, BindingKind.Func));
+            this.BindCore(typeof(T), Binding.Func(create));
             return this;
         }
 
@@ -209,8 +209,8 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(create));
             }
 
-            this.Bind(typeof(TInterface), typeof(TConcrete));
-            this.BindCore(typeof(TConcrete), new Binding(create, BindingKind.Func));
+            this.BindCore(typeof(TInterface), Binding.Map<TConcrete>());
+            this.BindCore(typeof(TConcrete), Binding.Func(create));
             return this;
         }
 
@@ -231,9 +231,9 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(create));
             }
 
-            this.Bind(typeof(TInterface1), typeof(TConcrete));
-            this.Bind(typeof(TInterface2), typeof(TConcrete));
-            this.BindCore(typeof(TConcrete), new Binding(create, BindingKind.Func));
+            this.BindCore(typeof(TInterface1), Binding.Map<TConcrete>());
+            this.BindCore(typeof(TInterface2), Binding.Map<TConcrete>());
+            this.BindCore(typeof(TConcrete), Binding.Func(create));
             return this;
         }
 
@@ -255,10 +255,10 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(create));
             }
 
-            this.Bind(typeof(TInterface1), typeof(TConcrete));
-            this.Bind(typeof(TInterface2), typeof(TConcrete));
-            this.Bind(typeof(TInterface3), typeof(TConcrete));
-            this.BindCore(typeof(TConcrete), new Binding(create, BindingKind.Func));
+            this.BindCore(typeof(TInterface1), Binding.Map<TConcrete>());
+            this.BindCore(typeof(TInterface2), Binding.Map<TConcrete>());
+            this.BindCore(typeof(TInterface3), Binding.Map<TConcrete>());
+            this.BindCore(typeof(TConcrete), Binding.Func(create));
             return this;
         }
 
@@ -278,7 +278,7 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(create));
             }
 
-            this.BindCore(typeof(T), new Binding(create, BindingKind.ResolverFunc));
+            this.BindCore(typeof(T), Binding.Resolver(create));
             return this;
         }
 
@@ -299,8 +299,8 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(create));
             }
 
-            this.Bind(typeof(TInterface), typeof(TConcrete));
-            this.BindCore(typeof(TConcrete), new Binding(create, BindingKind.ResolverFunc));
+            this.BindCore(typeof(TInterface), Binding.Map<TConcrete>());
+            this.BindCore(typeof(TConcrete), Binding.Resolver(create));
             return this;
         }
 
@@ -322,9 +322,9 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(create));
             }
 
-            this.Bind(typeof(TInterface1), typeof(TConcrete));
-            this.Bind(typeof(TInterface2), typeof(TConcrete));
-            this.BindCore(typeof(TConcrete), new Binding(create, BindingKind.ResolverFunc));
+            this.BindCore(typeof(TInterface1), Binding.Map<TConcrete>());
+            this.BindCore(typeof(TInterface2), Binding.Map<TConcrete>());
+            this.BindCore(typeof(TConcrete), Binding.Resolver(create));
             return this;
         }
 
@@ -347,10 +347,10 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(create));
             }
 
-            this.Bind(typeof(TInterface1), typeof(TConcrete));
-            this.Bind(typeof(TInterface2), typeof(TConcrete));
-            this.Bind(typeof(TInterface3), typeof(TConcrete));
-            this.BindCore(typeof(TConcrete), new Binding(create, BindingKind.ResolverFunc));
+            this.BindCore(typeof(TInterface1), Binding.Map<TConcrete>());
+            this.BindCore(typeof(TInterface2), Binding.Map<TConcrete>());
+            this.BindCore(typeof(TInterface3), Binding.Map<TConcrete>());
+            this.BindCore(typeof(TConcrete), Binding.Resolver(create));
             return this;
         }
     }

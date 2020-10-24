@@ -1,19 +1,34 @@
 namespace Gu.Inject
 {
+    using System;
     using System.Diagnostics;
 
     [DebuggerDisplay("{this.DebuggerDisplayString}")]
-    internal struct Binding
+    internal readonly struct Binding
     {
         internal readonly object Value;
         internal readonly BindingKind Kind;
 
-        internal Binding(object value, BindingKind kind)
+        private Binding(object value, BindingKind kind)
         {
             this.Value = value;
             this.Kind = kind;
         }
 
         private string DebuggerDisplayString => $"Type: {this.Kind}, Value: {this.Value ?? "null"}";
+
+        internal static Binding Map(Type type) => new Binding(type, BindingKind.Map);
+
+        internal static Binding Map<T>() => new Binding(typeof(T), BindingKind.Map);
+
+        internal static Binding Func<T>(Func<T> create) => new Binding(create, BindingKind.Func);
+
+        internal static Binding Resolver<T>(Func<IGetter, T> create) => new Binding(create, BindingKind.ResolverFunc);
+
+        internal static Binding Mapped<T>(T instance) => new Binding(instance!, BindingKind.Mapped);
+
+        internal static Binding Created<T>(T instance) => new Binding(instance!, BindingKind.Created);
+
+        internal static Binding Instance<T>(T instance) => new Binding(instance!, BindingKind.Instance);
     }
 }

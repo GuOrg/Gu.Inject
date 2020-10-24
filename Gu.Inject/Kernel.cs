@@ -16,7 +16,7 @@
         /// </summary>
         public Kernel()
         {
-            this.BindCore(typeof(IGetter), new Binding(this, BindingKind.Instance));
+            this.BindCore(typeof(IGetter), Binding.Instance(this));
         }
 
         /// <summary>
@@ -154,7 +154,7 @@
                 this.Creating?.Invoke(this, type);
                 var item = resolve(this);
                 this.Created?.Invoke(this, item);
-                return new Binding(item, BindingKind.Created);
+                return Binding.Created(item);
             }
 
             Binding Create(Func<object> create)
@@ -162,12 +162,12 @@
                 this.Creating?.Invoke(this, type);
                 var item = create();
                 this.Created?.Invoke(this, item);
-                return new Binding(item, BindingKind.Created);
+                return Binding.Created(item);
             }
 
             Binding Map(Type to)
             {
-                return new Binding(this.GetCore(to), BindingKind.Mapped);
+                return Binding.Mapped(this.GetCore(to));
             }
         }
     }
