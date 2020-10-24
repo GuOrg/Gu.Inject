@@ -20,14 +20,9 @@
             this.arguments = parameters is null ? null : new object[parameters.Length];
         }
 
-        internal static Constructor Get(Type type)
+        internal static Constructor? Get(Type type)
         {
-            return Cache.GetOrAdd(type, t => Create(t));
-        }
-
-        internal static Constructor? GetOrNull(Type type)
-        {
-            var ctor = Get(type);
+            var ctor = Cache.GetOrAdd(type, t => Create(t));
             if (ctor.arguments is { })
             {
                 lock (ctor.arguments)

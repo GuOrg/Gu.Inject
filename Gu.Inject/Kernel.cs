@@ -155,17 +155,24 @@
 
             Binding AutoResolve(Type candidate)
             {
-                var constructor = Constructor.Get(candidate);
-                this.hasResolved = true;
-                this.Creating?.Invoke(this, type);
-                var item = constructor.Invoke(null, x => ResolveParameter(x));
-                this.Created?.Invoke(this, item);
-                return Binding.AutoResolved(item);
+                if (Constructor.Get(candidate) is { } constructor)
+                {
+                    this.hasResolved = true;
+                    this.Creating?.Invoke(this, type);
+                    var item = constructor.Invoke(null, x => ResolveParameter(x));
+                    this.Created?.Invoke(this, item);
+                    return Binding.AutoResolved(item);
+                }
+                else
+                {
+                    var message = $"{type?.PrettyName()}(... Circular dependency detected.\r\nPotential solution: BindUninitialized<{type?.PrettyName()}>()\r\nNote that when using BindUninitialized() types taking {type?.PrettyName()} as constructor parameter get an uninitialized instance while in the constructor.";
+                    throw new CircularDependencyException(candidate, message);
+                }
             }
 
             Binding Initialize(object obj)
             {
-                if (Constructor.GetOrNull(obj.GetType()) is { } constructor)
+                if (Constructor.Get(obj.GetType()) is { } constructor)
                 {
                     this.hasResolved = true;
                     this.Creating?.Invoke(this, type);
