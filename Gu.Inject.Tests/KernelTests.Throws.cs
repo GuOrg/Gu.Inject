@@ -68,27 +68,27 @@
             public void BindBindingToSame()
             {
                 using var kernel = new Kernel();
-                var exception = Assert.Throws<InvalidOperationException>(() => kernel.Bind<DefaultCtor, DefaultCtor>());
-                Assert.AreEqual("Trying to bind to the same type.", exception.Message);
+                var exception = Assert.Throws<InvalidOperationException>(() => kernel.Bind<C, C>());
+                Assert.AreEqual("Trying to bind to the same type.\r\n This is the equivalent of kernel.Bind<SomeType, SomeType>() which is not strictly wrong but redundant and could indicate a real error hence this exception.", exception.Message);
             }
 
             [Test]
             public void BindTypeWhenHasBinding()
             {
                 using var kernel = new Kernel();
-                kernel.Bind<IWith, With<DefaultCtor>>();
-                var exception = Assert.Throws<InvalidOperationException>(() => kernel.Bind<IWith, With<DefaultCtor>>());
-                Assert.AreEqual("IWith already has a binding. It is mapped to the type With<DefaultCtor>", exception.Message);
+                kernel.Bind<I1, C>();
+                var exception = Assert.Throws<InvalidOperationException>(() => kernel.Bind<I1, C>());
+                Assert.AreEqual("I1 already has a binding. It is mapped to the type C", exception.Message);
             }
 
             [Test]
             public void BindTypeWhenHasInstanceBinding()
             {
                 using var kernel = new Kernel();
-                var instance = new With<DefaultCtor>(new DefaultCtor());
-                kernel.Bind<IWith>(instance);
-                var exception = Assert.Throws<InvalidOperationException>(() => kernel.Bind<IWith, With<DefaultCtor>>());
-                Assert.AreEqual("IWith already has a binding. It is bound to the instance Gu.Inject.Tests.Types.With`1[Gu.Inject.Tests.Types.DefaultCtor]", exception.Message);
+                var instance = new C();
+                kernel.Bind<I1>(instance);
+                var exception = Assert.Throws<InvalidOperationException>(() => kernel.Bind<I1, C>());
+                Assert.AreEqual("I1 already has a binding. It is mapped to C", exception.Message);
             }
 
             [Test]

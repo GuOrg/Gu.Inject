@@ -191,8 +191,19 @@
             public void BindInstanceAndTwoInterfacesInStepsThenGet(Type type1, Type type2)
             {
                 using var kernel = new Kernel();
-                kernel.Bind<I1, C>(new C());
+                kernel.Bind<I1, C>();
                 kernel.Bind<I2, C>(new C());
+                Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
+                Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
+            }
+
+            [TestCaseSource(nameof(ConcreteAndTwoInterfaces))]
+            public void BindInstanceAndTwoInterfacesInStepsAndExplicitThenGet(Type type1, Type type2)
+            {
+                using var kernel = new Kernel();
+                kernel.Bind<I1, C>();
+                kernel.Bind<I2, C>();
+                kernel.Bind(new C());
                 Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
                 Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
             }
