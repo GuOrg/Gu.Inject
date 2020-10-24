@@ -20,6 +20,12 @@
             this.arguments = parameters is null ? null : new object[parameters.Length];
         }
 
+        private bool IsBusy
+        {
+            get => this.arguments is { } && this.arguments?[this.arguments.Length - 1] == this.arguments;
+            set => this.arguments![this.arguments.Length - 1] = this.arguments;
+        }
+
         internal static Constructor? Get(Type type)
         {
             var ctor = Cache.GetOrAdd(type, t => Create(t));
@@ -27,13 +33,10 @@
             {
                 lock (ctor.arguments)
                 {
-                    if (ctor.arguments[ctor.arguments.Length - 1] is null)
-                    {
-                        return ctor;
-                    }
+                    return ctor.IsBusy
+                        ? null
+                        : (Constructor?)ctor;
                 }
-
-                return null;
             }
 
             return ctor;
@@ -54,7 +57,7 @@
 
             lock (this.arguments)
             {
-                this.arguments[this.arguments.Length - 1] = this.arguments;
+                this.IsBusy = true;
 
                 for (var i = 0; i < this.arguments.Length; i++)
                 {
