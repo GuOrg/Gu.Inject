@@ -75,6 +75,7 @@
                         break;
                     case BindingKind.Created:
                     case BindingKind.Resolved:
+                    case BindingKind.AutoResolved:
                         (kvp.Value.Value as IDisposable)?.Dispose();
                         break;
                     default:
@@ -134,10 +135,11 @@
                     { IsAbstract: true } => throw new NoBindingException(t),
                     { IsValueType: true } => throw new NoBindingException(t),
                     { IsArray: true } => throw new NoBindingException(t),
-                    _ => Resolve(Constructor.GetResolver(t)),
+                    _ => AutoResolve(t),
                 },
                 (t, b) => b.Kind switch
                 {
+                    BindingKind.AutoResolved => b,
                     BindingKind.Resolved => b,
                     BindingKind.Instance => b,
                     BindingKind.Created => b,
@@ -148,13 +150,23 @@
                     _ => throw new InvalidOperationException($"Not handling resolve Kind: {b.Kind}, Value: {b.Value ?? "null"} "),
                 }).Value;
 
+            Binding AutoResolve(Type candidate)
+            {
+                var resolve = Constructor.GetResolver(candidate);
+                this.hasResolved = true;
+                this.Creating?.Invoke(this, type);
+                var item = resolve(this);
+                this.Created?.Invoke(this, item);
+                return Binding.AutoResolved(item);
+            }
+
             Binding Resolve(Func<IGetter, object> resolve)
             {
                 this.hasResolved = true;
                 this.Creating?.Invoke(this, type);
                 var item = resolve(this);
                 this.Created?.Invoke(this, item);
-                return Binding.Created(item);
+                return Binding.Resolved(item);
             }
 
             Binding Create(Func<object> create)

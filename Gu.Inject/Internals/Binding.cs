@@ -29,6 +29,10 @@ namespace Gu.Inject
 
         internal static Binding Created<T>(T instance) => new Binding(instance!, BindingKind.Created);
 
+        internal static Binding Resolved<T>(T instance) => new Binding(instance!, BindingKind.Resolved);
+
+        internal static Binding AutoResolved<T>(T instance) => new Binding(instance!, BindingKind.AutoResolved);
+
         internal static Binding Instance<T>(T instance) => new Binding(instance!, BindingKind.Instance);
     }
 }
