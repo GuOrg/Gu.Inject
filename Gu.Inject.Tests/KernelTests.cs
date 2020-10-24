@@ -12,6 +12,8 @@
     {
         [TestCase(typeof(IGetter))]
         [TestCase(typeof(DefaultCtor))]
+        [TestCase(typeof(Graph2.Node1))]
+        [TestCase(typeof(Graph50.Node1))]
         [TestCase(typeof(StaticConstructor))]
         [TestCase(typeof(With<DefaultCtor>))]
         [TestCase(typeof(WithTwo<DefaultCtor, DefaultCtor>))]
@@ -42,7 +44,9 @@
             Assert.AreSame(kernel.Get<InheritNonAbstract.Foo>(), kernel.Get<InheritNonAbstract.FooDerived>());
         }
 
+        [TestCase(typeof(I1), typeof(C))]
         [TestCase(typeof(IDefaultCtor), typeof(DefaultCtor))]
+        [TestCase(typeof(IWith), typeof(With<DefaultCtor>))]
         [TestCase(typeof(IWith<DefaultCtor>), typeof(With<DefaultCtor>))]
         [TestCase(typeof(OneToOne.Abstract), typeof(OneToOne.Concrete))]
         [TestCase(typeof(OneToOne.IAbstract), typeof(OneToOne.Concrete))]
