@@ -99,7 +99,6 @@ Creating a container and resolving a graph with 50 types.
 https://github.com/GuOrg/Gu.Inject/blob/master/Gu.Inject.Benchmarks/Benchmarks/GetGraph50.cs
 
 ```
-```
 |         Method |        Mean |  Ratio | Allocated |
 |--------------- |------------:|-------:|----------:|
 |        Ninject | 4,680.07 μs | 411.17 | 236.54 KB |
