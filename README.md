@@ -100,10 +100,10 @@ https://github.com/GuOrg/Gu.Inject/blob/master/Gu.Inject.Benchmarks/Benchmarks/G
 
 ```
 ```
-|         Method |        Mean   Ratio | RatioSD | Allocated |
-|--------------- |------------:-------:|--------:|----------:|
-|        Ninject | 4,680.07 μs  411.17 |   16.79 | 236.54 KB |
-| SimpleInjector | 3,804.99 μs  330.38 |   13.93 | 201.04 KB |
-|         DryIoc |    82.99 μs    7.46 |    0.25 |  73.59 KB |
-|       GuInject |    10.99 μs    1.00 |    0.00 |   8.53 KB |
+|         Method |        Mean |  Ratio | Allocated |
+|--------------- |------------:|-------:|----------:|
+|        Ninject | 4,680.07 μs | 411.17 | 236.54 KB |
+| SimpleInjector | 3,804.99 μs | 330.38 | 201.04 KB |
+|         DryIoc |    82.99 μs |   7.46 |  73.59 KB |
+|       GuInject |    10.99 μs |   1.00 |   8.53 KB |
 ```
