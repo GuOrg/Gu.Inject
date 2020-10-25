@@ -109,7 +109,7 @@
 
             _ = this.map.AddOrUpdate(
                 key,
-                t => binding,
+                t => AddValueFactory(),
                 (t, b) => b.Kind switch
                 {
                     BindingKind.Func => throw new InvalidOperationException($"{t.PrettyName()} already has a binding. It is bound to the func {b.Value ?? "null"}"),
@@ -121,6 +121,8 @@
                     BindingKind.Mapped => throw new InvalidOperationException($"{t.PrettyName()} already has a binding. It is mapped to {b.Value?.GetType().PrettyName() ?? "null"}"),
                     _ => throw new InvalidOperationException($"Not handling binding error for Kind: {b.Kind}, Value: {b.Value ?? "null"} "),
                 });
+
+            Binding AddValueFactory() => binding;
         }
 
         private object GetCore(Type type)
