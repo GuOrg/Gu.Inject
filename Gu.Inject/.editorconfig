@@ -8,3 +8,4 @@ dotnet_diagnostic.SA1623.severity = none
 
 # SA1633: File should have header
 dotnet_diagnostic.SA1633.severity = none
+
