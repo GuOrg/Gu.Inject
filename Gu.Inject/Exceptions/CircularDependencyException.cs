@@ -13,6 +13,7 @@ namespace Gu.Inject
         /// Initializes a new instance of the <see cref="CircularDependencyException"/> class.
         /// </summary>
         /// <param name="type">The type to resolve.</param>
+        /// <param name="message">The message that describes the error.</param>
         public CircularDependencyException(Type type, string message)
             : base(type, message)
         {

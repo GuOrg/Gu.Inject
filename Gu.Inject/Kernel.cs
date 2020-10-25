@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Reflection;
     using System.Text;
 
     /// <summary>
@@ -87,6 +86,32 @@
 #pragma warning restore CA1065 // Do not raise exceptions in unexpected locations
                 }
             }
+        }
+
+        internal void RebindCore(Type key, Binding binding)
+        {
+            if (this.hasResolved)
+            {
+                throw new InvalidOperationException("Rebind not allowed after resolving. This could create hard to track down graph bugs.");
+            }
+
+            if (this.map is null)
+            {
+                throw new ObjectDisposedException(nameof(Kernel));
+            }
+
+            if (binding is { Kind: BindingKind.Map, Value: Type to } &&
+                key == to)
+            {
+                throw new InvalidOperationException("Trying to bind to the same type.\r\n This is the equivalent of kernel.Bind<SomeType, SomeType>() which is not strictly wrong but redundant and could indicate a real error hence this exception.");
+            }
+
+            _ = this.map.AddOrUpdate(
+                key,
+                t => throw new InvalidOperationException($"{t.PrettyName()} does not have a binding. For Rebind an existing binding is assumed."),
+                (t, b) => UpdateValueFactory());
+
+            Binding UpdateValueFactory() => binding;
         }
 
         private void BindCore(Type key, Binding binding)

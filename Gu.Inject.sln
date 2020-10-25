@@ -18,7 +18,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Inject.Tests", "Gu.Injec
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Inject.Benchmarks", "Gu.Inject.Benchmarks\Gu.Inject.Benchmarks.csproj", "{A92D6209-5247-4ADC-84B8-46F44F66BF42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gu.Inject.Rebind", "Gu.Inject.Rebind\Gu.Inject.Rebind.csproj", "{593C45DE-33D3-47C7-B04D-9A24D4690B6D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Gu.Inject.Rebind", "Gu.Inject.Rebind\Gu.Inject.Rebind.csproj", "{593C45DE-33D3-47C7-B04D-9A24D4690B6D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

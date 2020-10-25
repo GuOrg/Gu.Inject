@@ -12,6 +12,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Gu.Inject.Rebind\Gu.Inject.Rebind.csproj" />
     <ProjectReference Include="..\Gu.Inject\Gu.Inject.csproj" />
   </ItemGroup>
 
