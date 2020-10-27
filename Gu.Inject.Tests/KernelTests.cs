@@ -8,7 +8,7 @@
 
     using NUnit.Framework;
 
-    public partial class KernelTests
+    public static class KernelTests
     {
         [TestCase(typeof(IGetter))]
         [TestCase(typeof(DefaultCtor))]
@@ -22,7 +22,7 @@
         [TestCase(typeof(OneToOneGeneric.GenericOfDefaultCtor))]
         [TestCase(typeof(InheritNonAbstract.FooDerived))]
         [TestCase(typeof(ManyToOne.Foo))]
-        public void Get(Type type)
+        public static void Get(Type type)
         {
             using var kernel = new Kernel();
             var actual = kernel.Get(type);
@@ -30,7 +30,7 @@
         }
 
         [Test]
-        public void GetCircularSimple()
+        public static void GetCircularSimple()
         {
             using var kernel = new Kernel();
             kernel.BindUninitialized<Circular1.A>();
@@ -41,7 +41,7 @@
         }
 
         [Test]
-        public void GetCircularComplex()
+        public static void GetCircularComplex()
         {
             using var kernel = new Kernel();
             kernel.BindUninitialized<Circular2.A>();
@@ -63,14 +63,14 @@
         }
 
         [Test]
-        public void GetSubclassesReturnsDifferentByDefault()
+        public static void GetSubclassesReturnsDifferentByDefault()
         {
             using var kernel = new Kernel();
             Assert.AreNotSame(kernel.Get<InheritNonAbstract.Foo>(), kernel.Get<InheritNonAbstract.FooDerived>());
         }
 
         [Test]
-        public void GetSubclassesReturnsSameWithBindings()
+        public static void GetSubclassesReturnsSameWithBindings()
         {
             using var kernel = new Kernel();
             kernel.Bind<InheritNonAbstract.Foo, InheritNonAbstract.FooDerived>();
@@ -97,7 +97,7 @@
         [TestCase(typeof(ManyToOne.IGenericFoo2<int>), typeof(ManyToOne.Foo))]
         [TestCase(typeof(ManyToOne.IFooFoo), typeof(ManyToOne.Foo))]
         [TestCase(typeof(ManyToOne.IFoo), typeof(ManyToOne.Foo))]
-        public void BindThenGet(Type type, Type expected)
+        public static void BindThenGet(Type type, Type expected)
         {
             using var kernel = new Kernel();
             kernel.Bind(type, expected);
@@ -107,7 +107,7 @@
         }
 
         [Test]
-        public void InjectsSingletons1()
+        public static void InjectsSingletons1()
         {
             using var kernel = new Kernel();
             var actual = kernel.Get<WithTwo<DefaultCtor, DefaultCtor>>();
@@ -115,7 +115,7 @@
         }
 
         [Test]
-        public void InjectsSingletonsWithBindings()
+        public static void InjectsSingletonsWithBindings()
         {
             using var kernel = new Kernel();
             kernel.Bind<ManyToOne.IFoo, ManyToOne.Foo>();
@@ -125,7 +125,7 @@
         }
 
         [Test]
-        public void GetGraph50()
+        public static void GetGraph50()
         {
             using var kernel = new Kernel();
             var root = kernel.Get<Graph50.Node1>();
@@ -137,7 +137,7 @@
         }
 
         [Test]
-        public void DisposesCreated()
+        public static void DisposesCreated()
         {
             Disposable actual;
             using (var kernel = new Kernel())
@@ -150,7 +150,7 @@
         }
 
         [Test]
-        public void NotifiesCreating()
+        public static void NotifiesCreating()
         {
             using var kernel = new Kernel();
             var actual = new List<Type>();
@@ -160,7 +160,7 @@
         }
 
         [Test]
-        public void NotifiesCreated()
+        public static void NotifiesCreated()
         {
             using var kernel = new Kernel();
             var actual = new List<object>();
@@ -170,7 +170,7 @@
         }
 
         [Test]
-        public void NotifiesCreatingFunc()
+        public static void NotifiesCreatingFunc()
         {
             using var kernel = new Kernel();
             var actual = new List<Type>();
@@ -186,7 +186,7 @@
         }
 
         [Test]
-        public void NotifiesFuncCreatedFunc()
+        public static void NotifiesFuncCreatedFunc()
         {
             using var kernel = new Kernel();
             var actual = new List<Type>();
@@ -196,7 +196,7 @@
         }
 
         [Test]
-        public void NotifiesCreatingCircular()
+        public static void NotifiesCreatingCircular()
         {
             var actual = new List<Type>();
             using var kernel = new Kernel();
@@ -210,7 +210,7 @@
         }
 
         [Test]
-        public void NotifiesCreatedCircular()
+        public static void NotifiesCreatedCircular()
         {
             var actual = new List<object>();
             using var kernel = new Kernel();
@@ -224,7 +224,7 @@
         }
 
         [Test]
-        public void FuncTypes()
+        public static void FuncTypes()
         {
             using var kernel = new Kernel();
             kernel.Bind<Func<FuncTypes.A>>(() => kernel.Get<FuncTypes.A>());
