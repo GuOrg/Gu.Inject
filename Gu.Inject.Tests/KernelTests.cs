@@ -137,19 +137,6 @@
         }
 
         [Test]
-        public static void DisposesCreated()
-        {
-            Disposable actual;
-            using (var kernel = new Kernel())
-            {
-                actual = kernel.Get<Disposable>();
-                Assert.AreEqual(0, actual.Disposed);
-            }
-
-            Assert.AreEqual(1, actual.Disposed);
-        }
-
-        [Test]
         public static void NotifiesCreating()
         {
             using var kernel = new Kernel();
