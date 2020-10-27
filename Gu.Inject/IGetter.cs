@@ -13,8 +13,7 @@ namespace Gu.Inject
         /// </summary>
         /// <typeparam name="T">The type to resolve.</typeparam>
         /// <returns>The singleton instance of <typeparamref name="T"/>.</returns>
-        T Get<T>()
-            where T : class;
+        T Get<T>();
 
         /// <summary>
         /// Get the singleton instance of <paramref name="type"/>.

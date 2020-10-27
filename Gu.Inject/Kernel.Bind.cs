@@ -97,7 +97,6 @@ namespace Gu.Inject
         /// <param name="instance">The instance to bind.</param>
         /// <returns>The same instance.</returns>
         public Kernel Bind<T>(T instance)
-            where T : class
         {
             if (instance is null)
             {
@@ -126,7 +125,7 @@ namespace Gu.Inject
         /// <param name="instance">The instance to bind.</param>
         /// <returns>The same instance.</returns>
         public Kernel Bind<TInterface, TConcrete>(TConcrete instance)
-            where TConcrete : class, TInterface
+            where TConcrete : TInterface
         {
             if (instance is null)
             {
@@ -148,7 +147,7 @@ namespace Gu.Inject
         /// <param name="instance">The instance to bind.</param>
         /// <returns>The same instance.</returns>
         public Kernel Bind<TInterface1, TInterface2, TConcrete>(TConcrete instance)
-            where TConcrete : class, TInterface1, TInterface2
+            where TConcrete : TInterface1, TInterface2
         {
             if (instance is null)
             {
@@ -172,7 +171,7 @@ namespace Gu.Inject
         /// <param name="instance">The instance to bind.</param>
         /// <returns>The same instance.</returns>
         public Kernel Bind<TInterface1, TInterface2, TInterface3, TConcrete>(TConcrete instance)
-            where TConcrete : class, TInterface1, TInterface2, TInterface3
+            where TConcrete : TInterface1, TInterface2, TInterface3
         {
             if (instance is null)
             {
@@ -195,7 +194,6 @@ namespace Gu.Inject
         /// <param name="create">The factory function used to create the instance.</param>
         /// <returns>The same instance.</returns>
         public Kernel Bind<T>(Func<T> create)
-            where T : class
         {
             if (create is null)
             {
@@ -215,7 +213,7 @@ namespace Gu.Inject
         /// <param name="create">The factory function used to create the instance.</param>
         /// <returns>The same instance.</returns>
         public Kernel Bind<TInterface, TConcrete>(Func<TConcrete> create)
-            where TConcrete : class, TInterface
+            where TConcrete : TInterface
         {
             if (create is null)
             {
@@ -237,7 +235,7 @@ namespace Gu.Inject
         /// <param name="create">The factory function used to create the instance.</param>
         /// <returns>The same instance.</returns>
         public Kernel Bind<TInterface1, TInterface2, TConcrete>(Func<TConcrete> create)
-            where TConcrete : class, TInterface1, TInterface2
+            where TConcrete : TInterface1, TInterface2
         {
             if (create is null)
             {
@@ -261,7 +259,7 @@ namespace Gu.Inject
         /// <param name="create">The factory function used to create the instance.</param>
         /// <returns>The same instance.</returns>
         public Kernel Bind<TInterface1, TInterface2, TInterface3, TConcrete>(Func<TConcrete> create)
-            where TConcrete : class, TInterface1, TInterface2, TInterface3
+            where TConcrete : TInterface1, TInterface2, TInterface3
         {
             if (create is null)
             {
@@ -284,7 +282,6 @@ namespace Gu.Inject
         /// <param name="create">The instance to bind.</param>
         /// <returns>The same instance.</returns>
         public Kernel Bind<T>(Func<IGetter, T> create)
-            where T : class
         {
             if (create is null)
             {
@@ -305,7 +302,7 @@ namespace Gu.Inject
         /// <param name="create">The instance to bind.</param>
         /// <returns>The same instance.</returns>
         public Kernel Bind<TInterface, TConcrete>(Func<IGetter, TConcrete> create)
-            where TConcrete : class, TInterface
+            where TConcrete : TInterface
         {
             if (create is null)
             {
@@ -328,7 +325,7 @@ namespace Gu.Inject
         /// <param name="create">The instance to bind.</param>
         /// <returns>The same instance.</returns>
         public Kernel Bind<TInterface1, TInterface2, TConcrete>(Func<IGetter, TConcrete> create)
-            where TConcrete : class, TInterface1, TInterface2
+            where TConcrete : TInterface1, TInterface2
         {
             if (create is null)
             {
@@ -353,7 +350,7 @@ namespace Gu.Inject
         /// <param name="create">The instance to bind.</param>
         /// <returns>The same instance.</returns>
         public Kernel Bind<TInterface1, TInterface2, TInterface3, TConcrete>(Func<IGetter, TConcrete> create)
-            where TConcrete : class, TInterface1, TInterface2
+            where TConcrete : TInterface1, TInterface2
         {
             if (create is null)
             {

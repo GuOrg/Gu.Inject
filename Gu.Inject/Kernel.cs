@@ -35,9 +35,7 @@
         /// </summary>
         /// <typeparam name="T">The type to resolve.</typeparam>
         /// <returns>The singleton instance of <typeparamref name="T"/>.</returns>
-        public T Get<T>()
-            where T : class =>
-            (T)this.GetCore(typeof(T));
+        public T Get<T>() => (T)this.GetCore(typeof(T));
 
         /// <summary>
         /// Get the singleton instance of <paramref name="type"/>.
