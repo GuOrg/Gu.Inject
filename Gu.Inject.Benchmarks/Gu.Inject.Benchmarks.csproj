@@ -10,18 +10,6 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\Gu.Inject.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-  
-  <ItemGroup>
-    <Content Include="Types\Graph.generated.txt">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Graph.tt</DependentUpon>
-    </Content>
-    <Content Include="Types\Graph.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Graph.generated.txt</LastGenOutput>
-    </Content>
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Gu.Inject\Gu.Inject.csproj" />
@@ -41,6 +29,11 @@
 
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+
+    <None Include="Types\Graph.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Graph.generated.txt</LastGenOutput>
+    </None>
 
     <None Update="Types\Graph.generated.txt">
       <DesignTime>True</DesignTime>
