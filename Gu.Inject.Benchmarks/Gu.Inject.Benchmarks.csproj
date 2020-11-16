@@ -30,15 +30,7 @@
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
 
-    <None Include="Types\Graph.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Graph.generated.txt</LastGenOutput>
-    </None>
-
-    <None Update="Types\Graph.generated.txt">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Graph.tt</DependentUpon>
-    </None>
+    <None Include="Types\Graph.tt" Generator="TextTemplatingFileGenerator" LastGenOutput="Graph.generated.txt" />
+    <None Update="Types\Graph.generated.txt" DesignTime="True" AutoGen="True" DependentUpon="Graph.tt" />
   </ItemGroup>
 </Project>
