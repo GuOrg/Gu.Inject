@@ -13,7 +13,9 @@ namespace Gu.Inject.Benchmarks
         [Benchmark]
         public object Ninject()
         {
+#pragma warning disable IDISP004 // Don't ignore created IDisposable.
             using var kernel = new Ninject.StandardKernel(new Module());
+#pragma warning restore IDISP004 // Don't ignore created IDisposable.
             return kernel.Get<Node1>();
         }
 
