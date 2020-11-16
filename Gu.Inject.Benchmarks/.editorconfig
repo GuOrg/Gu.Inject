@@ -29,3 +29,6 @@ dotnet_diagnostic.SA1203.severity = none
 
 # SA1142: Refer to tuple fields by name
 dotnet_diagnostic.SA1142.severity = none
+
+# CA2000: Dispose objects before losing scope
+dotnet_diagnostic.CA2000.severity = none
