@@ -1,6 +1,7 @@
-﻿// ReSharper disable UnusedMember.Local
+// ReSharper disable UnusedMember.Local
 // ReSharper disable UnusedParameter.Local
 // ReSharper disable PossibleNullReferenceException
+#pragma warning disable IDE0051 // Remove unused private members
 namespace Gu.Inject.Benchmarks
 {
     using System;
@@ -65,7 +66,9 @@ namespace Gu.Inject.Benchmarks
             }
         }
 
+#pragma warning disable IDE0051 // Remove unused private members
         private static void CodeGen()
+#pragma warning restore IDE0051 // Remove unused private members
         {
             var builder = new StringBuilder();
             foreach (var type in typeof(Graph500).GetNestedTypes())
