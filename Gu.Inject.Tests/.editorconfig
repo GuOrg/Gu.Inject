@@ -26,3 +26,9 @@ dotnet_diagnostic.CA1825.severity = none
 
 # CA1716: Identifiers should not match keywords
 dotnet_diagnostic.CA1716.severity = none
+
+# IDE0052: Remove unread private members
+dotnet_diagnostic.IDE0052.severity = none
+
+# IDE0060: Remove unread private members
+dotnet_diagnostic.IDE0060.severity = none

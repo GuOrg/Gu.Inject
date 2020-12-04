@@ -1,6 +1,4 @@
-﻿// ReSharper disable All
-#pragma warning disable CA1801 // Review unused parameters
-#pragma warning disable IDE0060 // Remove unused parameter
+// ReSharper disable All
 namespace Gu.Inject.Tests.Types
 {
     public static class Circular1

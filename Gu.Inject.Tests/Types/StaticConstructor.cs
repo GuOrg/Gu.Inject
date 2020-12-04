@@ -1,11 +1,13 @@
-﻿// ReSharper disable All
+// ReSharper disable All
 namespace Gu.Inject.Tests.Types
 {
     using System;
 
     public class StaticConstructor
     {
+#pragma warning disable IDE0044 // Add readonly modifier
         private static int n;
+#pragma warning restore IDE0044 // Add readonly modifier
 
         static StaticConstructor()
         {
