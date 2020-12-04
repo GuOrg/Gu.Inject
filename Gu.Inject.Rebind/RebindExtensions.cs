@@ -1,4 +1,4 @@
-﻿// ReSharper disable RedundantTypeArgumentsOfMethod
+// ReSharper disable RedundantTypeArgumentsOfMethod
 #pragma warning disable IDE0001
 namespace Gu.Inject
 {
@@ -7,7 +7,7 @@ namespace Gu.Inject
     /// <summary>
     /// Rebind extension methods for <see cref="Kernel"/>.
     /// </summary>
-    public static class KernelExtensions
+    public static class RebindExtensions
     {
         /// <summary>
         /// Provide an override to the automatic mapping.

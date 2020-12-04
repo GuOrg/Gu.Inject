@@ -1,4 +1,4 @@
-﻿namespace Gu.Inject
+namespace Gu.Inject
 {
     using System;
     using System.Collections.Concurrent;
@@ -27,7 +27,7 @@
         /// </summary>
         private bool IsBusy
         {
-            get => this.arguments is { } && this.arguments?[this.arguments.Length - 1] == this.arguments;
+            get => this.arguments is { } args && args[this.arguments.Length - 1] == args;
             set => this.arguments![this.arguments.Length - 1] = this.arguments;
         }
 
