@@ -1,8 +1,10 @@
-﻿namespace Gu.Inject.Tests
+namespace Gu.Inject.Tests
 {
     using System;
 
     using Gu.Inject.Tests.Types;
+
+    using Moq;
 
     using NUnit.Framework;
 
@@ -146,6 +148,16 @@
             var instance = new C();
             kernel.Bind(instance);
             var actual = kernel.Get<C>();
+            Assert.AreSame(actual, instance);
+        }
+
+        [Test]
+        public static void BindMockObjectThenGet()
+        {
+            using var kernel = new Kernel();
+            var instance = new Mock<I1>().Object;
+            kernel.Bind<I1>(instance);
+            var actual = kernel.Get<I1>();
             Assert.AreSame(actual, instance);
         }
 

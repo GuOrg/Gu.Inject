@@ -49,7 +49,7 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(to));
             }
 
-            kernel.RebindCore(from, Binding.Map(to));
+            kernel.RebindCore(from, Binding.Map(to), requireExistingBinding: true);
             return kernel;
         }
 
@@ -68,7 +68,7 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(kernel));
             }
 
-            kernel.RebindCore(typeof(T), Binding.Uninitialized<T>());
+            kernel.RebindCore(typeof(T), Binding.Uninitialized<T>(), requireExistingBinding: true);
             return kernel;
         }
 
@@ -87,7 +87,7 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(kernel));
             }
 
-            kernel.RebindCore(typeof(TInterface), Binding.Map<TConcrete>());
+            kernel.RebindCore(typeof(TInterface), Binding.Map<TConcrete>(), requireExistingBinding: true);
             return kernel;
         }
 
@@ -107,8 +107,8 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(kernel));
             }
 
-            kernel.RebindCore(typeof(TInterface1), Binding.Map<TConcrete>());
-            kernel.RebindCore(typeof(TInterface2), Binding.Map<TConcrete>());
+            kernel.RebindCore(typeof(TInterface1), Binding.Map<TConcrete>(), requireExistingBinding: true);
+            kernel.RebindCore(typeof(TInterface2), Binding.Map<TConcrete>(), requireExistingBinding: true);
             return kernel;
         }
 
@@ -129,9 +129,9 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(kernel));
             }
 
-            kernel.RebindCore(typeof(TInterface1), Binding.Map<TConcrete>());
-            kernel.RebindCore(typeof(TInterface2), Binding.Map<TConcrete>());
-            kernel.RebindCore(typeof(TInterface3), Binding.Map<TConcrete>());
+            kernel.RebindCore(typeof(TInterface1), Binding.Map<TConcrete>(), requireExistingBinding: true);
+            kernel.RebindCore(typeof(TInterface2), Binding.Map<TConcrete>(), requireExistingBinding: true);
+            kernel.RebindCore(typeof(TInterface3), Binding.Map<TConcrete>(), requireExistingBinding: true);
             return kernel;
         }
 
@@ -157,12 +157,12 @@ namespace Gu.Inject
 
             if (typeof(T) == instance.GetType())
             {
-                kernel.RebindCore(typeof(T), Binding.Instance(instance));
+                kernel.RebindCore(typeof(T), Binding.Instance(instance), requireExistingBinding: true);
             }
             else
             {
-                kernel.RebindCore(typeof(T), Binding.Mapped(instance));
-                kernel.RebindCore(instance.GetType(), Binding.Instance(instance));
+                kernel.RebindCore(typeof(T), Binding.Mapped(instance), requireExistingBinding: true);
+                kernel.RebindCore(instance.GetType(), Binding.Instance(instance), requireExistingBinding: false);
             }
 
             return kernel;
@@ -191,7 +191,7 @@ namespace Gu.Inject
             }
 
             kernel.Rebind<TConcrete>(instance);
-            kernel.RebindCore(typeof(TInterface), Binding.Mapped(instance));
+            kernel.RebindCore(typeof(TInterface), Binding.Mapped(instance), requireExistingBinding: true);
             return kernel;
         }
 
@@ -219,8 +219,8 @@ namespace Gu.Inject
             }
 
             kernel.Rebind<TConcrete>(instance);
-            kernel.RebindCore(typeof(TInterface1), Binding.Mapped(instance));
-            kernel.RebindCore(typeof(TInterface2), Binding.Mapped(instance));
+            kernel.RebindCore(typeof(TInterface1), Binding.Mapped(instance), requireExistingBinding: true);
+            kernel.RebindCore(typeof(TInterface2), Binding.Mapped(instance), requireExistingBinding: true);
             return kernel;
         }
 
@@ -249,9 +249,9 @@ namespace Gu.Inject
             }
 
             kernel.Rebind<TConcrete>(instance);
-            kernel.RebindCore(typeof(TInterface1), Binding.Mapped(instance));
-            kernel.RebindCore(typeof(TInterface2), Binding.Mapped(instance));
-            kernel.RebindCore(typeof(TInterface3), Binding.Mapped(instance));
+            kernel.RebindCore(typeof(TInterface1), Binding.Mapped(instance), requireExistingBinding: true);
+            kernel.RebindCore(typeof(TInterface2), Binding.Mapped(instance), requireExistingBinding: true);
+            kernel.RebindCore(typeof(TInterface3), Binding.Mapped(instance), requireExistingBinding: true);
             return kernel;
         }
 
@@ -276,7 +276,7 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(create));
             }
 
-            kernel.RebindCore(typeof(T), Binding.Func(create));
+            kernel.RebindCore(typeof(T), Binding.Func(create), requireExistingBinding: true);
             return kernel;
         }
 
@@ -302,8 +302,8 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(create));
             }
 
-            kernel.RebindCore(typeof(TInterface), Binding.Map<TConcrete>());
-            kernel.RebindCore(typeof(TConcrete), Binding.Func(create));
+            kernel.RebindCore(typeof(TInterface), Binding.Map<TConcrete>(), requireExistingBinding: true);
+            kernel.RebindCore(typeof(TConcrete), Binding.Func(create), requireExistingBinding: true);
             return kernel;
         }
 
@@ -330,9 +330,9 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(create));
             }
 
-            kernel.RebindCore(typeof(TInterface1), Binding.Map<TConcrete>());
-            kernel.RebindCore(typeof(TInterface2), Binding.Map<TConcrete>());
-            kernel.RebindCore(typeof(TConcrete), Binding.Func(create));
+            kernel.RebindCore(typeof(TInterface1), Binding.Map<TConcrete>(), requireExistingBinding: true);
+            kernel.RebindCore(typeof(TInterface2), Binding.Map<TConcrete>(), requireExistingBinding: true);
+            kernel.RebindCore(typeof(TConcrete), Binding.Func(create), requireExistingBinding: true);
             return kernel;
         }
 
@@ -360,10 +360,10 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(create));
             }
 
-            kernel.RebindCore(typeof(TInterface1), Binding.Map<TConcrete>());
-            kernel.RebindCore(typeof(TInterface2), Binding.Map<TConcrete>());
-            kernel.RebindCore(typeof(TInterface3), Binding.Map<TConcrete>());
-            kernel.RebindCore(typeof(TConcrete), Binding.Func(create));
+            kernel.RebindCore(typeof(TInterface1), Binding.Map<TConcrete>(), requireExistingBinding: true);
+            kernel.RebindCore(typeof(TInterface2), Binding.Map<TConcrete>(), requireExistingBinding: true);
+            kernel.RebindCore(typeof(TInterface3), Binding.Map<TConcrete>(), requireExistingBinding: true);
+            kernel.RebindCore(typeof(TConcrete), Binding.Func(create), requireExistingBinding: true);
             return kernel;
         }
 
@@ -388,7 +388,7 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(create));
             }
 
-            kernel.RebindCore(typeof(T), Binding.Resolver(create));
+            kernel.RebindCore(typeof(T), Binding.Resolver(create), requireExistingBinding: true);
             return kernel;
         }
 
@@ -415,8 +415,8 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(create));
             }
 
-            kernel.RebindCore(typeof(TInterface), Binding.Map<TConcrete>());
-            kernel.RebindCore(typeof(TConcrete), Binding.Resolver(create));
+            kernel.RebindCore(typeof(TInterface), Binding.Map<TConcrete>(), requireExistingBinding: true);
+            kernel.RebindCore(typeof(TConcrete), Binding.Resolver(create), requireExistingBinding: true);
             return kernel;
         }
 
@@ -444,9 +444,9 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(create));
             }
 
-            kernel.RebindCore(typeof(TInterface1), Binding.Map<TConcrete>());
-            kernel.RebindCore(typeof(TInterface2), Binding.Map<TConcrete>());
-            kernel.RebindCore(typeof(TConcrete), Binding.Resolver(create));
+            kernel.RebindCore(typeof(TInterface1), Binding.Map<TConcrete>(), requireExistingBinding: true);
+            kernel.RebindCore(typeof(TInterface2), Binding.Map<TConcrete>(), requireExistingBinding: true);
+            kernel.RebindCore(typeof(TConcrete), Binding.Resolver(create), requireExistingBinding: true);
             return kernel;
         }
 
@@ -475,10 +475,10 @@ namespace Gu.Inject
                 throw new ArgumentNullException(nameof(create));
             }
 
-            kernel.RebindCore(typeof(TInterface1), Binding.Map<TConcrete>());
-            kernel.RebindCore(typeof(TInterface2), Binding.Map<TConcrete>());
-            kernel.RebindCore(typeof(TInterface3), Binding.Map<TConcrete>());
-            kernel.RebindCore(typeof(TConcrete), Binding.Resolver(create));
+            kernel.RebindCore(typeof(TInterface1), Binding.Map<TConcrete>(), requireExistingBinding: true);
+            kernel.RebindCore(typeof(TInterface2), Binding.Map<TConcrete>(), requireExistingBinding: true);
+            kernel.RebindCore(typeof(TInterface3), Binding.Map<TConcrete>(), requireExistingBinding: true);
+            kernel.RebindCore(typeof(TConcrete), Binding.Resolver(create), requireExistingBinding: true);
             return kernel;
         }
     }

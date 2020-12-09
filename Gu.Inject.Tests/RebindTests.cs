@@ -1,7 +1,8 @@
-﻿namespace Gu.Inject.Tests
+namespace Gu.Inject.Tests
 {
     using System;
     using Gu.Inject.Tests.Types;
+    using Moq;
     using NUnit.Framework;
 
     public static class RebindTests
@@ -428,6 +429,17 @@
 
             Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
             Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
+        }
+
+        [Test]
+        public static void RebindMockObjectThenGet()
+        {
+            using var kernel = new Kernel();
+            kernel.Bind<I1, C>();
+            var instance = new Mock<I1>().Object;
+            kernel.Rebind<I1>(instance);
+            var actual = kernel.Get<I1>();
+            Assert.AreSame(actual, instance);
         }
     }
 }

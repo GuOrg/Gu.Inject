@@ -94,7 +94,7 @@ namespace Gu.Inject
         /// <returns>True if there is a binding.</returns>
         internal bool HasBindingCore(Type type) => this.map?.TryGetValue(type, out _) ?? false;
 
-        internal void RebindCore(Type key, Binding binding)
+        internal void RebindCore(Type key, Binding binding, bool requireExistingBinding)
         {
             if (this.hasResolved)
             {
@@ -114,8 +114,18 @@ namespace Gu.Inject
 
             _ = this.map.AddOrUpdate(
                 key,
-                t => throw new InvalidOperationException($"{t.PrettyName()} does not have a binding. For Rebind an existing binding is assumed."),
+                t => AddValueFactory(t),
                 (t, b) => UpdateValueFactory());
+
+            Binding AddValueFactory(Type t)
+            {
+                if (requireExistingBinding)
+                {
+                    throw new InvalidOperationException($"{t.PrettyName()} does not have a binding. For Rebind an existing binding is assumed.");
+                }
+
+                return binding;
+            }
 
             Binding UpdateValueFactory() => binding;
         }
