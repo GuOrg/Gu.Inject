@@ -229,7 +229,7 @@ namespace Gu.Inject.Tests
                 Assert.AreEqual(
                     "There was already an instance created.\r\n" +
                     "This can happen by doing:\r\n" +
-                    "1. Bind<I>(() => new C())" +
+                    "1. Bind<I>(() => new C())\r\n" +
                     "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
                     "3. Get<I>() this creates an instance of C using the func and then detects there is already an instance.\r\n" +
                     "Solution:\r\n" +
@@ -264,7 +264,7 @@ namespace Gu.Inject.Tests
                 Assert.AreEqual(
                     "There was already an instance created.\r\n" +
                     "This can happen by doing:\r\n" +
-                    "1. Bind<I>(() => new C())" +
+                    "1. Bind<I>(() => new C())\r\n" +
                     "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
                     "3. Get<I>() this creates an instance of C using the func and then detects there is already an instance.\r\n" +
                     "Solution:\r\n" +
@@ -317,7 +317,7 @@ namespace Gu.Inject.Tests
                 Assert.AreEqual(
                     "There was already an instance created.\r\n" +
                     "This can happen by doing:\r\n" +
-                    "1. Bind<I>(x => new C())" +
+                    "1. Bind<I>(x => new C())\r\n" +
                     "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
                     "3. Get<I>() this creates an instance of C using the func and then detects there is already an instance.\r\n" +
                     "Solution:\r\n" +
@@ -362,7 +362,7 @@ namespace Gu.Inject.Tests
                 Assert.AreEqual(
                     "There was already an instance created.\r\n" +
                     "This can happen by doing:\r\n" +
-                    "1. Bind<I>(x => new C())" +
+                    "1. Bind<I>(x => new C())\r\n" +
                     "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
                     "3. Get<I>() this creates an instance of C using the func and then detects there is already an instance.\r\n" +
                     "Solution:\r\n" +
