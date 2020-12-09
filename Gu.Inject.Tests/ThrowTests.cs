@@ -212,7 +212,7 @@ namespace Gu.Inject.Tests
         public static void NoBindingFunc()
         {
             using var kernel = new Kernel();
-            // ReSharper disable once AccessToDisposedClosure
+            //// ReSharper disable once AccessToDisposedClosure
             kernel.Bind(() => new With<int>(kernel.Get<int>()));
             Assert.AreEqual(
                 "Type int has no binding.\r\n" +

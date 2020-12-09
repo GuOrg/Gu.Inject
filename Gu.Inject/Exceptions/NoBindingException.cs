@@ -22,6 +22,8 @@ namespace Gu.Inject
         /// Initializes a new instance of the <see cref="NoBindingException"/> class.
         /// </summary>
         /// <param name="type">The type that has no binding.</param>
+        /// <param name="message">The exception message.</param>
+        /// <param name="inner">The inner exception.</param>
         public NoBindingException(Type type, string message, NoBindingException inner)
             : base(type, message, inner)
         {
