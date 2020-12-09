@@ -5,6 +5,7 @@ namespace Gu.Inject
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.Threading;
 
     internal readonly struct Constructor
     {
@@ -21,33 +22,22 @@ namespace Gu.Inject
             this.arguments = parameters is null ? null : new object[parameters.Length];
         }
 
+        private object? Gate => this.arguments;
+
         /// <summary>
         /// Setting this.arguments[last] = this.arguments; when resolving.
         /// Reason for this hack is silly optimization.
         /// </summary>
-        private bool IsBusy
-        {
-            get => this.arguments is { } args && args[this.arguments.Length - 1] == args;
-            set
-            {
-                if (value)
-                {
-                    this.arguments![this.arguments.Length - 1] = this.arguments;
-                }
-            }
-        }
+        private bool IsBusy => this.Gate is { } gate && Monitor.IsEntered(gate);
 
         internal static Constructor? Get(Type type)
         {
             var ctor = Cache.GetOrAdd(type, t => Create(t));
             if (ctor.arguments is { })
             {
-                lock (ctor.arguments)
-                {
-                    return ctor.IsBusy
-                        ? null
-                        : (Constructor?)ctor;
-                }
+                return ctor.IsBusy
+                    ? null
+                    : (Constructor?)ctor;
             }
 
             return ctor;
@@ -83,10 +73,8 @@ namespace Gu.Inject
                 return obj;
             }
 
-            lock (this.arguments)
+            lock (this.Gate!)
             {
-                this.IsBusy = true;
-
                 for (var i = 0; i < this.arguments.Length; i++)
                 {
                     this.arguments[i] = resolve(this.parameters![i].ParameterType);
