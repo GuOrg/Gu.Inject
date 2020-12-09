@@ -257,7 +257,14 @@ namespace Gu.Inject
                     return Binding.Mapped(item);
                 }
 
-                throw new ResolveException(type, AlreadyCreatedMessage(item, create));
+                var existing = this.map[item.GetType()];
+                if (ReferenceEquals(existing.Value, item) ||
+                    item.GetType().IsValueType)
+                {
+                    return existing;
+                }
+
+                throw new ResolveException(type, AlreadyCreatedMessage(existing, create));
             }
 
             Binding Resolve(Func<IGetter, object?> resolve)
@@ -278,7 +285,14 @@ namespace Gu.Inject
                     return Binding.Mapped(item);
                 }
 
-                throw new ResolveException(type, AlreadyCreatedMessage(item, resolve));
+                var existing = this.map[item.GetType()];
+                if (ReferenceEquals(existing.Value, item) ||
+                    item.GetType().IsValueType)
+                {
+                    return existing;
+                }
+
+                throw new ResolveException(type, AlreadyCreatedMessage(existing, resolve));
             }
 
             Binding Map(Type to)
@@ -288,9 +302,9 @@ namespace Gu.Inject
 
             object? ResolveParameter(Type parameterType) => this.GetCore(parameterType);
 
-            string AlreadyCreatedMessage(object duplicate, Delegate func)
+            string AlreadyCreatedMessage(Binding duplicate, Delegate func)
             {
-                return $"An instance of type {duplicate.GetType().PrettyName()} was already created.\r\n" +
+                return $"An instance of type {duplicate.Value?.GetType().PrettyName()} was already created.\r\n" +
                        $"The existing instance was created via {CreatedVia()}.\r\n" +
                        "This can happen by doing:\r\n" +
                        $"1. Bind<I>({Lambda()})\r\n" +
@@ -311,7 +325,7 @@ namespace Gu.Inject
                     _ => func.ToString() ?? "null",
                 };
 
-                string CreatedVia() => this.map![duplicate.GetType()].Kind switch
+                string CreatedVia() => duplicate.Kind switch
                 {
                     BindingKind.Func => "Func<C>",
                     BindingKind.ResolverFunc => "Func<IGetter, C>",

@@ -161,6 +161,25 @@ namespace Gu.Inject.Tests
             Assert.AreSame(actual, instance);
         }
 
+        [Test]
+        public static void BindResolveGetThenGet()
+        {
+            using var kernel = new Kernel();
+            kernel.Bind<I1>(x => x.Get<C>());
+            var actual = kernel.Get<I1>();
+            Assert.AreSame(actual, kernel.Get<I1>());
+        }
+
+        [Test]
+        public static void BindFuncGetThenGet()
+        {
+            using var kernel = new Kernel();
+            //// ReSharper disable once AccessToDisposedClosure
+            kernel.Bind<I1>(() => kernel.Get<C>());
+            var actual = kernel.Get<I1>();
+            Assert.AreSame(actual, kernel.Get<I1>());
+        }
+
         [TestCaseSource(nameof(ConcreteAndInterface))]
         public static void BindInstanceAndInterfaceThenGet(Type type1, Type type2)
         {
