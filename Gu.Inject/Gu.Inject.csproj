@@ -18,11 +18,13 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.3.0</Version>
+    <Version>0.3.1</Version>
     <Authors>Johan Larsson;milleniumbug</Authors>
     <Description>A dependency injection library with no features. The lack of features is the main feature!</Description>
     <PackageTags>DI IoC</PackageTags>
     <PackageReleaseNotes>
+      0.3.1
+      FEATURE: Improved exception messages.
       0.3.0
       BUGFIX: Handle rebind of mock
       BREAKING: Rename ResolveExtensions was KernelExtensions

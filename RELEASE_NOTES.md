@@ -1,3 +1,6 @@
+#### 0.3.1
+* FEATURE: Improved exception messages.
+
 #### 0.3.0
 * BUGFIX: Handle rebind of mock
 * BREAKING: Rename ResolveExtensions was KernelExtensions
