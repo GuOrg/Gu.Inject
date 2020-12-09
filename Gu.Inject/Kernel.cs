@@ -308,7 +308,7 @@ namespace Gu.Inject
                 {
                     Func<object?> => "() => new C()",
                     Func<IGetter, object?> => "x => new C(...)",
-                    _ => func?.ToString() ?? "null",
+                    _ => func.ToString() ?? "null",
                 };
 
                 string CreatedVia() => this.map![duplicate.GetType()].Kind switch
@@ -330,7 +330,7 @@ namespace Gu.Inject
                 {
                     Func<object?> => "Func<C>",
                     Func<IGetter, object?> => "Func<IGetter, C>",
-                    _ => func?.ToString() ?? "null",
+                    _ => func.ToString() ?? "null",
                 };
             }
         }
