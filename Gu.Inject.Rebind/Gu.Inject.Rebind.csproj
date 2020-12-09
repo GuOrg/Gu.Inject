@@ -19,11 +19,17 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.2.1-dev</Version>
+    <Version>0.3.0</Version>
     <Authors>Johan Larsson;milleniumbug</Authors>
     <Description>Adds Rebind capability to Gu.Inject.Kernel for use in test projects.</Description>
     <PackageTags>IoC DI</PackageTags>
     <PackageReleaseNotes>
+      0.3.0
+      BUGFIX: Handle rebind of mock
+      BREAKING: Rename ResolveExtensions was KernelExtensions
+      BREAKING: Use event arguments for Kernel.Creating
+      BREAKING: Use event arguments for Kernel.Created
+      0.2.0
       FEATURE: Netstandard support.
     </PackageReleaseNotes>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
