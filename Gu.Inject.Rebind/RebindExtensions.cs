@@ -10,6 +10,22 @@ namespace Gu.Inject
     public static class RebindExtensions
     {
         /// <summary>
+        /// Check if there is a binding for <paramref name="type"/>.
+        /// </summary>
+        /// <param name="kernel">The <see cref="Kernel"/>.</param>
+        /// <param name="type">The type to resolve.</param>
+        /// <returns>True if there is a binding.</returns>
+        public static bool HasBinding(this Kernel kernel, Type type)
+        {
+            if (kernel is null)
+            {
+                throw new ArgumentNullException(nameof(kernel));
+            }
+
+            return kernel.HasBindingCore(type);
+        }
+
+        /// <summary>
         /// Provide an override to the automatic mapping.
         /// </summary>
         /// <param name="kernel">The <see cref="Kernel"/>.</param>

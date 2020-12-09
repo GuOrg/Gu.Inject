@@ -1,4 +1,4 @@
-﻿namespace Gu.Inject
+namespace Gu.Inject
 {
     using System;
     using System.Collections.Concurrent;
@@ -85,6 +85,14 @@
                 }
             }
         }
+
+        /// <summary>
+        /// Only exposing this via RebindExtensions as it is the only use case I can think of.
+        /// So that we don't clutter API for the common use.
+        /// </summary>
+        /// <param name="type">The type to resolve.</param>
+        /// <returns>True if there is a binding.</returns>
+        internal bool HasBindingCore(Type type) => this.map?.TryGetValue(type, out _) ?? false;
 
         internal void RebindCore(Type key, Binding binding)
         {

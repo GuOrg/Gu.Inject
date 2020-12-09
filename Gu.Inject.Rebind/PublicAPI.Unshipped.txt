@@ -1,1 +1,1 @@
-﻿
+﻿static Gu.Inject.RebindExtensions.HasBinding(this Gu.Inject.Kernel! kernel, System.Type! type) -> bool
