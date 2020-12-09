@@ -134,7 +134,9 @@ namespace Gu.Inject
         {
             if (this.hasResolved)
             {
-                throw new InvalidOperationException("Bind not allowed after resolving. This could create hard to track down graph bugs.");
+                throw new InvalidOperationException(
+                    "Bind not allowed after Get<T>().\r\n" +
+                    "This could create hard to track down graph bugs.");
             }
 
             if (this.map is null)
@@ -145,7 +147,10 @@ namespace Gu.Inject
             if (binding is { Kind: BindingKind.Map, Value: Type to } &&
                 key == to)
             {
-                throw new InvalidOperationException("Trying to bind to the same type.\r\n This is the equivalent of kernel.Bind<SomeType, SomeType>() which is not strictly wrong but redundant and could indicate a real error hence this exception.");
+                throw new InvalidOperationException(
+                    "Trying to bind to the same type.\r\n" +
+                    "This is the equivalent of kernel.Bind<C, C>().\r\n" +
+                    "It is not strictly wrong but redundant and could indicate a mistake and hence disallowed.");
             }
 
             _ = this.map.AddOrUpdate(
@@ -183,18 +188,18 @@ namespace Gu.Inject
                     { IsArray: true } => throw new NoBindingException(t),
                     _ => AutoResolve(t),
                 },
-                (_, b) => b.Kind switch
+                (_, b) => b switch
                 {
-                    BindingKind.Initialized => b,
-                    BindingKind.AutoResolved => b,
-                    BindingKind.Resolved => b,
-                    BindingKind.Instance => b,
-                    BindingKind.Created => b,
-                    BindingKind.Mapped => b,
-                    BindingKind.Uninitialized => Initialize(b.Value!),
-                    BindingKind.Func => Create((Func<object>)b.Value!),
-                    BindingKind.ResolverFunc => Resolve((Func<IGetter, object>)b.Value!),
-                    BindingKind.Map => Map((Type)b.Value!),
+                    { Kind: BindingKind.Initialized } => b,
+                    { Kind: BindingKind.AutoResolved } => b,
+                    { Kind: BindingKind.Resolved } => b,
+                    { Kind: BindingKind.Instance } => b,
+                    { Kind: BindingKind.Created } => b,
+                    { Kind: BindingKind.Mapped } => b,
+                    { Kind: BindingKind.Uninitialized } => Initialize(b.Value!),
+                    { Kind: BindingKind.Func, Value: Func<object?> func } => Create(func),
+                    { Kind: BindingKind.ResolverFunc, Value: Func<IGetter, object?> func } => Resolve(func),
+                    { Kind: BindingKind.Map, Value: Type mappedType } => Map(mappedType),
                     _ => throw new InvalidOperationException($"Not handling resolve Kind: {b.Kind}, Value: {b.Value ?? "null"} "),
                 }).Value;
 
@@ -219,8 +224,6 @@ namespace Gu.Inject
                 }
 
                 messageBuilder.AppendLine($"{padding}{candidate.PrettyName()}(... Circular dependency detected.");
-                ////messageBuilder.AppendLine($"Potential solution: {nameof(this.BindUninitialized)}<{type?.PrettyName()}>()")
-                ////              .AppendLine($"Note that when using {nameof(this.BindUninitialized)}<{type?.PrettyName()}>() types taking {type?.PrettyName()} as constructor parameter get an uninitialized instance while in the constructor.");
                 throw new CircularDependencyException(candidate, messageBuilder.ToString());
             }
 
@@ -238,61 +241,44 @@ namespace Gu.Inject
                 return Binding.Initialized(obj);
             }
 
-            Binding Create(Func<object> create)
+            Binding Create(Func<object?> create)
             {
                 this.Creating?.Invoke(this, new CreatingEventArgs(type));
                 var item = create();
                 this.Created?.Invoke(this, new CreatedEventArgs(item));
-                //// ReSharper disable once ConditionIsAlwaysTrueOrFalse
                 if (item is null ||
                     type == item.GetType())
                 {
                     return Binding.Created(item);
                 }
 
-                if (this.map!.TryAdd(item!.GetType(), Binding.Created(item)))
+                if (this.map.TryAdd(item.GetType(), Binding.Created(item)))
                 {
                     return Binding.Mapped(item);
                 }
 
-                var message = "There was already an instance created.\r\n" +
-                                    "This can happen by doing:\r\n" +
-                                    "1. Bind<I>(() => new C())\r\n" +
-                                    "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
-                                    "3. Get<I>() this creates an instance of C using the func and then detects there is already an instance.\r\n" +
-                                    "Solution:\r\n" +
-                                    "Specify explicit binding for the concrete type.\r\n" +
-                                    "For example by: Bind<I, C>(() => new C())";
-                throw new ResolveException(type, message);
+                throw new ResolveException(type, AlreadyCreatedMessage(item, create));
             }
 
-            Binding Resolve(Func<IGetter, object> resolve)
+            Binding Resolve(Func<IGetter, object?> resolve)
             {
                 this.hasResolved = true;
                 this.Creating?.Invoke(this, new CreatingEventArgs(type));
                 var item = resolve(this);
                 this.Created?.Invoke(this, new CreatedEventArgs(item));
-                //// ReSharper disable once ConditionIsAlwaysTrueOrFalse
+
                 if (item is null ||
                     type == item.GetType())
                 {
                     return Binding.Resolved(item);
                 }
 
-                if (this.map!.TryAdd(item!.GetType(), Binding.Resolved(item)))
+                if (this.map.TryAdd(item.GetType(), Binding.Resolved(item)))
                 {
                     return Binding.Mapped(item);
                 }
 
-                var message = "There was already an instance created.\r\n" +
-                                    "This can happen by doing:\r\n" +
-                                    "1. Bind<I>(x => new C())\r\n" +
-                                    "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
-                                    "3. Get<I>() this creates an instance of C using the func and then detects there is already an instance.\r\n" +
-                                    "Solution:\r\n" +
-                                    "Specify explicit binding for the concrete type.\r\n" +
-                                    "For example by: Bind<I, C>(x => new C())";
-                throw new ResolveException(type, message);
+                throw new ResolveException(type, AlreadyCreatedMessage(item, resolve));
             }
 
             Binding Map(Type to)
@@ -301,6 +287,52 @@ namespace Gu.Inject
             }
 
             object? ResolveParameter(Type parameterType) => this.GetCore(parameterType);
+
+            string AlreadyCreatedMessage(object duplicate, Delegate func)
+            {
+                return $"An instance of type {duplicate.GetType().PrettyName()} was already created.\r\n" +
+                       $"The existing instance was created via {CreatedVia()}.\r\n" +
+                       "This can happen by doing:\r\n" +
+                       $"1. Bind<I>({Lambda()})\r\n" +
+                       "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
+                       $"3. Get<I>() this creates an instance of C using the bound {Func()} and then detects the instance created in 2.\r\n" +
+                       "\r\n" +
+                       "Specify explicit binding for the concrete type.\r\n" +
+                       "For example by:\r\n" +
+                       $"Bind<I, C>({Lambda()})\r\n" +
+                       "or\r\n" +
+                       $"Bind<I, C>()\r\n" +
+                       $"Bind<C>({Lambda()})";
+
+                string Lambda() => func switch
+                {
+                    Func<object?> => "() => new C()",
+                    Func<IGetter, object?> => "x => new C(...)",
+                    _ => func?.ToString() ?? "null",
+                };
+
+                string CreatedVia() => this.map![duplicate.GetType()].Kind switch
+                {
+                    BindingKind.Func => "Func<C>",
+                    BindingKind.ResolverFunc => "Func<IGetter, C>",
+                    BindingKind.Map => "map type",
+                    BindingKind.Instance => "bound instance",
+                    BindingKind.Uninitialized => "bound uninitialized",
+                    BindingKind.Initialized => "initialized",
+                    BindingKind.AutoResolved => "constructor",
+                    BindingKind.Created => "bound Func<C>",
+                    BindingKind.Resolved => "bound Func<IGetter, C>",
+                    BindingKind.Mapped => "mapped type",
+                    _ => "unknown",
+                };
+
+                string Func() => func switch
+                {
+                    Func<object?> => "Func<C>",
+                    Func<IGetter, object?> => "Func<IGetter, C>",
+                    _ => func?.ToString() ?? "null",
+                };
+            }
         }
     }
 }

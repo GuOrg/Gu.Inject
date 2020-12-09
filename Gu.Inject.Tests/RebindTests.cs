@@ -242,14 +242,19 @@ namespace Gu.Inject.Tests
             {
                 _ = kernel.Get(type1);
                 Assert.AreEqual(
-                    "There was already an instance created.\r\n" +
+                    "An instance of type C was already created.\r\n" +
+                    "The existing instance was created via constructor.\r\n" +
                     "This can happen by doing:\r\n" +
                     "1. Bind<I>(() => new C())\r\n" +
                     "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
-                    "3. Get<I>() this creates an instance of C using the func and then detects there is already an instance.\r\n" +
-                    "Solution:\r\n" +
+                    "3. Get<I>() this creates an instance of C using the bound Func<C> and then detects the instance created in 2.\r\n" +
+                    "\r\n" +
                     "Specify explicit binding for the concrete type.\r\n" +
-                    "For example by: Bind<I, C>(() => new C())",
+                    "For example by:\r\n" +
+                    "Bind<I, C>(() => new C())\r\n" +
+                    "or\r\n" +
+                    "Bind<I, C>()\r\n" +
+                    "Bind<C>(() => new C())",
                     Assert.Throws<ResolveException>(() => kernel.Get(type2)).Message);
             }
             else
@@ -279,14 +284,19 @@ namespace Gu.Inject.Tests
             {
                 _ = kernel.Get(type1);
                 Assert.AreEqual(
-                    "There was already an instance created.\r\n" +
+                    "An instance of type C was already created.\r\n" +
+                    "The existing instance was created via constructor.\r\n" +
                     "This can happen by doing:\r\n" +
                     "1. Bind<I>(() => new C())\r\n" +
                     "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
-                    "3. Get<I>() this creates an instance of C using the func and then detects there is already an instance.\r\n" +
-                    "Solution:\r\n" +
+                    "3. Get<I>() this creates an instance of C using the bound Func<C> and then detects the instance created in 2.\r\n" +
+                    "\r\n" +
                     "Specify explicit binding for the concrete type.\r\n" +
-                    "For example by: Bind<I, C>(() => new C())",
+                    "For example by:\r\n" +
+                    "Bind<I, C>(() => new C())\r\n" +
+                    "or\r\n" +
+                    "Bind<I, C>()\r\n" +
+                    "Bind<C>(() => new C())",
                     Assert.Throws<ResolveException>(() => kernel.Get(type2)).Message);
             }
             else
@@ -339,14 +349,19 @@ namespace Gu.Inject.Tests
             {
                 _ = kernel.Get(type1);
                 Assert.AreEqual(
-                    "There was already an instance created.\r\n" +
+                    "An instance of type C was already created.\r\n" +
+                    "The existing instance was created via constructor.\r\n" +
                     "This can happen by doing:\r\n" +
-                    "1. Bind<I>(x => new C())\r\n" +
+                    "1. Bind<I>(x => new C(...))\r\n" +
                     "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
-                    "3. Get<I>() this creates an instance of C using the func and then detects there is already an instance.\r\n" +
-                    "Solution:\r\n" +
+                    "3. Get<I>() this creates an instance of C using the bound Func<IGetter, C> and then detects the instance created in 2.\r\n" +
+                    "\r\n" +
                     "Specify explicit binding for the concrete type.\r\n" +
-                    "For example by: Bind<I, C>(x => new C())",
+                    "For example by:\r\n" +
+                    "Bind<I, C>(x => new C(...))\r\n" +
+                    "or\r\n" +
+                    "Bind<I, C>()\r\n" +
+                    "Bind<C>(x => new C(...))",
                     Assert.Throws<ResolveException>(() => kernel.Get(type2)).Message);
             }
             else
@@ -390,14 +405,19 @@ namespace Gu.Inject.Tests
             {
                 _ = kernel.Get(type1);
                 Assert.AreEqual(
-                    "There was already an instance created.\r\n" +
+                    "An instance of type C was already created.\r\n" +
+                    "The existing instance was created via constructor.\r\n" +
                     "This can happen by doing:\r\n" +
-                    "1. Bind<I>(x => new C())\r\n" +
+                    "1. Bind<I>(x => new C(...))\r\n" +
                     "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
-                    "3. Get<I>() this creates an instance of C using the func and then detects there is already an instance.\r\n" +
-                    "Solution:\r\n" +
+                    "3. Get<I>() this creates an instance of C using the bound Func<IGetter, C> and then detects the instance created in 2.\r\n" +
+                    "\r\n" +
                     "Specify explicit binding for the concrete type.\r\n" +
-                    "For example by: Bind<I, C>(x => new C())",
+                    "For example by:\r\n" +
+                    "Bind<I, C>(x => new C(...))\r\n" +
+                    "or\r\n" +
+                    "Bind<I, C>()\r\n" +
+                    "Bind<C>(x => new C(...))",
                     Assert.Throws<ResolveException>(() => kernel.Get(type2)).Message);
             }
             else

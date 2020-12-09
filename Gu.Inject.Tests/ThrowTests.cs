@@ -21,8 +21,9 @@ namespace Gu.Inject.Tests
         public static void GetWhenNoBinding(Type type, string expected)
         {
             using var kernel = new Kernel();
-            var exception = Assert.Throws<NoBindingException>(() => kernel.Get(type));
-            Assert.AreEqual(expected, exception.Message);
+            Assert.AreEqual(
+                expected,
+                Assert.Throws<NoBindingException>(() => kernel.Get(type)).Message);
         }
 
         [TestCase(typeof(Circular1.A), "Circular1.A(\r\n  Circular1.B(\r\n    Circular1.A(... Circular dependency detected.\r\n")]
@@ -30,28 +31,29 @@ namespace Gu.Inject.Tests
         public static void GetWhenCircular(Type type, string message)
         {
             using var kernel = new Kernel();
-            var exception = Assert.Throws<CircularDependencyException>(() => kernel.Get(type));
-            Assert.AreEqual(message, exception.Message);
+            Assert.AreEqual(
+                message,
+                Assert.Throws<CircularDependencyException>(() => kernel.Get(type)).Message);
         }
 
         [Test]
         public static void GetWhenTwoConstructors()
         {
             using var kernel = new Kernel();
-            var exception = Assert.Throws<ResolveException>(() => kernel.Get<Error.TwoCtors>());
-            var expected = "Type Error.TwoCtors has more than one constructor.\r\n" +
-                           "Add a binding specifying which constructor to use.";
-            Assert.AreEqual(expected, exception.Message);
+            Assert.AreEqual(
+                "Type Error.TwoCtors has more than one constructor.\r\n" +
+                "Add a binding specifying which constructor to use.",
+                Assert.Throws<ResolveException>(() => kernel.Get<Error.TwoCtors>()).Message);
         }
 
         [Test]
         public static void GetWhenParamsCtor()
         {
             using var kernel = new Kernel();
-            var exception = Assert.Throws<ResolveException>(() => kernel.Get<Error.ParamsCtor>());
-            var expected = "Type Error.ParamsCtor has params parameter which is not supported.\r\n" +
-                                 "Add a binding specifying how to create an instance.";
-            Assert.AreEqual(expected, exception.Message);
+            Assert.AreEqual(
+                "Type Error.ParamsCtor has params parameter which is not supported.\r\n" +
+                "Add a binding specifying how to create an instance.",
+                Assert.Throws<ResolveException>(() => kernel.Get<Error.ParamsCtor>()).Message);
         }
 
         [Test]
@@ -59,16 +61,21 @@ namespace Gu.Inject.Tests
         {
             using var kernel = new Kernel();
             _ = kernel.Get<DefaultCtor>();
-            var exception = Assert.Throws<InvalidOperationException>(() => kernel.Bind<IWith, With<DefaultCtor>>());
-            Assert.AreEqual("Bind not allowed after resolving. This could create hard to track down graph bugs.", exception.Message);
+            Assert.AreEqual(
+                "Bind not allowed after Get<T>().\r\n" +
+                "This could create hard to track down graph bugs.",
+                Assert.Throws<InvalidOperationException>(() => kernel.Bind<IWith, With<DefaultCtor>>()).Message);
         }
 
         [Test]
         public static void BindBindingToSame()
         {
             using var kernel = new Kernel();
-            var exception = Assert.Throws<InvalidOperationException>(() => kernel.Bind<C, C>());
-            Assert.AreEqual("Trying to bind to the same type.\r\n This is the equivalent of kernel.Bind<SomeType, SomeType>() which is not strictly wrong but redundant and could indicate a real error hence this exception.", exception.Message);
+            Assert.AreEqual(
+                "Trying to bind to the same type.\r\n" +
+                "This is the equivalent of kernel.Bind<C, C>().\r\n" +
+                "It is not strictly wrong but redundant and could indicate a mistake and hence disallowed.",
+                Assert.Throws<InvalidOperationException>(() => kernel.Bind<C, C>()).Message);
         }
 
         [Test]
@@ -86,8 +93,9 @@ namespace Gu.Inject.Tests
             using var kernel = new Kernel();
             var instance = new C();
             kernel.Bind<I1>(instance);
-            var exception = Assert.Throws<InvalidOperationException>(() => kernel.Bind<I1, C>());
-            Assert.AreEqual("I1 already has a binding. It is mapped to C", exception.Message);
+            Assert.AreEqual(
+                "I1 already has a binding. It is mapped to C",
+                Assert.Throws<InvalidOperationException>(() => kernel.Bind<I1, C>()).Message);
         }
 
         [Test]
@@ -96,8 +104,9 @@ namespace Gu.Inject.Tests
             using var kernel = new Kernel();
             kernel.Bind<IWith, With<DefaultCtor>>();
             var instance = new With<DefaultCtor>(new DefaultCtor());
-            var exception = Assert.Throws<InvalidOperationException>(() => kernel.Bind<IWith>(instance));
-            Assert.AreEqual("IWith already has a binding. It is mapped to the type With<DefaultCtor>", exception.Message);
+            Assert.AreEqual(
+                "IWith already has a binding. It is mapped to the type With<DefaultCtor>",
+                Assert.Throws<InvalidOperationException>(() => kernel.Bind<IWith>(instance)).Message);
         }
 
         [Test]
@@ -110,14 +119,19 @@ namespace Gu.Inject.Tests
 
             // Next get fails as there is already an instance created. Solution is Bind<I1, C>(() => new C())
             Assert.AreEqual(
-                "There was already an instance created.\r\n" +
+                "An instance of type C was already created.\r\n" +
+                "The existing instance was created via constructor.\r\n" +
                 "This can happen by doing:\r\n" +
                 "1. Bind<I>(() => new C())\r\n" +
                 "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
-                "3. Get<I>() this creates an instance of C using the func and then detects there is already an instance.\r\n" +
-                "Solution:\r\n" +
+                "3. Get<I>() this creates an instance of C using the bound Func<C> and then detects the instance created in 2.\r\n" +
+                "\r\n" +
                 "Specify explicit binding for the concrete type.\r\n" +
-                "For example by: Bind<I, C>(() => new C())",
+                "For example by:\r\n" +
+                "Bind<I, C>(() => new C())\r\n" +
+                "or\r\n" +
+                "Bind<I, C>()\r\n" +
+                "Bind<C>(() => new C())",
                 Assert.Throws<ResolveException>(() => kernel.Get<I1>()).Message);
         }
 
@@ -131,14 +145,19 @@ namespace Gu.Inject.Tests
 
             // Next get fails as there is already an instance created. Solution is Bind<I1, C>(c => new C())
             Assert.AreEqual(
-                "There was already an instance created.\r\n" +
+                "An instance of type C was already created.\r\n" +
+                "The existing instance was created via constructor.\r\n" +
                 "This can happen by doing:\r\n" +
-                "1. Bind<I>(x => new C())\r\n" +
+                "1. Bind<I>(x => new C(...))\r\n" +
                 "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
-                "3. Get<I>() this creates an instance of C using the func and then detects there is already an instance.\r\n" +
-                "Solution:\r\n" +
+                "3. Get<I>() this creates an instance of C using the bound Func<IGetter, C> and then detects the instance created in 2.\r\n" +
+                "\r\n" +
                 "Specify explicit binding for the concrete type.\r\n" +
-                "For example by: Bind<I, C>(x => new C())",
+                "For example by:\r\n" +
+                "Bind<I, C>(x => new C(...))\r\n" +
+                "or\r\n" +
+                "Bind<I, C>()\r\n" +
+                "Bind<C>(x => new C(...))",
                 Assert.Throws<ResolveException>(() => kernel.Get<I1>()).Message);
         }
     }
