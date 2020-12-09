@@ -18,6 +18,15 @@ namespace Gu.Inject
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NoBindingException"/> class.
+        /// </summary>
+        /// <param name="type">The type that has no binding.</param>
+        public NoBindingException(Type type, string message, NoBindingException inner)
+            : base(type, message, inner)
+        {
+        }
+
         /// <summary>Initializes a new instance of the <see cref="NoBindingException" /> class with serialized data.</summary>
         /// <param name="info">The object that holds the serialized object data.</param>
         /// <param name="context">The contextual information about the source or destination.</param>

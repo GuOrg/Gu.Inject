@@ -1,4 +1,4 @@
-﻿namespace Gu.Inject
+namespace Gu.Inject
 {
     using System;
     using System.Runtime.Serialization;
@@ -16,9 +16,8 @@
         /// <param name="type">The type to resolve.</param>
         /// <param name="message">The exception message.</param>
         public ResolveException(Type type, string message)
-            : base(message, null)
+            : this(type, message, null!)
         {
-            this.Type = type;
         }
 
         /// <summary>
@@ -27,7 +26,18 @@
         /// <param name="type">The type to resolve.</param>
         /// <param name="inner">The inner exception.</param>
         public ResolveException(Type type, ResolveException inner)
-            : base(CreateMessage(type, inner), inner)
+            : this(type, CreateMessage(type, inner), inner)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ResolveException"/> class.
+        /// </summary>
+        /// <param name="type">The type to resolve.</param>
+        /// <param name="message">The exception message.</param>
+        /// <param name="inner">The inner exception.</param>
+        public ResolveException(Type type, string message, ResolveException inner)
+            : base(message, inner)
         {
             this.Type = type;
         }

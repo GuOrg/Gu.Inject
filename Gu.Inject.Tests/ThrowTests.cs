@@ -26,8 +26,8 @@ namespace Gu.Inject.Tests
                 Assert.Throws<NoBindingException>(() => kernel.Get(type)).Message);
         }
 
-        [TestCase(typeof(Circular1.A), "Circular1.A(\r\n  Circular1.B(\r\n    Circular1.A(... Circular dependency detected.\r\n")]
-        [TestCase(typeof(Circular2.A), "Circular2.A(\r\n  Circular2.E(\r\n    Circular2.G(\r\n      Circular2.A(... Circular dependency detected.\r\n")]
+        [TestCase(typeof(Circular1.A), "new Circular1.A(\r\n  new Circular1.B(\r\n    new Circular1.A(... Circular dependency detected.\r\n")]
+        [TestCase(typeof(Circular2.A), "new Circular2.A(\r\n  new Circular2.E(\r\n    new Circular2.G(\r\n      new Circular2.A(... Circular dependency detected.\r\n")]
         public static void GetWhenCircular(Type type, string message)
         {
             using var kernel = new Kernel();
@@ -159,6 +159,40 @@ namespace Gu.Inject.Tests
                 "Bind<I, C>()\r\n" +
                 "Bind<C>(x => new C(...))",
                 Assert.Throws<ResolveException>(() => kernel.Get<I1>()).Message);
+        }
+
+        [Test]
+        public static void NoBindingImplicit()
+        {
+            using var kernel = new Kernel();
+            Assert.AreEqual(
+                "Type int has no binding.",
+                Assert.Throws<NoBindingException>(() => kernel.Get<int>()).Message);
+        }
+
+        [Test]
+        public static void NoBindingImplicitOneLevel()
+        {
+            using var kernel = new Kernel();
+            Assert.AreEqual(
+                "Type int has no binding.\r\n" +
+                "\r\n" +
+                "new With<int>(\r\n" +
+                "  could not resolve int here.",
+                Assert.Throws<NoBindingException>(() => kernel.Get<With<int>>()).Message);
+        }
+
+        [Test]
+        public static void NoBindingImplicitTwoLevels()
+        {
+            using var kernel = new Kernel();
+            Assert.AreEqual(
+                "Type int has no binding.\r\n" +
+                "\r\n" +
+                "new With<With<int>>(\r\n" +
+                "  new With<int>(\r\n" +
+                "    could not resolve int here.",
+                Assert.Throws<NoBindingException>(() => kernel.Get<With<With<int>>>()).Message);
         }
     }
 }

@@ -2,6 +2,7 @@ namespace Gu.Inject
 {
     using System;
     using System.Collections.Concurrent;
+    using System.IO;
     using System.Text;
 
     /// <summary>
@@ -209,21 +210,28 @@ namespace Gu.Inject
                 {
                     this.hasResolved = true;
                     this.Creating?.Invoke(this, new CreatingEventArgs(type));
-                    var item = constructor.Invoke(null, x => ResolveParameter(x));
-                    this.Created?.Invoke(this, new CreatedEventArgs(item));
-                    return Binding.AutoResolved(item);
+                    try
+                    {
+                        var item = constructor.Invoke(null, x => ResolveParameter(x));
+                        this.Created?.Invoke(this, new CreatedEventArgs(item));
+                        return Binding.AutoResolved(item);
+                    }
+                    catch (NoBindingException e)
+                    {
+                        throw new NoBindingException(candidate, NoBindingMessage($"new {type.PrettyName()}(", e), e);
+                    }
                 }
 
                 var messageBuilder = new StringBuilder();
                 var padding = "  ";
-                messageBuilder.AppendLine($"{candidate.PrettyName()}(");
+                messageBuilder.AppendLine($"new {candidate.PrettyName()}(");
                 foreach (var parameter in Constructor.Cycle(candidate))
                 {
-                    messageBuilder.AppendLine($"{padding}{parameter.ParameterType.PrettyName()}(");
+                    messageBuilder.AppendLine($"{padding}new {parameter.ParameterType.PrettyName()}(");
                     padding += "  ";
                 }
 
-                messageBuilder.AppendLine($"{padding}{candidate.PrettyName()}(... Circular dependency detected.");
+                messageBuilder.AppendLine($"{padding}new {candidate.PrettyName()}(... Circular dependency detected.");
                 throw new CircularDependencyException(candidate, messageBuilder.ToString());
             }
 
@@ -346,6 +354,32 @@ namespace Gu.Inject
                     Func<IGetter, object?> => "Func<IGetter, C>",
                     _ => func.ToString() ?? "null",
                 };
+            }
+
+            string NoBindingMessage(string line, NoBindingException inner)
+            {
+                var message = new StringBuilder();
+                if (inner.InnerException is null)
+                {
+                    return message.AppendLine(inner.Message)
+                                  .AppendLine()
+                                  .AppendLine(line)
+                                  .Append($"  could not resolve {inner.Type.PrettyName()} here.")
+                                  .ToString();
+                }
+
+                using var reader = new StringReader(inner.Message);
+                message.AppendLine(reader.ReadLine());
+                message.AppendLine(reader.ReadLine());
+                message.Append(line);
+                while (reader.Peek() > 0)
+                {
+                    message.AppendLine();
+                    message.Append("  ");
+                    message.Append(reader.ReadLine());
+                }
+
+                return message.ToString();
             }
         }
     }
