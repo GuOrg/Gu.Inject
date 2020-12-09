@@ -252,55 +252,69 @@ namespace Gu.Inject
             Binding Create(Func<object?> create)
             {
                 this.Creating?.Invoke(this, new CreatingEventArgs(type));
-                var item = create();
-                this.Created?.Invoke(this, new CreatedEventArgs(item));
-                if (item is null ||
-                    type == item.GetType())
+                try
                 {
-                    return Binding.Created(item);
-                }
+                    var item = create();
+                    this.Created?.Invoke(this, new CreatedEventArgs(item));
+                    if (item is null ||
+                        type == item.GetType())
+                    {
+                        return Binding.Created(item);
+                    }
 
-                if (this.map.TryAdd(item.GetType(), Binding.Created(item)))
+                    if (this.map.TryAdd(item.GetType(), Binding.Created(item)))
+                    {
+                        return Binding.Mapped(item);
+                    }
+
+                    var existing = this.map[item.GetType()];
+                    if (ReferenceEquals(existing.Value, item) ||
+                        item.GetType().IsValueType)
+                    {
+                        return existing;
+                    }
+
+                    throw new ResolveException(type, AlreadyCreatedMessage(existing, create));
+                }
+                catch (NoBindingException e)
                 {
-                    return Binding.Mapped(item);
+                    throw new NoBindingException(type, NoBindingMessage($"Func<{type.PrettyName()}>.Invoke(", e), e);
                 }
-
-                var existing = this.map[item.GetType()];
-                if (ReferenceEquals(existing.Value, item) ||
-                    item.GetType().IsValueType)
-                {
-                    return existing;
-                }
-
-                throw new ResolveException(type, AlreadyCreatedMessage(existing, create));
             }
 
             Binding Resolve(Func<IGetter, object?> resolve)
             {
                 this.hasResolved = true;
                 this.Creating?.Invoke(this, new CreatingEventArgs(type));
-                var item = resolve(this);
-                this.Created?.Invoke(this, new CreatedEventArgs(item));
-
-                if (item is null ||
-                    type == item.GetType())
+                try
                 {
-                    return Binding.Resolved(item);
-                }
+                    var item = resolve(this);
+                    this.Created?.Invoke(this, new CreatedEventArgs(item));
 
-                if (this.map.TryAdd(item.GetType(), Binding.Resolved(item)))
+                    if (item is null ||
+                        type == item.GetType())
+                    {
+                        return Binding.Resolved(item);
+                    }
+
+                    if (this.map.TryAdd(item.GetType(), Binding.Resolved(item)))
+                    {
+                        return Binding.Mapped(item);
+                    }
+
+                    var existing = this.map[item.GetType()];
+                    if (ReferenceEquals(existing.Value, item) ||
+                        item.GetType().IsValueType)
+                    {
+                        return existing;
+                    }
+
+                    throw new ResolveException(type, AlreadyCreatedMessage(existing, resolve));
+                }
+                catch (NoBindingException e)
                 {
-                    return Binding.Mapped(item);
+                    throw new NoBindingException(type, NoBindingMessage($"getter.Get<{type.PrettyName()}>(", e), e);
                 }
-
-                var existing = this.map[item.GetType()];
-                if (ReferenceEquals(existing.Value, item) ||
-                    item.GetType().IsValueType)
-                {
-                    return existing;
-                }
-
-                throw new ResolveException(type, AlreadyCreatedMessage(existing, resolve));
             }
 
             Binding Map(Type to)

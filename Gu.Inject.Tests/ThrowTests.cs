@@ -194,5 +194,32 @@ namespace Gu.Inject.Tests
                 "    could not resolve int here.",
                 Assert.Throws<NoBindingException>(() => kernel.Get<With<With<int>>>()).Message);
         }
+
+        [Test]
+        public static void NoBindingResolverOneLevel()
+        {
+            using var kernel = new Kernel();
+            kernel.Bind(x => new With<int>(x.Get<int>()));
+            Assert.AreEqual(
+                "Type int has no binding.\r\n" +
+                "\r\n" +
+                "getter.Get<With<int>>(\r\n" +
+                "  could not resolve int here.",
+                Assert.Throws<NoBindingException>(() => kernel.Get<With<int>>()).Message);
+        }
+
+        [Test]
+        public static void NoBindingFunc()
+        {
+            using var kernel = new Kernel();
+            // ReSharper disable once AccessToDisposedClosure
+            kernel.Bind(() => new With<int>(kernel.Get<int>()));
+            Assert.AreEqual(
+                "Type int has no binding.\r\n" +
+                "\r\n" +
+                "Func<With<int>>.Invoke(\r\n" +
+                "  could not resolve int here.",
+                Assert.Throws<NoBindingException>(() => kernel.Get<With<int>>()).Message);
+        }
     }
 }

@@ -9,7 +9,7 @@ namespace Gu.Inject
 
     internal readonly struct Constructor
     {
-        private static readonly ConcurrentDictionary<Type, Constructor> Cache = new ConcurrentDictionary<Type, Constructor>();
+        private static readonly ConcurrentDictionary<Type, Constructor> Cache = new();
 
         private readonly ConstructorInfo info;
         private readonly ParameterInfo[]? parameters;
@@ -22,13 +22,11 @@ namespace Gu.Inject
             this.arguments = parameters is null ? null : new object[parameters.Length];
         }
 
-        private object? Gate => this.arguments;
-
         /// <summary>
         /// Setting this.arguments[last] = this.arguments; when resolving.
         /// Reason for this hack is silly optimization.
         /// </summary>
-        private bool IsBusy => this.Gate is { } gate && Monitor.IsEntered(gate);
+        private bool IsBusy => this.arguments is { } gate && Monitor.IsEntered(gate);
 
         internal static Constructor? Get(Type type)
         {
@@ -73,7 +71,7 @@ namespace Gu.Inject
                 return obj;
             }
 
-            lock (this.Gate!)
+            lock (this.arguments)
             {
                 for (var i = 0; i < this.arguments.Length; i++)
                 {
