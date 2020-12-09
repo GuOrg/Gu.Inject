@@ -1,3 +1,6 @@
+#### 0.3.2
+* BUGFIX: Don't throw when resolving same instance.
+
 #### 0.3.1
 * FEATURE: Improved exception messages.
 
