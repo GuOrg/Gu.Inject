@@ -1,1 +1,20 @@
 ﻿#nullable enable
+Gu.Inject.RebindExtensions
+static Gu.Inject.RebindExtensions.HasBinding(this Gu.Inject.Kernel! kernel, System.Type! type) -> bool
+static Gu.Inject.RebindExtensions.Rebind(this Gu.Inject.Kernel! kernel, System.Type! from, System.Type! to) -> Gu.Inject.Kernel!
+static Gu.Inject.RebindExtensions.Rebind<T>(this Gu.Inject.Kernel! kernel, System.Func<Gu.Inject.IGetter!, T>! create) -> Gu.Inject.Kernel!
+static Gu.Inject.RebindExtensions.Rebind<T>(this Gu.Inject.Kernel! kernel, System.Func<T>! create) -> Gu.Inject.Kernel!
+static Gu.Inject.RebindExtensions.Rebind<T>(this Gu.Inject.Kernel! kernel, T instance) -> Gu.Inject.Kernel!
+static Gu.Inject.RebindExtensions.Rebind<TInterface, TConcrete>(this Gu.Inject.Kernel! kernel) -> Gu.Inject.Kernel!
+static Gu.Inject.RebindExtensions.Rebind<TInterface, TConcrete>(this Gu.Inject.Kernel! kernel, System.Func<Gu.Inject.IGetter!, TConcrete>! create) -> Gu.Inject.Kernel!
+static Gu.Inject.RebindExtensions.Rebind<TInterface, TConcrete>(this Gu.Inject.Kernel! kernel, System.Func<TConcrete>! create) -> Gu.Inject.Kernel!
+static Gu.Inject.RebindExtensions.Rebind<TInterface, TConcrete>(this Gu.Inject.Kernel! kernel, TConcrete instance) -> Gu.Inject.Kernel!
+static Gu.Inject.RebindExtensions.Rebind<TInterface1, TInterface2, TConcrete>(this Gu.Inject.Kernel! kernel) -> Gu.Inject.Kernel!
+static Gu.Inject.RebindExtensions.Rebind<TInterface1, TInterface2, TConcrete>(this Gu.Inject.Kernel! kernel, System.Func<Gu.Inject.IGetter!, TConcrete>! create) -> Gu.Inject.Kernel!
+static Gu.Inject.RebindExtensions.Rebind<TInterface1, TInterface2, TConcrete>(this Gu.Inject.Kernel! kernel, System.Func<TConcrete>! create) -> Gu.Inject.Kernel!
+static Gu.Inject.RebindExtensions.Rebind<TInterface1, TInterface2, TConcrete>(this Gu.Inject.Kernel! kernel, TConcrete instance) -> Gu.Inject.Kernel!
+static Gu.Inject.RebindExtensions.Rebind<TInterface1, TInterface2, TInterface3, TConcrete>(this Gu.Inject.Kernel! kernel) -> Gu.Inject.Kernel!
+static Gu.Inject.RebindExtensions.Rebind<TInterface1, TInterface2, TInterface3, TConcrete>(this Gu.Inject.Kernel! kernel, System.Func<Gu.Inject.IGetter!, TConcrete>! create) -> Gu.Inject.Kernel!
+static Gu.Inject.RebindExtensions.Rebind<TInterface1, TInterface2, TInterface3, TConcrete>(this Gu.Inject.Kernel! kernel, System.Func<TConcrete>! create) -> Gu.Inject.Kernel!
+static Gu.Inject.RebindExtensions.Rebind<TInterface1, TInterface2, TInterface3, TConcrete>(this Gu.Inject.Kernel! kernel, TConcrete instance) -> Gu.Inject.Kernel!
+static Gu.Inject.RebindExtensions.RebindUninitialized<T>(this Gu.Inject.Kernel! kernel) -> Gu.Inject.Kernel!
