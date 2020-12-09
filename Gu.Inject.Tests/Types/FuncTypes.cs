@@ -1,4 +1,5 @@
-﻿namespace Gu.Inject.Tests.Types
+// ReSharper disable All
+namespace Gu.Inject.Tests.Types
 {
     using System;
 

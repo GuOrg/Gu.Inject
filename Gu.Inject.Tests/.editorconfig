@@ -32,3 +32,6 @@ dotnet_diagnostic.IDE0052.severity = none
 
 # IDE0060: Remove unread private members
 dotnet_diagnostic.IDE0060.severity = none
+
+# IDE0001: Simplify Names
+dotnet_diagnostic.IDE0001.severity = none

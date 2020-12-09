@@ -28,7 +28,13 @@ namespace Gu.Inject
         private bool IsBusy
         {
             get => this.arguments is { } args && args[this.arguments.Length - 1] == args;
-            set => this.arguments![this.arguments.Length - 1] = this.arguments;
+            set
+            {
+                if (value)
+                {
+                    this.arguments![this.arguments.Length - 1] = this.arguments;
+                }
+            }
         }
 
         internal static Constructor? Get(Type type)
@@ -64,7 +70,7 @@ namespace Gu.Inject
             }
         }
 
-        internal object Invoke(object? obj, Func<Type, object> resolve)
+        internal object Invoke(object? obj, Func<Type, object?> resolve)
         {
             if (this.arguments is null)
             {
@@ -118,7 +124,7 @@ namespace Gu.Inject
             }
 
             if (parameters.Last() is { CustomAttributes: { } attributes } &&
-                attributes.Any(x => x.AttributeType == typeof(System.ParamArrayAttribute)))
+                attributes.Any(x => x.AttributeType == typeof(ParamArrayAttribute)))
             {
                 var message = $"Type {type.PrettyName()} has params parameter which is not supported.\r\n" +
                               "Add a binding specifying how to create an instance.";

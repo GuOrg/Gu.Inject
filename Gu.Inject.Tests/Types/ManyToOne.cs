@@ -1,4 +1,5 @@
-﻿namespace Gu.Inject.Tests.Types
+// ReSharper disable UnusedTypeParameter
+namespace Gu.Inject.Tests.Types
 {
     public static class ManyToOne
     {

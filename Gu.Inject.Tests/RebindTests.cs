@@ -324,8 +324,8 @@ namespace Gu.Inject.Tests
         public static void BindGetterFactory()
         {
             using var kernel = new Kernel();
-            kernel.Bind<C>(c => new C());
-            kernel.Rebind<C>(c => new C());
+            kernel.Bind<C>(_ => new C());
+            kernel.Rebind<C>(_ => new C());
             Assert.AreSame(kernel.Get<C>(), kernel.Get<C>());
         }
 
@@ -333,8 +333,8 @@ namespace Gu.Inject.Tests
         public static void BindGetterFactoryAndInterface(Type type1, Type type2)
         {
             using var kernel = new Kernel();
-            kernel.Bind<I1>(c => new C());
-            kernel.Rebind<I1>(c => new C());
+            kernel.Bind<I1>(_ => new C());
+            kernel.Rebind<I1>(_ => new C());
             if (type1.IsClass && type2.IsInterface)
             {
                 _ = kernel.Get(type1);
@@ -360,8 +360,8 @@ namespace Gu.Inject.Tests
         public static void BindGetterFactoryAndInterfaceExplicit(Type type1, Type type2)
         {
             using var kernel = new Kernel();
-            kernel.Bind<I1, C>(c => new C());
-            kernel.Rebind<I1, C>(c => new C());
+            kernel.Bind<I1, C>(_ => new C());
+            kernel.Rebind<I1, C>(_ => new C());
             Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
             Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
         }
@@ -371,10 +371,10 @@ namespace Gu.Inject.Tests
         {
             using var kernel = new Kernel();
             kernel.Bind<I1, C>();
-            kernel.Bind(c => new C());
+            kernel.Bind(_ => new C());
 
             kernel.Rebind<I1, C>();
-            kernel.Rebind(c => new C());
+            kernel.Rebind(_ => new C());
 
             Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
             Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
@@ -384,8 +384,8 @@ namespace Gu.Inject.Tests
         public static void BindGetterFactoryAndTwoInterfaces(Type type1, Type type2)
         {
             using var kernel = new Kernel();
-            kernel.Bind<I1, I2>(c => new C());
-            kernel.Rebind<I1, I2>(c => new C());
+            kernel.Bind<I1, I2>(_ => new C());
+            kernel.Rebind<I1, I2>(_ => new C());
             if (type1.IsClass && type2.IsInterface)
             {
                 _ = kernel.Get(type1);
@@ -411,8 +411,8 @@ namespace Gu.Inject.Tests
         public static void BindGetterFactoryAndTwoInterfacesExplicit(Type type1, Type type2)
         {
             using var kernel = new Kernel();
-            kernel.Bind<I1, I2, C>(c => new C());
-            kernel.Rebind<I1, I2, C>(c => new C());
+            kernel.Bind<I1, I2, C>(_ => new C());
+            kernel.Rebind<I1, I2, C>(_ => new C());
             Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
             Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
         }
@@ -422,10 +422,10 @@ namespace Gu.Inject.Tests
         {
             using var kernel = new Kernel();
             kernel.Bind<I1, I2>();
-            kernel.Bind<I2, C>(c => new C());
+            kernel.Bind<I2, C>(_ => new C());
 
             kernel.Rebind<I1, I2>();
-            kernel.Rebind<I2, C>(c => new C());
+            kernel.Rebind<I2, C>(_ => new C());
 
             Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
             Assert.AreSame(kernel.Get(type2), kernel.Get(type1));

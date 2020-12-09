@@ -1,4 +1,4 @@
-﻿namespace Gu.Inject.Tests
+namespace Gu.Inject.Tests
 {
     using System;
 
@@ -125,7 +125,7 @@
         public static void BindGetterFactoryAndInterfaceThenGetTypeFirst()
         {
             using var kernel = new Kernel();
-            kernel.Bind<I1>(c => new C());
+            kernel.Bind<I1>(_ => new C());
 
             _ = kernel.Get<C>(); // This works as it resolves using reflection and constructor.
 

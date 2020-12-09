@@ -78,6 +78,7 @@ namespace Gu.Inject.Benchmarks
                 builder.AppendLine($".Bind(c => new {type.Name}({string.Join(", ", ctor.GetParameters().Select(x => $"c.Get<{x.ParameterType.Name}>()"))}))");
             }
 
+            // ReSharper disable once UnusedVariable
             var code = builder.ToString();
         }
     }

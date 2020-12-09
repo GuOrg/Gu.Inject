@@ -1,4 +1,4 @@
-// ReSharper disable UnusedMember.Global
+// ReSharper disable All
 namespace Gu.Inject.Benchmarks
 {
     using System;

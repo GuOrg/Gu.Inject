@@ -1,4 +1,4 @@
-﻿namespace Gu.Inject.Tests
+namespace Gu.Inject.Tests
 {
     using System;
     using Gu.Inject.Tests.Types;
@@ -80,7 +80,7 @@
             Disposable actual;
             using (var kernel = new Kernel())
             {
-                kernel.Bind(x => new Disposable());
+                kernel.Bind(_ => new Disposable());
                 actual = kernel.Get<Disposable>();
                 Assert.AreEqual(0, actual.Disposed);
             }

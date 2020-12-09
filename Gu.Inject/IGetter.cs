@@ -20,6 +20,6 @@ namespace Gu.Inject
         /// </summary>
         /// <param name="type">The type to resolve.</param>
         /// <returns>The singleton instance of <paramref name="type"/>.</returns>
-        object Get(Type type);
+        object? Get(Type type);
     }
 }

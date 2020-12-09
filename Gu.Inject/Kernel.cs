@@ -23,26 +23,26 @@ namespace Gu.Inject
         /// <summary>
         /// This notifies before creating an instance of a type.
         /// </summary>
-        public event EventHandler<Type>? Creating;
+        public event EventHandler<CreatingEventArgs>? Creating;
 
         /// <summary>
         /// This notifies after creating an instance of a type.
         /// </summary>
-        public event EventHandler<object>? Created;
+        public event EventHandler<CreatedEventArgs>? Created;
 
         /// <summary>
         /// Get the singleton instance of <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The type to resolve.</typeparam>
         /// <returns>The singleton instance of <typeparamref name="T"/>.</returns>
-        public T Get<T>() => (T)this.GetCore(typeof(T));
+        public T Get<T>() => (T)this.GetCore(typeof(T))!;
 
         /// <summary>
         /// Get the singleton instance of <paramref name="type"/>.
         /// </summary>
         /// <param name="type">The type to resolve.</param>
         /// <returns>The singleton instance of <paramref name="type"/>.</returns>
-        public object Get(Type type)
+        public object? Get(Type type)
         {
             if (type is null)
             {
@@ -115,7 +115,7 @@ namespace Gu.Inject
             _ = this.map.AddOrUpdate(
                 key,
                 t => AddValueFactory(t),
-                (t, b) => UpdateValueFactory());
+                (_, _) => UpdateValueFactory());
 
             Binding AddValueFactory(Type t)
             {
@@ -150,12 +150,12 @@ namespace Gu.Inject
 
             _ = this.map.AddOrUpdate(
                 key,
-                t => AddValueFactory(),
+                _ => AddValueFactory(),
                 (t, b) => b.Kind switch
                 {
                     BindingKind.Func => throw new InvalidOperationException($"{t.PrettyName()} already has a binding. It is bound to the func {b.Value ?? "null"}"),
                     BindingKind.ResolverFunc => throw new InvalidOperationException($"{t.PrettyName()} already has a binding. It is bound to the resolver func {b.Value ?? "null"}"),
-                    BindingKind.Map => throw new InvalidOperationException($"{t.PrettyName()} already has a binding. It is mapped to the type {((Type)b.Value)?.PrettyName() ?? "null"}"),
+                    BindingKind.Map => throw new InvalidOperationException($"{t.PrettyName()} already has a binding. It is mapped to the type {((Type?)b.Value)?.PrettyName() ?? "null"}"),
                     BindingKind.Instance => throw new InvalidOperationException($"{t.PrettyName()} already has a binding. It is bound to an instance of {b.Value?.GetType().PrettyName() ?? "null"}"),
                     BindingKind.Created => throw new InvalidOperationException($"{t.PrettyName()} already has a binding. It is bound to the created instance {b.Value ?? "null"}"),
                     BindingKind.Resolved => throw new InvalidOperationException($"{t.PrettyName()} already has a binding. It is bound to the resolved instance {b.Value ?? "null"}"),
@@ -166,7 +166,7 @@ namespace Gu.Inject
             Binding AddValueFactory() => binding;
         }
 
-        private object GetCore(Type type)
+        private object? GetCore(Type type)
         {
             if (this.map is null)
             {
@@ -183,7 +183,7 @@ namespace Gu.Inject
                     { IsArray: true } => throw new NoBindingException(t),
                     _ => AutoResolve(t),
                 },
-                (t, b) => b.Kind switch
+                (_, b) => b.Kind switch
                 {
                     BindingKind.Initialized => b,
                     BindingKind.AutoResolved => b,
@@ -191,10 +191,10 @@ namespace Gu.Inject
                     BindingKind.Instance => b,
                     BindingKind.Created => b,
                     BindingKind.Mapped => b,
-                    BindingKind.Uninitialized => Initialize(b.Value),
-                    BindingKind.Func => Create((Func<object>)b.Value),
-                    BindingKind.ResolverFunc => Resolve((Func<IGetter, object>)b.Value),
-                    BindingKind.Map => Map((Type)b.Value),
+                    BindingKind.Uninitialized => Initialize(b.Value!),
+                    BindingKind.Func => Create((Func<object>)b.Value!),
+                    BindingKind.ResolverFunc => Resolve((Func<IGetter, object>)b.Value!),
+                    BindingKind.Map => Map((Type)b.Value!),
                     _ => throw new InvalidOperationException($"Not handling resolve Kind: {b.Kind}, Value: {b.Value ?? "null"} "),
                 }).Value;
 
@@ -203,9 +203,9 @@ namespace Gu.Inject
                 if (Constructor.Get(candidate) is { } constructor)
                 {
                     this.hasResolved = true;
-                    this.Creating?.Invoke(this, type);
+                    this.Creating?.Invoke(this, new CreatingEventArgs(type));
                     var item = constructor.Invoke(null, x => ResolveParameter(x));
-                    this.Created?.Invoke(this, item);
+                    this.Created?.Invoke(this, new CreatedEventArgs(item));
                     return Binding.AutoResolved(item);
                 }
 
@@ -229,9 +229,9 @@ namespace Gu.Inject
                 if (Constructor.Get(obj.GetType()) is { } constructor)
                 {
                     this.hasResolved = true;
-                    this.Creating?.Invoke(this, type);
+                    this.Creating?.Invoke(this, new CreatingEventArgs(type));
                     var item = constructor.Invoke(obj, x => ResolveParameter(x));
-                    this.Created?.Invoke(this, item);
+                    this.Created?.Invoke(this, new CreatedEventArgs(item));
                     return Binding.Initialized(item);
                 }
 
@@ -240,12 +240,12 @@ namespace Gu.Inject
 
             Binding Create(Func<object> create)
             {
-                this.Creating?.Invoke(this, type);
+                this.Creating?.Invoke(this, new CreatingEventArgs(type));
                 var item = create();
-                this.Created?.Invoke(this, item);
+                this.Created?.Invoke(this, new CreatedEventArgs(item));
                 //// ReSharper disable once ConditionIsAlwaysTrueOrFalse
                 if (item is null ||
-                    type == item?.GetType())
+                    type == item.GetType())
                 {
                     return Binding.Created(item);
                 }
@@ -269,12 +269,12 @@ namespace Gu.Inject
             Binding Resolve(Func<IGetter, object> resolve)
             {
                 this.hasResolved = true;
-                this.Creating?.Invoke(this, type);
+                this.Creating?.Invoke(this, new CreatingEventArgs(type));
                 var item = resolve(this);
-                this.Created?.Invoke(this, item);
+                this.Created?.Invoke(this, new CreatedEventArgs(item));
                 //// ReSharper disable once ConditionIsAlwaysTrueOrFalse
                 if (item is null ||
-                    type == item?.GetType())
+                    type == item.GetType())
                 {
                     return Binding.Resolved(item);
                 }
@@ -300,7 +300,7 @@ namespace Gu.Inject
                 return Binding.Mapped(this.GetCore(to));
             }
 
-            object ResolveParameter(Type parameterType) => this.GetCore(parameterType);
+            object? ResolveParameter(Type parameterType) => this.GetCore(parameterType);
         }
     }
 }

@@ -7,10 +7,10 @@ namespace Gu.Inject
     [DebuggerDisplay("{this.DebuggerDisplayString}")]
     internal readonly struct Binding
     {
-        internal readonly object Value;
+        internal readonly object? Value;
         internal readonly BindingKind Kind;
 
-        private Binding(object value, BindingKind kind)
+        private Binding(object? value, BindingKind kind)
         {
             this.Value = value;
             this.Kind = kind;

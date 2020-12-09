@@ -1,4 +1,4 @@
-﻿namespace Gu.Inject.Tests
+namespace Gu.Inject.Tests
 {
     using System;
     using System.Collections.Generic;
@@ -102,7 +102,7 @@
             using var kernel = new Kernel();
             kernel.Bind(type, expected);
             var actual = kernel.Get(type);
-            Assert.AreEqual(expected.PrettyName(), actual.GetType().PrettyName());
+            Assert.AreEqual(expected.PrettyName(), actual!.GetType().PrettyName());
             Assert.AreSame(actual, kernel.Get(expected));
         }
 
@@ -141,7 +141,7 @@
         {
             using var kernel = new Kernel();
             var actual = new List<Type>();
-            kernel.Creating += (sender, item) => actual.Add(item);
+            kernel.Creating += (_, e) => actual.Add(e.Type);
             _ = kernel.Get<DefaultCtor>();
             CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
         }
@@ -150,8 +150,8 @@
         public static void NotifiesCreated()
         {
             using var kernel = new Kernel();
-            var actual = new List<object>();
-            kernel.Created += (sender, item) => actual.Add(item);
+            var actual = new List<object?>();
+            kernel.Created += (_, e) => actual.Add(e.Instance);
             var defaultCtor = kernel.Get<DefaultCtor>();
             CollectionAssert.AreEqual(new[] { defaultCtor }, actual);
         }
@@ -161,7 +161,7 @@
         {
             using var kernel = new Kernel();
             var actual = new List<Type>();
-            kernel.Creating += (sender, type) => actual.Add(type);
+            kernel.Creating += (_, e) => actual.Add(e.Type);
             kernel.Bind(() =>
             {
                 // check that we notify before creating.
@@ -177,7 +177,7 @@
         {
             using var kernel = new Kernel();
             var actual = new List<Type>();
-            kernel.Creating += (sender, type) => actual.Add(type);
+            kernel.Creating += (_, e) => actual.Add(e.Type);
             _ = kernel.Get<DefaultCtor>();
             CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
         }
@@ -187,7 +187,7 @@
         {
             var actual = new List<Type>();
             using var kernel = new Kernel();
-            kernel.Creating += (sender, type) => actual.Add(type);
+            kernel.Creating += (_, e) => actual.Add(e.Type);
             kernel.BindUninitialized<Circular1.A>();
             var a = kernel.Get<Circular1.A>();
             var b = kernel.Get<Circular1.B>();
@@ -199,9 +199,9 @@
         [Test]
         public static void NotifiesCreatedCircular()
         {
-            var actual = new List<object>();
+            var actual = new List<object?>();
             using var kernel = new Kernel();
-            kernel.Created += (sender, type) => actual.Add(type);
+            kernel.Created += (_, e) => actual.Add(e.Instance);
             kernel.BindUninitialized<Circular1.A>();
             var a = kernel.Get<Circular1.A>();
             var b = kernel.Get<Circular1.B>();
@@ -214,8 +214,10 @@
         public static void FuncTypes()
         {
             using var kernel = new Kernel();
+            //// ReSharper disable AccessToDisposedClosure
             kernel.Bind<Func<FuncTypes.A>>(() => kernel.Get<FuncTypes.A>());
             kernel.Bind<Func<FuncTypes.B>>(() => kernel.Get<FuncTypes.B>());
+            //// ReSharper restore AccessToDisposedClosure
             Assert.AreSame(kernel.Get<FuncTypes.A>(), kernel.Get<FuncTypes.A>());
             Assert.AreSame(kernel.Get<FuncTypes.B>(), kernel.Get<FuncTypes.B>());
         }
