@@ -481,7 +481,7 @@ namespace Gu.Inject.Tests
 
         [TestCase(typeof(C))]
         [TestCase(typeof(I1))]
-        public static void RebindWithOneInterface(Type type)
+        public static void RebindFuncWithOneInterface(Type type)
         {
             using var kernel = new Kernel();
             Assert.AreEqual(false, kernel.HasBinding(type));
@@ -495,13 +495,41 @@ namespace Gu.Inject.Tests
         [TestCase(typeof(C))]
         [TestCase(typeof(I1))]
         [TestCase(typeof(I2))]
-        public static void RebindWithTwoInterfaces(Type type)
+        public static void RebindFuncWithTwoInterfaces(Type type)
         {
             using var kernel = new Kernel();
             Assert.AreEqual(false, kernel.HasBinding(type));
             kernel.Bind<I1, I2, C>(() => throw new AssertionException("SHOULD NEVER GET HERE"));
 
             kernel.Rebind<I1, I2, C>(() => new C());
+            Assert.AreSame(kernel.Get<C>(), kernel.Get(type));
+            Assert.AreSame(kernel.Get<I1>(), kernel.Get(type));
+            Assert.AreSame(kernel.Get<I2>(), kernel.Get(type));
+        }
+
+        [TestCase(typeof(C))]
+        [TestCase(typeof(I1))]
+        public static void RebindResolverWithOneInterface(Type type)
+        {
+            using var kernel = new Kernel();
+            Assert.AreEqual(false, kernel.HasBinding(type));
+            kernel.Bind<I1, C>(_ => throw new AssertionException("SHOULD NEVER GET HERE"));
+
+            kernel.Rebind<I1, C>(_ => new C());
+            Assert.AreSame(kernel.Get<C>(), kernel.Get(type));
+            Assert.AreSame(kernel.Get<I1>(), kernel.Get(type));
+        }
+
+        [TestCase(typeof(C))]
+        [TestCase(typeof(I1))]
+        [TestCase(typeof(I2))]
+        public static void RebindResolverWithTwoInterfaces(Type type)
+        {
+            using var kernel = new Kernel();
+            Assert.AreEqual(false, kernel.HasBinding(type));
+            kernel.Bind<I1, I2, C>(_ => throw new AssertionException("SHOULD NEVER GET HERE"));
+
+            kernel.Rebind<I1, I2, C>(_ => new C());
             Assert.AreSame(kernel.Get<C>(), kernel.Get(type));
             Assert.AreSame(kernel.Get<I1>(), kernel.Get(type));
             Assert.AreSame(kernel.Get<I2>(), kernel.Get(type));
