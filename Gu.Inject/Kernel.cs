@@ -174,6 +174,8 @@ namespace Gu.Inject
 
         private object? GetCore(Type type)
         {
+            this.hasResolved = true;
+
             if (this.map is null)
             {
                 throw new ObjectDisposedException(nameof(Kernel));
@@ -208,7 +210,6 @@ namespace Gu.Inject
             {
                 if (Constructor.Get(candidate) is { } constructor)
                 {
-                    this.hasResolved = true;
                     this.Creating?.Invoke(this, new CreatingEventArgs(type));
                     try
                     {
@@ -239,7 +240,6 @@ namespace Gu.Inject
             {
                 if (Constructor.Get(obj.GetType()) is { } constructor)
                 {
-                    this.hasResolved = true;
                     this.Creating?.Invoke(this, new CreatingEventArgs(type));
                     var item = constructor.Invoke(obj, x => ResolveParameter(x));
                     this.Created?.Invoke(this, new CreatedEventArgs(item));
@@ -284,7 +284,6 @@ namespace Gu.Inject
 
             Binding Resolve(Func<IGetter, object?> resolve)
             {
-                this.hasResolved = true;
                 this.Creating?.Invoke(this, new CreatingEventArgs(type));
                 try
                 {
