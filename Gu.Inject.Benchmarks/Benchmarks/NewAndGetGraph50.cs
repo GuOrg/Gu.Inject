@@ -2,6 +2,7 @@ namespace Gu.Inject.Benchmarks
 {
     using BenchmarkDotNet.Attributes;
     using DryIoc;
+    using Microsoft.Extensions.DependencyInjection;
     using Ninject;
     using SimpleInjector;
     using static Gu.Inject.Benchmarks.Types.Graph50;
@@ -38,6 +39,63 @@ namespace Gu.Inject.Benchmarks
             return container.Resolve<Node1>();
         }
 
+        [Benchmark]
+        public object? ServiceCollection()
+        {
+            using var container = new ServiceCollection()
+                .AddSingleton<Node1>()
+                .AddSingleton<Node2>()
+                .AddSingleton<Node3>()
+                .AddSingleton<Node4>()
+                .AddSingleton<Node5>()
+                .AddSingleton<Node6>()
+                .AddSingleton<Node7>()
+                .AddSingleton<Node8>()
+                .AddSingleton<Node9>()
+                .AddSingleton<Node10>()
+                .AddSingleton<Node11>()
+                .AddSingleton<Node12>()
+                .AddSingleton<Node13>()
+                .AddSingleton<Node14>()
+                .AddSingleton<Node15>()
+                .AddSingleton<Node16>()
+                .AddSingleton<Node17>()
+                .AddSingleton<Node18>()
+                .AddSingleton<Node19>()
+                .AddSingleton<Node20>()
+                .AddSingleton<Node21>()
+                .AddSingleton<Node22>()
+                .AddSingleton<Node23>()
+                .AddSingleton<Node24>()
+                .AddSingleton<Node25>()
+                .AddSingleton<Node26>()
+                .AddSingleton<Node27>()
+                .AddSingleton<Node28>()
+                .AddSingleton<Node29>()
+                .AddSingleton<Node30>()
+                .AddSingleton<Node31>()
+                .AddSingleton<Node32>()
+                .AddSingleton<Node33>()
+                .AddSingleton<Node34>()
+                .AddSingleton<Node35>()
+                .AddSingleton<Node36>()
+                .AddSingleton<Node37>()
+                .AddSingleton<Node38>()
+                .AddSingleton<Node39>()
+                .AddSingleton<Node40>()
+                .AddSingleton<Node41>()
+                .AddSingleton<Node42>()
+                .AddSingleton<Node43>()
+                .AddSingleton<Node44>()
+                .AddSingleton<Node45>()
+                .AddSingleton<Node46>()
+                .AddSingleton<Node47>()
+                .AddSingleton<Node48>()
+                .AddSingleton<Node49>()
+                .BuildServiceProvider();
+            return container.GetService<Node1>();
+        }
+        
         [Benchmark(Baseline = true)]
         public object GuInject()
         {

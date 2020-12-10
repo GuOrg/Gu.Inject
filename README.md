@@ -100,10 +100,11 @@ Creating a container and resolving a graph with 50 types.
 https://github.com/GuOrg/Gu.Inject/blob/master/Gu.Inject.Benchmarks/Benchmarks/GetGraph50.cs
 
 ```
-|         Method |        Mean |  Ratio | Allocated |
-|--------------- |------------:|-------:|----------:|
-|        Ninject | 4,680.07 μs | 411.17 | 236.54 KB |
-| SimpleInjector | 3,804.99 μs | 330.38 | 201.04 KB |
-|         DryIoc |    82.99 μs |   7.46 |  73.59 KB |
-|       GuInject |    10.99 μs |   1.00 |   8.53 KB |
+|            Method |        Mean |  Ratio | Allocated |
+|------------------ |------------:|-------:|----------:|
+|           Ninject | 7,748.16 μs | 365.83 | 239.35 KB |
+|    SimpleInjector | 6,592.05 μs | 296.92 | 202.58 KB |
+|            DryIoc |   182.59 μs |   8.25 |  73.82 KB |
+| ServiceCollection |    41.37 μs |   1.86 |  20.68 KB |
+|         Gu.Inject |    22.14 μs |   1.00 |   8.11 KB |
 ```
