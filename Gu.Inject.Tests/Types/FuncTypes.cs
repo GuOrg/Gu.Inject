@@ -7,21 +7,21 @@ namespace Gu.Inject.Tests.Types
     {
         public class A
         {
-            private readonly Func<B> bFactory;
+            private readonly Func<B> bFunc;
 
-            public A(Func<B> bFactory)
+            public A(Func<B> bFunc)
             {
-                this.bFactory = bFactory;
+                this.bFunc = bFunc;
             }
         }
 
         public class B
         {
-            private readonly Func<A> aFactory;
+            private readonly Func<A> aFunc;
 
-            public B(Func<A> aFactory)
+            public B(Func<A> aFunc)
             {
-                this.aFactory = aFactory;
+                this.aFunc = aFunc;
             }
         }
     }

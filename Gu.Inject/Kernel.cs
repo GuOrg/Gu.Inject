@@ -93,9 +93,9 @@ namespace Gu.Inject
         /// </summary>
         /// <param name="type">The type to resolve.</param>
         /// <returns>True if there is a binding.</returns>
-        internal bool HasBindingCore(Type type) => this.map?.TryGetValue(type, out _) ?? false;
+        internal bool HasBinding(Type type) => this.map?.TryGetValue(type, out _) ?? false;
 
-        internal void RebindCore(Type key, Binding binding, bool requireExistingBinding)
+        internal void Rebind(Type key, Binding binding, bool requireExistingBinding)
         {
             if (this.hasResolved)
             {

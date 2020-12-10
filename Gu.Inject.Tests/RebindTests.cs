@@ -137,6 +137,7 @@ namespace Gu.Inject.Tests
             kernel.Bind<I3, C>();
             kernel.Bind<I1, I2>();
             kernel.Bind<I2, I3>();
+
             kernel.Rebind<I3, C>();
             kernel.Rebind<I1, I2>();
             kernel.Rebind<I2, I3>();
@@ -236,7 +237,7 @@ namespace Gu.Inject.Tests
         }
 
         [TestCaseSource(nameof(ConcreteAndInterface))]
-        public static void BindFactoryAndInterfaceThenGet(Type type1, Type type2)
+        public static void BindFuncAndInterfaceThenGet(Type type1, Type type2)
         {
             using var kernel = new Kernel();
             kernel.Bind<I1>(() => new C());
@@ -268,7 +269,7 @@ namespace Gu.Inject.Tests
         }
 
         [TestCaseSource(nameof(ConcreteAndInterface))]
-        public static void BindFactoryAndInterfaceExplicitThenGe(Type type1, Type type2)
+        public static void BindFuncAndInterfaceExplicitThenGe(Type type1, Type type2)
         {
             using var kernel = new Kernel();
             kernel.Bind<I1, C>(() => new C());
@@ -278,7 +279,7 @@ namespace Gu.Inject.Tests
         }
 
         [TestCaseSource(nameof(ConcreteAndTwoInterfaces))]
-        public static void BindFactoryAndTwoInterfacesThenGet(Type type1, Type type2)
+        public static void BindFuncAndTwoInterfacesThenGet(Type type1, Type type2)
         {
             using var kernel = new Kernel();
             kernel.Bind<I1, I2>(() => new C());
@@ -310,7 +311,7 @@ namespace Gu.Inject.Tests
         }
 
         [TestCaseSource(nameof(ConcreteAndTwoInterfaces))]
-        public static void BindFactoryAndTwoInterfacesExplicitThenGet(Type type1, Type type2)
+        public static void BindFuncAndTwoInterfacesExplicitThenGet(Type type1, Type type2)
         {
             using var kernel = new Kernel();
             kernel.Bind<I1, I2, C>(() => new C());
@@ -320,7 +321,7 @@ namespace Gu.Inject.Tests
         }
 
         [TestCaseSource(nameof(ConcreteAndTwoInterfaces))]
-        public static void BindFactoryAndTwoInterfacesInStepsThenGet(Type type1, Type type2)
+        public static void BindFuncAndTwoInterfacesInStepsThenGet(Type type1, Type type2)
         {
             using var kernel = new Kernel();
             kernel.Bind<I1, I2>();
@@ -334,7 +335,7 @@ namespace Gu.Inject.Tests
         }
 
         [Test]
-        public static void BindGetterFactory()
+        public static void BindResolver()
         {
             using var kernel = new Kernel();
             kernel.Bind<C>(_ => new C());
@@ -343,7 +344,7 @@ namespace Gu.Inject.Tests
         }
 
         [TestCaseSource(nameof(ConcreteAndInterface))]
-        public static void BindGetterFactoryAndInterface(Type type1, Type type2)
+        public static void BindResolverAndInterface(Type type1, Type type2)
         {
             using var kernel = new Kernel();
             kernel.Bind<I1>(_ => new C());
@@ -375,7 +376,7 @@ namespace Gu.Inject.Tests
         }
 
         [TestCaseSource(nameof(ConcreteAndInterface))]
-        public static void BindGetterFactoryAndInterfaceExplicit(Type type1, Type type2)
+        public static void BindResolverAndInterfaceExplicit(Type type1, Type type2)
         {
             using var kernel = new Kernel();
             kernel.Bind<I1, C>(_ => new C());
@@ -385,7 +386,7 @@ namespace Gu.Inject.Tests
         }
 
         [TestCaseSource(nameof(ConcreteAndInterface))]
-        public static void BindGetterFactoryAndInterfaceInSteps(Type type1, Type type2)
+        public static void BindResolverAndInterfaceInSteps(Type type1, Type type2)
         {
             using var kernel = new Kernel();
             kernel.Bind<I1, C>();
@@ -399,7 +400,7 @@ namespace Gu.Inject.Tests
         }
 
         [TestCaseSource(nameof(ConcreteAndTwoInterfaces))]
-        public static void BindGetterFactoryAndTwoInterfaces(Type type1, Type type2)
+        public static void BindResolverAndTwoInterfaces(Type type1, Type type2)
         {
             using var kernel = new Kernel();
             kernel.Bind<I1, I2>(_ => new C());
@@ -431,7 +432,7 @@ namespace Gu.Inject.Tests
         }
 
         [TestCaseSource(nameof(ConcreteAndTwoInterfaces))]
-        public static void BindGetterFactoryAndTwoInterfacesExplicit(Type type1, Type type2)
+        public static void BindResolverAndTwoInterfacesExplicit(Type type1, Type type2)
         {
             using var kernel = new Kernel();
             kernel.Bind<I1, I2, C>(_ => new C());
@@ -441,7 +442,7 @@ namespace Gu.Inject.Tests
         }
 
         [TestCaseSource(nameof(ConcreteAndTwoInterfaces))]
-        public static void BindGetterFactoryAndTwoInterfacesInSteps(Type type1, Type type2)
+        public static void BindResolverAndTwoInterfacesInSteps(Type type1, Type type2)
         {
             using var kernel = new Kernel();
             kernel.Bind<I1, I2>();
@@ -460,12 +461,12 @@ namespace Gu.Inject.Tests
         public static void HasBinding(Type type, bool expected)
         {
             using var kernel = new Kernel();
-            Assert.AreEqual(false, kernel.HasBinding(type));
+            Assert.AreEqual(false, RebindExtensions.HasBinding(kernel, type));
             kernel.Bind<I1, C>(() => new C());
-            Assert.AreEqual(expected, kernel.HasBinding(type));
+            Assert.AreEqual(expected, RebindExtensions.HasBinding(kernel, type));
 
             kernel.Rebind<I1, C>(_ => new C());
-            Assert.AreEqual(expected, kernel.HasBinding(type));
+            Assert.AreEqual(expected, RebindExtensions.HasBinding(kernel, type));
         }
 
         [Test]
@@ -484,7 +485,7 @@ namespace Gu.Inject.Tests
         public static void RebindFuncWithOneInterface(Type type)
         {
             using var kernel = new Kernel();
-            Assert.AreEqual(false, kernel.HasBinding(type));
+            Assert.AreEqual(false, RebindExtensions.HasBinding(kernel, type));
             kernel.Bind<I1, C>(() => throw new AssertionException("SHOULD NEVER GET HERE"));
 
             kernel.Rebind<I1, C>(() => new C());
@@ -498,7 +499,7 @@ namespace Gu.Inject.Tests
         public static void RebindFuncWithTwoInterfaces(Type type)
         {
             using var kernel = new Kernel();
-            Assert.AreEqual(false, kernel.HasBinding(type));
+            Assert.AreEqual(false, RebindExtensions.HasBinding(kernel, type));
             kernel.Bind<I1, I2, C>(() => throw new AssertionException("SHOULD NEVER GET HERE"));
 
             kernel.Rebind<I1, I2, C>(() => new C());
@@ -512,7 +513,7 @@ namespace Gu.Inject.Tests
         public static void RebindResolverWithOneInterface(Type type)
         {
             using var kernel = new Kernel();
-            Assert.AreEqual(false, kernel.HasBinding(type));
+            Assert.AreEqual(false, RebindExtensions.HasBinding(kernel, type));
             kernel.Bind<I1, C>(_ => throw new AssertionException("SHOULD NEVER GET HERE"));
 
             kernel.Rebind<I1, C>(_ => new C());
@@ -526,7 +527,7 @@ namespace Gu.Inject.Tests
         public static void RebindResolverWithTwoInterfaces(Type type)
         {
             using var kernel = new Kernel();
-            Assert.AreEqual(false, kernel.HasBinding(type));
+            Assert.AreEqual(false, RebindExtensions.HasBinding(kernel, type));
             kernel.Bind<I1, I2, C>(_ => throw new AssertionException("SHOULD NEVER GET HERE"));
 
             kernel.Rebind<I1, I2, C>(_ => new C());

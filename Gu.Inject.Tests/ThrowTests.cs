@@ -110,7 +110,7 @@ namespace Gu.Inject.Tests
         }
 
         [Test]
-        public static void BindFactoryAndInterfaceThenGetTypeFirst()
+        public static void BindFuncAndInterfaceThenGetTypeFirst()
         {
             using var kernel = new Kernel();
             kernel.Bind<I1>(() => new C());
@@ -136,7 +136,7 @@ namespace Gu.Inject.Tests
         }
 
         [Test]
-        public static void BindGetterFactoryAndInterfaceThenGetTypeFirst()
+        public static void BindResolverAndInterfaceThenGetTypeFirst()
         {
             using var kernel = new Kernel();
             kernel.Bind<I1>(_ => new C());

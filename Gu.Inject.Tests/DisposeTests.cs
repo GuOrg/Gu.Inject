@@ -61,7 +61,7 @@ namespace Gu.Inject.Tests
         }
 
         [Test]
-        public static void BoundFactoryIsDisposed()
+        public static void BoundFuncIsDisposed()
         {
             Disposable actual;
             using (var kernel = new Kernel())
@@ -75,7 +75,7 @@ namespace Gu.Inject.Tests
         }
 
         [Test]
-        public static void BoundResolverFactoryIsDisposed()
+        public static void BoundResolverIsDisposed()
         {
             Disposable actual;
             using (var kernel = new Kernel())
