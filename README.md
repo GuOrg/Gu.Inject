@@ -46,6 +46,7 @@ Also note:
 ```cs
 using var kernel = new Kernel();
 var root = kernel.Get<RootType>();
+kernal.Bind<Foo>(() => new Foo()); // throws binding after Get.
 ```
 
 ## Bind factory
