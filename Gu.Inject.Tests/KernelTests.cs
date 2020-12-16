@@ -30,39 +30,6 @@ namespace Gu.Inject.Tests
         }
 
         [Test]
-        public static void GetCircularSimple()
-        {
-            using var kernel = new Kernel();
-            kernel.BindUninitialized<Circular1.A>();
-            var a = kernel.Get<Circular1.A>();
-            var b = kernel.Get<Circular1.B>();
-            Assert.AreSame(a.B, b);
-            Assert.AreSame(a, b.A);
-        }
-
-        [Test]
-        public static void GetCircularComplex()
-        {
-            using var kernel = new Kernel();
-            kernel.BindUninitialized<Circular2.A>();
-            var a = kernel.Get<Circular2.A>();
-            var b = kernel.Get<Circular2.B>();
-            var c = kernel.Get<Circular2.C>();
-            var d = kernel.Get<Circular2.D>();
-            var e = kernel.Get<Circular2.E>();
-            var f = kernel.Get<Circular2.F>();
-            var g = kernel.Get<Circular2.G>();
-            Assert.AreSame(a.B, b);
-            Assert.AreSame(a.E, e);
-            Assert.AreSame(b.C, c);
-            Assert.AreSame(b.D, d);
-            Assert.AreSame(c, kernel.Get<Circular2.C>());
-            Assert.AreSame(d, kernel.Get<Circular2.D>());
-            Assert.AreSame(e.F, f);
-            Assert.AreSame(e.G, g);
-        }
-
-        [Test]
         public static void GetSubclassesReturnsDifferentByDefault()
         {
             using var kernel = new Kernel();

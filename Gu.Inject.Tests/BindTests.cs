@@ -12,43 +12,43 @@ namespace Gu.Inject.Tests
     {
         private static readonly TestCaseData[] ConcreteAndInterface =
         {
-                new TestCaseData(typeof(C), typeof(C)),
-                new TestCaseData(typeof(C), typeof(I1)),
-                new TestCaseData(typeof(I1), typeof(C)),
-                new TestCaseData(typeof(I1), typeof(I1)),
+                new(typeof(C), typeof(C)),
+                new(typeof(C), typeof(I1)),
+                new(typeof(I1), typeof(C)),
+                new(typeof(I1), typeof(I1)),
         };
 
         private static readonly TestCaseData[] ConcreteAndTwoInterfaces =
         {
-                new TestCaseData(typeof(C), typeof(C)),
-                new TestCaseData(typeof(C), typeof(I1)),
-                new TestCaseData(typeof(C), typeof(I2)),
-                new TestCaseData(typeof(I1), typeof(C)),
-                new TestCaseData(typeof(I2), typeof(C)),
-                new TestCaseData(typeof(I1), typeof(I1)),
-                new TestCaseData(typeof(I1), typeof(I2)),
-                new TestCaseData(typeof(I2), typeof(I1)),
-                new TestCaseData(typeof(I2), typeof(I2)),
+                new(typeof(C), typeof(C)),
+                new(typeof(C), typeof(I1)),
+                new(typeof(C), typeof(I2)),
+                new(typeof(I1), typeof(C)),
+                new(typeof(I2), typeof(C)),
+                new(typeof(I1), typeof(I1)),
+                new(typeof(I1), typeof(I2)),
+                new(typeof(I2), typeof(I1)),
+                new(typeof(I2), typeof(I2)),
         };
 
         private static readonly TestCaseData[] ConcreteAndThreeInterfaces =
         {
-                new TestCaseData(typeof(C), typeof(C)),
-                new TestCaseData(typeof(C), typeof(I1)),
-                new TestCaseData(typeof(C), typeof(I2)),
-                new TestCaseData(typeof(C), typeof(I3)),
-                new TestCaseData(typeof(I1), typeof(C)),
-                new TestCaseData(typeof(I2), typeof(C)),
-                new TestCaseData(typeof(I3), typeof(C)),
-                new TestCaseData(typeof(I1), typeof(I1)),
-                new TestCaseData(typeof(I1), typeof(I2)),
-                new TestCaseData(typeof(I1), typeof(I3)),
-                new TestCaseData(typeof(I2), typeof(I1)),
-                new TestCaseData(typeof(I2), typeof(I2)),
-                new TestCaseData(typeof(I2), typeof(I3)),
-                new TestCaseData(typeof(I3), typeof(I1)),
-                new TestCaseData(typeof(I3), typeof(I2)),
-                new TestCaseData(typeof(I3), typeof(I3)),
+                new(typeof(C), typeof(C)),
+                new(typeof(C), typeof(I1)),
+                new(typeof(C), typeof(I2)),
+                new(typeof(C), typeof(I3)),
+                new(typeof(I1), typeof(C)),
+                new(typeof(I2), typeof(C)),
+                new(typeof(I3), typeof(C)),
+                new(typeof(I1), typeof(I1)),
+                new(typeof(I1), typeof(I2)),
+                new(typeof(I1), typeof(I3)),
+                new(typeof(I2), typeof(I1)),
+                new(typeof(I2), typeof(I2)),
+                new(typeof(I2), typeof(I3)),
+                new(typeof(I3), typeof(I1)),
+                new(typeof(I3), typeof(I2)),
+                new(typeof(I3), typeof(I3)),
         };
 
         [TestCase(typeof(I1), typeof(C))]
@@ -433,6 +433,39 @@ namespace Gu.Inject.Tests
             kernel.Bind<I2, C>(_ => new C());
             Assert.AreSame(kernel.Get(type1), kernel.Get(type2));
             Assert.AreSame(kernel.Get(type2), kernel.Get(type1));
+        }
+
+        [Test]
+        public static void BindUninitializedThenGetCircularSimple()
+        {
+            using var kernel = new Kernel();
+            kernel.BindUninitialized<Circular1.A>();
+            var a = kernel.Get<Circular1.A>();
+            var b = kernel.Get<Circular1.B>();
+            Assert.AreSame(a.B, b);
+            Assert.AreSame(a, b.A);
+        }
+
+        [Test]
+        public static void BindUninitializedTheGetCircularComplex()
+        {
+            using var kernel = new Kernel();
+            kernel.BindUninitialized<Circular2.A>();
+            var a = kernel.Get<Circular2.A>();
+            var b = kernel.Get<Circular2.B>();
+            var c = kernel.Get<Circular2.C>();
+            var d = kernel.Get<Circular2.D>();
+            var e = kernel.Get<Circular2.E>();
+            var f = kernel.Get<Circular2.F>();
+            var g = kernel.Get<Circular2.G>();
+            Assert.AreSame(a.B, b);
+            Assert.AreSame(a.E, e);
+            Assert.AreSame(b.C, c);
+            Assert.AreSame(b.D, d);
+            Assert.AreSame(c, kernel.Get<Circular2.C>());
+            Assert.AreSame(d, kernel.Get<Circular2.D>());
+            Assert.AreSame(e.F, f);
+            Assert.AreSame(e.G, g);
         }
     }
 }
