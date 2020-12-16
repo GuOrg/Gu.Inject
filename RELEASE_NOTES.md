@@ -1,3 +1,6 @@
+#### 0.3.4
+* FEATURE: event Kernel.Disposing.
+
 #### 0.3.3
 * FEATURE: Improved exception messages.
 

@@ -8,6 +8,9 @@ Gu.Inject.CreatedEventArgs.Instance.get -> object?
 Gu.Inject.CreatingEventArgs
 Gu.Inject.CreatingEventArgs.CreatingEventArgs(System.Type! type) -> void
 Gu.Inject.CreatingEventArgs.Type.get -> System.Type!
+Gu.Inject.DisposingEventArgs
+Gu.Inject.DisposingEventArgs.DisposingEventArgs(object? instance) -> void
+Gu.Inject.DisposingEventArgs.Instance.get -> object?
 Gu.Inject.IGetter
 Gu.Inject.IGetter.Get(System.Type! type) -> object?
 Gu.Inject.IGetter.Get<T>() -> T
@@ -32,6 +35,7 @@ Gu.Inject.Kernel.BindUninitialized<T>() -> Gu.Inject.Kernel!
 Gu.Inject.Kernel.Created -> System.EventHandler<Gu.Inject.CreatedEventArgs!>?
 Gu.Inject.Kernel.Creating -> System.EventHandler<Gu.Inject.CreatingEventArgs!>?
 Gu.Inject.Kernel.Dispose() -> void
+Gu.Inject.Kernel.Disposing -> System.EventHandler<Gu.Inject.DisposingEventArgs!>?
 Gu.Inject.Kernel.Get(System.Type! type) -> object?
 Gu.Inject.Kernel.Get<T>() -> T
 Gu.Inject.Kernel.Kernel() -> void

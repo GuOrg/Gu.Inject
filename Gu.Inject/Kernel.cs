@@ -18,7 +18,7 @@ namespace Gu.Inject
         /// </summary>
         public Kernel()
         {
-            this.BindCore(typeof(IGetter), Binding.Instance(this));
+            this.BindCore(typeof(IGetter), Binding.Mapped(this));
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace Gu.Inject
         /// <summary>
         /// This notifies before an instance is removed when calling <see cref="Dispose"/>.
         /// Note that the event notifies for all instances not only types that implement <see cref="IDisposable"/>.
-        /// It is called before the instance is disposed.
+        /// It is called before the call to instance.Dispose() if it was created by the kernel.
         /// </summary>
         public event EventHandler<DisposingEventArgs>? Disposing;
 
@@ -76,9 +76,11 @@ namespace Gu.Inject
                 {
                     case BindingKind.Func:
                     case BindingKind.ResolverFunc:
-                    case BindingKind.Instance:
                     case BindingKind.Map:
                     case BindingKind.Mapped:
+                        break;
+                    case BindingKind.Instance:
+                        this.Disposing?.Invoke(this, new DisposingEventArgs(kvp.Value.Value));
                         break;
                     case BindingKind.Created:
                     case BindingKind.Resolved:

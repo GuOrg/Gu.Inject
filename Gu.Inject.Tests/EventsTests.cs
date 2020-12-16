@@ -81,6 +81,42 @@ namespace Gu.Inject.Tests
         }
 
         [Test]
+        public static void CreatingInstance()
+        {
+            var kernel = new Kernel();
+            var instance = new DefaultCtor();
+            kernel.Bind<DefaultCtor>(instance);
+            var actual = new List<Type>();
+            kernel.Creating += (_, e) => actual.Add(e.Type);
+            kernel.Dispose();
+            CollectionAssert.IsEmpty(actual);
+        }
+
+        [Test]
+        public static void CreatedInstance()
+        {
+            var kernel = new Kernel();
+            var instance = new DefaultCtor();
+            kernel.Bind<DefaultCtor>(instance);
+            var actual = new List<object?>();
+            kernel.Created += (_, e) => actual.Add(e.Instance);
+            kernel.Dispose();
+            CollectionAssert.IsEmpty(actual);
+        }
+
+        [Test]
+        public static void DisposingInstance()
+        {
+            var kernel = new Kernel();
+            var instance = new DefaultCtor();
+            kernel.Bind<DefaultCtor>(instance);
+            var actual = new List<object?>();
+            kernel.Disposing += (_, e) => actual.Add(e.Instance);
+            kernel.Dispose();
+            CollectionAssert.AreEqual(new[] { instance }, actual);
+        }
+
+        [Test]
         public static void CreatingResolver()
         {
             using var kernel = new Kernel();

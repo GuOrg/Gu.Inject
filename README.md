@@ -94,6 +94,22 @@ using var kernel = new Kernel()
     .Bind<IFoo>(new Foo()); // this instance is not disposed when the container is disposed
 ```
 
+## Events
+
+### Kernel.Creating
+
+Notifies before the container creates an instance. The event arguments contains the type that is about to be created.
+
+### Kernel.Created
+
+Notifies after the container created an instance. The event arguments contains the instance that was created.
+
+### Kernel.Disposing
+
+Notifies after calling kernel.Dispose() before an instance is removed. The event arguments contains the instance.
+This can be used if there is additional cleanup needed.
+Note that it is called for all instances not just for types that implement `IDisposable`
+
 # Benchmark
 
 Creating a container and resolving a graph with 50 types.
