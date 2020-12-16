@@ -1,1 +1,4 @@
-﻿
+﻿Gu.Inject.DisposingEventArgs
+Gu.Inject.DisposingEventArgs.DisposingEventArgs(object? instance) -> void
+Gu.Inject.DisposingEventArgs.Instance.get -> object?
+Gu.Inject.Kernel.Disposing -> System.EventHandler<Gu.Inject.DisposingEventArgs!>?

@@ -32,6 +32,13 @@ namespace Gu.Inject
         public event EventHandler<CreatedEventArgs>? Created;
 
         /// <summary>
+        /// This notifies before an instance is removed when calling <see cref="Dispose"/>.
+        /// Note that the event notifies for all instances not only types that implement <see cref="IDisposable"/>.
+        /// It is called before the instance is disposed.
+        /// </summary>
+        public event EventHandler<DisposingEventArgs>? Disposing;
+
+        /// <summary>
         /// Get the singleton instance of <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The type to resolve.</typeparam>
@@ -77,6 +84,7 @@ namespace Gu.Inject
                     case BindingKind.Resolved:
                     case BindingKind.AutoResolved:
                     case BindingKind.Initialized:
+                        this.Disposing?.Invoke(this, new DisposingEventArgs(kvp.Value.Value));
                         (kvp.Value.Value as IDisposable)?.Dispose();
                         break;
                     default:

@@ -1,3 +1,4 @@
+#pragma warning disable IDISP017 // Prefer using.
 namespace Gu.Inject.Tests
 {
     using System;
@@ -30,6 +31,17 @@ namespace Gu.Inject.Tests
         }
 
         [Test]
+        public static void Disposing()
+        {
+            var kernel = new Kernel();
+            var actual = new List<object?>();
+            kernel.Disposing += (_, e) => actual.Add(e.Instance);
+            var defaultCtor = kernel.Get<DefaultCtor>();
+            kernel.Dispose();
+            CollectionAssert.AreEqual(new[] { defaultCtor }, actual);
+        }
+
+        [Test]
         public static void CreatingFunc()
         {
             using var kernel = new Kernel();
@@ -57,6 +69,18 @@ namespace Gu.Inject.Tests
         }
 
         [Test]
+        public static void DisposingFunc()
+        {
+            var kernel = new Kernel();
+            kernel.Bind<DefaultCtor>(() => new DefaultCtor());
+            var actual = new List<object?>();
+            kernel.Disposing += (_, e) => actual.Add(e.Instance);
+            var defaultCtor = kernel.Get<DefaultCtor>();
+            kernel.Dispose();
+            CollectionAssert.AreEqual(new[] { defaultCtor }, actual);
+        }
+
+        [Test]
         public static void CreatingResolver()
         {
             using var kernel = new Kernel();
@@ -81,6 +105,18 @@ namespace Gu.Inject.Tests
             kernel.Creating += (_, e) => actual.Add(e.Type);
             _ = kernel.Get<DefaultCtor>();
             CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
+        }
+
+        [Test]
+        public static void DisposingResolver()
+        {
+            var kernel = new Kernel();
+            kernel.Bind<DefaultCtor>(_ => new DefaultCtor());
+            var actual = new List<object?>();
+            kernel.Disposing += (_, e) => actual.Add(e.Instance);
+            var defaultCtor = kernel.Get<DefaultCtor>();
+            kernel.Dispose();
+            CollectionAssert.AreEqual(new[] { defaultCtor }, actual);
         }
 
         [Test]
