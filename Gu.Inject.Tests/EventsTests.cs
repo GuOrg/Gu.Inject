@@ -182,6 +182,5 @@ namespace Gu.Inject.Tests
             Assert.AreSame(a, b.A);
             CollectionAssert.AreEqual(new object[] { b, a }, actual);
         }
-
     }
 }
