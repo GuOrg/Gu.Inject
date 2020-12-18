@@ -1,1 +1,10 @@
-﻿
+﻿Gu.Inject.IReadOnlyKernel
+Gu.Inject.IReadOnlyKernel.Created -> System.EventHandler<Gu.Inject.CreatedEventArgs!>?
+Gu.Inject.IReadOnlyKernel.Creating -> System.EventHandler<Gu.Inject.CreatingEventArgs!>?
+Gu.Inject.IReadOnlyKernel.Disposing -> System.EventHandler<Gu.Inject.DisposingEventArgs!>?
+Gu.Inject.IReadOnlyKernel.Get(System.Type! type) -> object?
+Gu.Inject.IReadOnlyKernel.Get<T>() -> T
+Gu.Inject.Kernel.Bind<T>(System.Func<Gu.Inject.IReadOnlyKernel!, T>! create) -> Gu.Inject.Kernel!
+Gu.Inject.Kernel.Bind<TInterface, TConcrete>(System.Func<Gu.Inject.IReadOnlyKernel!, TConcrete>! create) -> Gu.Inject.Kernel!
+Gu.Inject.Kernel.Bind<TInterface1, TInterface2, TConcrete>(System.Func<Gu.Inject.IReadOnlyKernel!, TConcrete>! create) -> Gu.Inject.Kernel!
+Gu.Inject.Kernel.Bind<TInterface1, TInterface2, TInterface3, TConcrete>(System.Func<Gu.Inject.IReadOnlyKernel!, TConcrete>! create) -> Gu.Inject.Kernel!

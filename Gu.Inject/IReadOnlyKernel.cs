@@ -19,7 +19,7 @@ namespace Gu.Inject
         event EventHandler<CreatedEventArgs>? Created;
 
         /// <summary>
-        /// This notifies before an instance is removed when calling <see cref="Dispose"/>.
+        /// This notifies before an instance is removed when calling <see cref="Kernel.Dispose"/>.
         /// Note that the event notifies for all instances not only types that implement <see cref="IDisposable"/>.
         /// It is called before the call to instance.Dispose() if it was created by the kernel.
         /// </summary>
