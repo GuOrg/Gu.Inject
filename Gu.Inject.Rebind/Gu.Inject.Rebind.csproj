@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.3.6</Version>
+    <Version>0.3.7</Version>
     <Authors>Johan Larsson;milleniumbug</Authors>
     <Description>Adds Rebind capability to Gu.Inject.Kernel for use in test projects.</Description>
     <PackageTags>IoC DI</PackageTags>

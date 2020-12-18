@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.3.6</Version>
+    <Version>0.3.7</Version>
     <Authors>Johan Larsson;milleniumbug</Authors>
     <Description>A dependency injection library with no features. The lack of features is the main feature!</Description>
     <PackageTags>DI IoC</PackageTags>
