@@ -15,7 +15,12 @@ namespace Gu.Inject.Tests
         {
             using var kernel = new Kernel();
             var actual = new List<Type>();
-            kernel.Creating += (_, e) => actual.Add(e.Type);
+            kernel.Creating += (sender, e) =>
+            {
+                // ReSharper disable once AccessToDisposedClosure
+                Assert.AreSame(kernel, sender);
+                actual.Add(e.Type);
+            };
             _ = kernel.Get<DefaultCtor>();
             CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
         }
@@ -25,7 +30,12 @@ namespace Gu.Inject.Tests
         {
             using var kernel = new Kernel();
             var actual = new List<Type>();
-            kernel.Creating += (_, e) => actual.Add(e.Type);
+            kernel.Creating += (sender, e) =>
+            {
+                // ReSharper disable once AccessToDisposedClosure
+                Assert.AreSame(kernel, sender);
+                actual.Add(e.Type);
+            };
             _ = kernel.Get<With<DefaultCtor>>();
             CollectionAssert.AreEqual(new[] { typeof(DefaultCtor), typeof(With<DefaultCtor>) }, actual);
         }
@@ -35,7 +45,12 @@ namespace Gu.Inject.Tests
         {
             using var kernel = new Kernel();
             var actual = new List<object?>();
-            kernel.Created += (_, e) => actual.Add(e.Instance);
+            kernel.Created += (sender, e) =>
+            {
+                // ReSharper disable once AccessToDisposedClosure
+                Assert.AreSame(kernel, sender);
+                actual.Add(e.Instance);
+            };
             var defaultCtor = kernel.Get<DefaultCtor>();
             CollectionAssert.AreEqual(new[] { defaultCtor }, actual);
         }
@@ -45,7 +60,12 @@ namespace Gu.Inject.Tests
         {
             var kernel = new Kernel();
             var actual = new List<object?>();
-            kernel.Disposing += (_, e) => actual.Add(e.Instance);
+            kernel.Disposing += (sender, e) =>
+            {
+                // ReSharper disable once AccessToDisposedClosure
+                Assert.AreSame(kernel, sender);
+                actual.Add(e.Instance);
+            };
             var defaultCtor = kernel.Get<DefaultCtor>();
             kernel.Dispose();
             CollectionAssert.AreEqual(new[] { defaultCtor }, actual);
@@ -56,7 +76,12 @@ namespace Gu.Inject.Tests
         {
             using var kernel = new Kernel();
             var actual = new List<Type>();
-            kernel.Creating += (_, e) => actual.Add(e.Type);
+            kernel.Creating += (sender, e) =>
+            {
+                // ReSharper disable once AccessToDisposedClosure
+                Assert.AreSame(kernel, sender);
+                actual.Add(e.Type);
+            };
             kernel.Bind(() =>
             {
                 // check that we notify before creating.
@@ -73,7 +98,12 @@ namespace Gu.Inject.Tests
             using var kernel = new Kernel();
             var actual = new List<Type>();
             kernel.Bind<DefaultCtor>(() => new DefaultCtor());
-            kernel.Creating += (_, e) => actual.Add(e.Type);
+            kernel.Creating += (sender, e) =>
+            {
+                // ReSharper disable once AccessToDisposedClosure
+                Assert.AreSame(kernel, sender);
+                actual.Add(e.Type);
+            };
             _ = kernel.Get<DefaultCtor>();
             CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
         }
@@ -84,7 +114,12 @@ namespace Gu.Inject.Tests
             var kernel = new Kernel();
             kernel.Bind<DefaultCtor>(() => new DefaultCtor());
             var actual = new List<object?>();
-            kernel.Disposing += (_, e) => actual.Add(e.Instance);
+            kernel.Disposing += (sender, e) =>
+            {
+                // ReSharper disable once AccessToDisposedClosure
+                Assert.AreSame(kernel, sender);
+                actual.Add(e.Instance);
+            };
             var defaultCtor = kernel.Get<DefaultCtor>();
             kernel.Dispose();
             CollectionAssert.AreEqual(new[] { defaultCtor }, actual);
@@ -95,7 +130,12 @@ namespace Gu.Inject.Tests
         {
             using var kernel = new Kernel();
             var actual = new List<Type>();
-            kernel.Creating += (_, e) => actual.Add(e.Type);
+            kernel.Creating += (sender, e) =>
+            {
+                // ReSharper disable once AccessToDisposedClosure
+                Assert.AreSame(kernel, sender);
+                actual.Add(e.Type);
+            };
             kernel.Bind(_ =>
             {
                 // check that we notify before creating.
@@ -111,7 +151,12 @@ namespace Gu.Inject.Tests
         {
             using var kernel = new Kernel();
             var actual = new List<Type>();
-            kernel.Creating += (_, e) => actual.Add(e.Type);
+            kernel.Creating += (sender, e) =>
+            {
+                // ReSharper disable once AccessToDisposedClosure
+                Assert.AreSame(kernel, sender);
+                actual.Add(e.Type);
+            };
             kernel.Bind(c =>
             {
                 // check that we notify before creating.
@@ -128,7 +173,12 @@ namespace Gu.Inject.Tests
             using var kernel = new Kernel();
             var actual = new List<Type>();
             kernel.Bind<DefaultCtor>(_ => new DefaultCtor());
-            kernel.Creating += (_, e) => actual.Add(e.Type);
+            kernel.Creating += (sender, e) =>
+            {
+                // ReSharper disable once AccessToDisposedClosure
+                Assert.AreSame(kernel, sender);
+                actual.Add(e.Type);
+            };
             _ = kernel.Get<DefaultCtor>();
             CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
         }
@@ -139,7 +189,12 @@ namespace Gu.Inject.Tests
             var kernel = new Kernel();
             kernel.Bind<DefaultCtor>(_ => new DefaultCtor());
             var actual = new List<object?>();
-            kernel.Disposing += (_, e) => actual.Add(e.Instance);
+            kernel.Disposing += (sender, e) =>
+            {
+                // ReSharper disable once AccessToDisposedClosure
+                Assert.AreSame(kernel, sender);
+                actual.Add(e.Instance);
+            };
             var defaultCtor = kernel.Get<DefaultCtor>();
             kernel.Dispose();
             CollectionAssert.AreEqual(new[] { defaultCtor }, actual);
@@ -152,7 +207,12 @@ namespace Gu.Inject.Tests
             var instance = new DefaultCtor();
             kernel.Bind<DefaultCtor>(instance);
             var actual = new List<Type>();
-            kernel.Creating += (_, e) => actual.Add(e.Type);
+            kernel.Creating += (sender, e) =>
+            {
+                // ReSharper disable once AccessToDisposedClosure
+                Assert.AreSame(kernel, sender);
+                actual.Add(e.Type);
+            };
             kernel.Dispose();
             CollectionAssert.IsEmpty(actual);
         }
@@ -164,7 +224,12 @@ namespace Gu.Inject.Tests
             var instance = new DefaultCtor();
             kernel.Bind<DefaultCtor>(instance);
             var actual = new List<object?>();
-            kernel.Created += (_, e) => actual.Add(e.Instance);
+            kernel.Created += (sender, e) =>
+            {
+                // ReSharper disable once AccessToDisposedClosure
+                Assert.AreSame(kernel, sender);
+                actual.Add(e.Instance);
+            };
             kernel.Dispose();
             CollectionAssert.IsEmpty(actual);
         }
@@ -176,7 +241,12 @@ namespace Gu.Inject.Tests
             var instance = new DefaultCtor();
             kernel.Bind<DefaultCtor>(instance);
             var actual = new List<object?>();
-            kernel.Disposing += (_, e) => actual.Add(e.Instance);
+            kernel.Disposing += (sender, e) =>
+            {
+                // ReSharper disable once AccessToDisposedClosure
+                Assert.AreSame(kernel, sender);
+                actual.Add(e.Instance);
+            };
             kernel.Dispose();
             CollectionAssert.AreEqual(new[] { instance }, actual);
         }
@@ -186,7 +256,12 @@ namespace Gu.Inject.Tests
         {
             var actual = new List<Type>();
             using var kernel = new Kernel();
-            kernel.Creating += (_, e) => actual.Add(e.Type);
+            kernel.Creating += (sender, e) =>
+            {
+                // ReSharper disable once AccessToDisposedClosure
+                Assert.AreSame(kernel, sender);
+                actual.Add(e.Type);
+            };
             kernel.BindUninitialized<Circular1.A>();
             var a = kernel.Get<Circular1.A>();
             var b = kernel.Get<Circular1.B>();
@@ -200,7 +275,12 @@ namespace Gu.Inject.Tests
         {
             var actual = new List<object?>();
             using var kernel = new Kernel();
-            kernel.Created += (_, e) => actual.Add(e.Instance);
+            kernel.Created += (sender, e) =>
+            {
+                // ReSharper disable once AccessToDisposedClosure
+                Assert.AreSame(kernel, sender);
+                actual.Add(e.Instance);
+            };
             kernel.BindUninitialized<Circular1.A>();
             var a = kernel.Get<Circular1.A>();
             var b = kernel.Get<Circular1.B>();
