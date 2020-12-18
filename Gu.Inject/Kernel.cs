@@ -220,10 +220,9 @@ namespace Gu.Inject
             {
                 if (Constructor.Get(candidate) is { } constructor)
                 {
-                    this.Creating?.Invoke(this, new CreatingEventArgs(type));
                     try
                     {
-                        var item = constructor.Invoke(null, x => ResolveParameter(x));
+                        var item = constructor.Invoke(null, x => ResolveParameter(x), this.Creating);
                         this.Created?.Invoke(this, new CreatedEventArgs(item));
                         return Binding.AutoResolved(item);
                     }
@@ -250,8 +249,7 @@ namespace Gu.Inject
             {
                 if (Constructor.Get(obj.GetType()) is { } constructor)
                 {
-                    this.Creating?.Invoke(this, new CreatingEventArgs(type));
-                    var item = constructor.Invoke(obj, x => ResolveParameter(x));
+                    var item = constructor.Invoke(obj, x => ResolveParameter(x), this.Creating);
                     this.Created?.Invoke(this, new CreatedEventArgs(item));
                     return Binding.Initialized(item);
                 }

@@ -21,6 +21,16 @@ namespace Gu.Inject.Tests
         }
 
         [Test]
+        public static void CreatingOrder()
+        {
+            using var kernel = new Kernel();
+            var actual = new List<Type>();
+            kernel.Creating += (_, e) => actual.Add(e.Type);
+            _ = kernel.Get<With<DefaultCtor>>();
+            CollectionAssert.AreEqual(new[] { typeof(DefaultCtor), typeof(With<DefaultCtor>) }, actual);
+        }
+
+        [Test]
         public static void Created()
         {
             using var kernel = new Kernel();
@@ -81,6 +91,61 @@ namespace Gu.Inject.Tests
         }
 
         [Test]
+        public static void CreatingResolver()
+        {
+            using var kernel = new Kernel();
+            var actual = new List<Type>();
+            kernel.Creating += (_, e) => actual.Add(e.Type);
+            kernel.Bind(_ =>
+            {
+                // check that we notify before creating.
+                CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
+                return new DefaultCtor();
+            });
+            _ = kernel.Get<DefaultCtor>();
+            CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
+        }
+
+        [Test]
+        public static void CreatingResolverOrder()
+        {
+            using var kernel = new Kernel();
+            var actual = new List<Type>();
+            kernel.Creating += (_, e) => actual.Add(e.Type);
+            kernel.Bind(c =>
+            {
+                // check that we notify before creating.
+                CollectionAssert.AreEqual(new[] { typeof(With<DefaultCtor>) }, actual);
+                return new With<DefaultCtor>(c.Get<DefaultCtor>());
+            });
+            _ = kernel.Get<With<DefaultCtor>>();
+            CollectionAssert.AreEqual(new[] { typeof(With<DefaultCtor>), typeof(DefaultCtor) }, actual);
+        }
+
+        [Test]
+        public static void CreatedResolver()
+        {
+            using var kernel = new Kernel();
+            var actual = new List<Type>();
+            kernel.Bind<DefaultCtor>(_ => new DefaultCtor());
+            kernel.Creating += (_, e) => actual.Add(e.Type);
+            _ = kernel.Get<DefaultCtor>();
+            CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
+        }
+
+        [Test]
+        public static void DisposingResolver()
+        {
+            var kernel = new Kernel();
+            kernel.Bind<DefaultCtor>(_ => new DefaultCtor());
+            var actual = new List<object?>();
+            kernel.Disposing += (_, e) => actual.Add(e.Instance);
+            var defaultCtor = kernel.Get<DefaultCtor>();
+            kernel.Dispose();
+            CollectionAssert.AreEqual(new[] { defaultCtor }, actual);
+        }
+
+        [Test]
         public static void CreatingInstance()
         {
             var kernel = new Kernel();
@@ -117,45 +182,6 @@ namespace Gu.Inject.Tests
         }
 
         [Test]
-        public static void CreatingResolver()
-        {
-            using var kernel = new Kernel();
-            var actual = new List<Type>();
-            kernel.Creating += (_, e) => actual.Add(e.Type);
-            kernel.Bind(_ =>
-            {
-                // check that we notify before creating.
-                CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
-                return new DefaultCtor();
-            });
-            _ = kernel.Get<DefaultCtor>();
-            CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
-        }
-
-        [Test]
-        public static void CreatedResolver()
-        {
-            using var kernel = new Kernel();
-            var actual = new List<Type>();
-            kernel.Bind<DefaultCtor>(_ => new DefaultCtor());
-            kernel.Creating += (_, e) => actual.Add(e.Type);
-            _ = kernel.Get<DefaultCtor>();
-            CollectionAssert.AreEqual(new[] { typeof(DefaultCtor) }, actual);
-        }
-
-        [Test]
-        public static void DisposingResolver()
-        {
-            var kernel = new Kernel();
-            kernel.Bind<DefaultCtor>(_ => new DefaultCtor());
-            var actual = new List<object?>();
-            kernel.Disposing += (_, e) => actual.Add(e.Instance);
-            var defaultCtor = kernel.Get<DefaultCtor>();
-            kernel.Dispose();
-            CollectionAssert.AreEqual(new[] { defaultCtor }, actual);
-        }
-
-        [Test]
         public static void CreatingCircular()
         {
             var actual = new List<Type>();
@@ -166,7 +192,7 @@ namespace Gu.Inject.Tests
             var b = kernel.Get<Circular1.B>();
             Assert.AreSame(a.B, b);
             Assert.AreSame(a, b.A);
-            CollectionAssert.AreEqual(new[] { typeof(Circular1.A), typeof(Circular1.B) }, actual);
+            CollectionAssert.AreEqual(new[] { typeof(Circular1.B), typeof(Circular1.A) }, actual);
         }
 
         [Test]

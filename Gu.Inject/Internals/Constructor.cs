@@ -58,10 +58,12 @@ namespace Gu.Inject
             }
         }
 
-        internal object Invoke(object? obj, Func<Type, object?> resolve)
+        internal object Invoke(object? obj, Func<Type, object?> resolve, EventHandler<CreatingEventArgs>? eventHandler)
         {
             if (this.arguments is null)
             {
+                eventHandler?.Invoke(this, new CreatingEventArgs(this.info.DeclaringType!));
+
                 if (obj is null)
                 {
                     return this.info.Invoke(null);
@@ -78,6 +80,7 @@ namespace Gu.Inject
                     this.arguments[i] = resolve(this.parameters![i].ParameterType);
                 }
 
+                eventHandler?.Invoke(this, new CreatingEventArgs(this.info.DeclaringType!));
                 if (obj is null)
                 {
                     obj = this.info.Invoke(this.arguments);
