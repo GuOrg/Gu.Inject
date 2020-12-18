@@ -209,29 +209,12 @@ namespace Gu.Inject
                 {
                     try
                     {
-                        if (constructor.Arguments is null)
-                        {
-                            this.Creating?.Invoke(this, new CreatingEventArgs(type));
-                            var item = constructor.Info.Invoke(null);
-                            this.Created?.Invoke(this, new CreatedEventArgs(item));
-                            return Binding.AutoResolved(item);
-                        }
-                        else
-                        {
-                            lock (constructor.Arguments)
-                            {
-                                for (var i = 0; i < constructor.Arguments.Length; i++)
-                                {
-                                    constructor.Arguments[i] = ResolveParameter(constructor.Parameters![i].ParameterType);
-                                }
-
-                                this.Creating?.Invoke(this, new CreatingEventArgs(type));
-                                var item = constructor.Info.Invoke(constructor.Arguments);
-                                Array.Clear(constructor.Arguments, 0, constructor.Arguments.Length);
-                                this.Created?.Invoke(this, new CreatedEventArgs(item));
-                                return Binding.AutoResolved(item);
-                            }
-                        }
+                        var args = constructor.ResolveArguments(p => ResolveParameter(p.ParameterType));
+                        this.Creating?.Invoke(this, new CreatingEventArgs(type));
+                        var item = constructor.Info.Invoke(args);
+                        constructor.Return(args);
+                        this.Created?.Invoke(this, new CreatedEventArgs(item));
+                        return Binding.AutoResolved(item);
                     }
                     catch (NoBindingException e)
                     {
@@ -246,26 +229,10 @@ namespace Gu.Inject
             {
                 if (Constructor.Get(obj.GetType()) is { } constructor)
                 {
-                    if (constructor.Arguments is null)
-                    {
-                        this.Creating?.Invoke(this, new CreatingEventArgs(type));
-                        _ = constructor.Info.Invoke(obj, null);
-                    }
-                    else
-                    {
-                        lock (constructor.Arguments)
-                        {
-                            for (var i = 0; i < constructor.Arguments.Length; i++)
-                            {
-                                constructor.Arguments[i] = ResolveParameter(constructor.Parameters![i].ParameterType);
-                            }
-
-                            this.Creating?.Invoke(this, new CreatingEventArgs(type));
-                            _ = constructor.Info.Invoke(obj, constructor.Arguments);
-                            Array.Clear(constructor.Arguments, 0, constructor.Arguments.Length);
-                        }
-                    }
-
+                    var args = constructor.ResolveArguments(p => ResolveParameter(p.ParameterType));
+                    this.Creating?.Invoke(this, new CreatingEventArgs(type));
+                    _ = constructor.Info.Invoke(obj, args);
+                    constructor.Return(args);
                     this.Created?.Invoke(this, new CreatedEventArgs(obj));
                     return Binding.Initialized(obj);
                 }
@@ -407,7 +374,7 @@ namespace Gu.Inject
                 messageBuilder.AppendLine($"{padding}new {root.PrettyName()}(... Circular dependency detected.");
                 return messageBuilder.ToString();
             }
-            
+
             string NoBindingMessage(string line, NoBindingException inner)
             {
                 var message = new StringBuilder();

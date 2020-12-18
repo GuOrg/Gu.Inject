@@ -9,36 +9,31 @@ namespace Gu.Inject
 
     internal readonly struct Constructor
     {
-        private static readonly ConcurrentDictionary<Type, Constructor> Cache = new();
-
         internal readonly ConstructorInfo Info;
-        internal readonly ParameterInfo[]? Parameters;
-        internal readonly object?[]? Arguments;
 
-        private Constructor(ConstructorInfo info, ParameterInfo[]? parameters)
+        private static readonly ConcurrentDictionary<Type, Constructor> Cache = new();
+        private static readonly ConcurrentDictionary<int, ConcurrentQueue<object?[]>> ArrayPool = new();
+
+        private readonly ParameterInfo[]? parameters;
+        private readonly ConcurrentQueue<object?[]>? pool;
+
+        private Constructor(ConstructorInfo info, ParameterInfo[]? parameters, ConcurrentQueue<object?[]>? pool)
         {
             this.Info = info;
-            this.Parameters = parameters;
-            this.Arguments = parameters is null ? null : new object[parameters.Length];
+            this.parameters = parameters;
+            this.pool = pool;
         }
 
         /// <summary>
         /// Setting this.arguments[last] = this.arguments; when resolving.
         /// Reason for this hack is silly optimization.
         /// </summary>
-        private bool IsBusy => this.Arguments is { } gate && Monitor.IsEntered(gate);
+        private bool IsBusy => this.parameters is { } gate && Monitor.IsEntered(gate);
 
         internal static Constructor? Get(Type type)
         {
             var ctor = Cache.GetOrAdd(type, t => Create(t));
-            if (ctor.Arguments is { })
-            {
-                return ctor.IsBusy
-                    ? null
-                    : (Constructor?)ctor;
-            }
-
-            return ctor;
+            return ctor.IsBusy ? null : ctor;
         }
 
         internal static IEnumerable<ParameterInfo> Cycle(Type candidate)
@@ -54,7 +49,37 @@ namespace Gu.Inject
 
             static ParameterInfo Find(Type current)
             {
-                return Cache[current].Parameters!.First(p => Cache[p.ParameterType].IsBusy);
+                return Cache[current].parameters!.First(p => Cache[p.ParameterType].IsBusy);
+            }
+        }
+
+        internal object?[]? ResolveArguments(Func<ParameterInfo, object?> resolve)
+        {
+            if (this.parameters is null)
+            {
+                return null;
+            }
+
+            var args = this.pool!.TryDequeue(out var cached)
+                ? cached
+                : new object[this.parameters.Length];
+            lock (this.parameters)
+            {
+                for (var i = 0; i < args.Length; i++)
+                {
+                    args[i] = resolve(this.parameters[i]);
+                }
+            }
+
+            return args;
+        }
+
+        internal void Return(object?[]? args)
+        {
+            if (args is { })
+            {
+                Array.Clear(args, 0, args.Length);
+                this.pool!.Enqueue(args);
             }
         }
 
@@ -72,7 +97,7 @@ namespace Gu.Inject
             var parameters = ctor.GetParameters();
             if (parameters.Length == 0)
             {
-                return new Constructor(ctor, null);
+                return new Constructor(ctor, null, null);
             }
 
             if (parameters.Last() is { CustomAttributes: { } attributes } &&
@@ -83,7 +108,10 @@ namespace Gu.Inject
                 throw new ResolveException(type, message);
             }
 
-            return new Constructor(ctor, parameters);
+            return new Constructor(
+                ctor,
+                parameters,
+                ArrayPool.GetOrAdd(parameters.Length, _ => new ConcurrentQueue<object?[]>()));
         }
     }
 }
