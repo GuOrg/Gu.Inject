@@ -1,3 +1,6 @@
+#### 0.3.5
+* Notify created after resolving arguments.
+
 #### 0.3.4
 * FEATURE: event Kernel.Disposing.
 
