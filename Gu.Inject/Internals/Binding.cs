@@ -24,7 +24,7 @@ namespace Gu.Inject
 
         internal static Binding Func<T>(Func<T> create) => new Binding(create, BindingKind.Func);
 
-        internal static Binding Resolver<T>(Func<IGetter, T> create) => new Binding(create, BindingKind.ResolverFunc);
+        internal static Binding Resolver<T>(Func<IReadOnlyKernel, T> create) => new Binding(create, BindingKind.ResolverFunc);
 
         internal static Binding Mapped<T>(T instance) => new Binding(instance!, BindingKind.Mapped);
 

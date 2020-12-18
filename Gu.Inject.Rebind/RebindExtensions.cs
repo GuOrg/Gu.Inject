@@ -376,7 +376,7 @@ namespace Gu.Inject
         /// <param name="kernel">The <see cref="Kernel"/>.</param>
         /// <param name="create">The instance to bind.</param>
         /// <returns>The same instance.</returns>
-        public static Kernel Rebind<T>(this Kernel kernel, Func<IGetter, T> create)
+        public static Kernel Rebind<T>(this Kernel kernel, Func<IReadOnlyKernel, T> create)
         {
             if (kernel is null)
             {
@@ -402,7 +402,7 @@ namespace Gu.Inject
         /// <param name="kernel">The <see cref="Kernel"/>.</param>
         /// <param name="create">The instance to bind.</param>
         /// <returns>The same instance.</returns>
-        public static Kernel Rebind<TInterface, TConcrete>(this Kernel kernel, Func<IGetter, TConcrete> create)
+        public static Kernel Rebind<TInterface, TConcrete>(this Kernel kernel, Func<IReadOnlyKernel, TConcrete> create)
             where TConcrete : TInterface
         {
             if (kernel is null)
@@ -431,7 +431,7 @@ namespace Gu.Inject
         /// <param name="kernel">The <see cref="Kernel"/>.</param>
         /// <param name="create">The instance to bind.</param>
         /// <returns>The same instance.</returns>
-        public static Kernel Rebind<TInterface1, TInterface2, TConcrete>(this Kernel kernel, Func<IGetter, TConcrete> create)
+        public static Kernel Rebind<TInterface1, TInterface2, TConcrete>(this Kernel kernel, Func<IReadOnlyKernel, TConcrete> create)
             where TConcrete : TInterface1, TInterface2
         {
             if (kernel is null)
@@ -462,7 +462,7 @@ namespace Gu.Inject
         /// <param name="kernel">The <see cref="Kernel"/>.</param>
         /// <param name="create">The instance to bind.</param>
         /// <returns>The same instance.</returns>
-        public static Kernel Rebind<TInterface1, TInterface2, TInterface3, TConcrete>(this Kernel kernel, Func<IGetter, TConcrete> create)
+        public static Kernel Rebind<TInterface1, TInterface2, TInterface3, TConcrete>(this Kernel kernel, Func<IReadOnlyKernel, TConcrete> create)
             where TConcrete : TInterface1, TInterface2
         {
             if (kernel is null)

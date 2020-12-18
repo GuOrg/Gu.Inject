@@ -281,7 +281,7 @@ namespace Gu.Inject
         /// <typeparam name="T">The mapped type.</typeparam>
         /// <param name="create">The instance to bind.</param>
         /// <returns>The same instance.</returns>
-        public Kernel Bind<T>(Func<IGetter, T> create)
+        public Kernel Bind<T>(Func<IReadOnlyKernel, T> create)
         {
             if (create is null)
             {
@@ -301,7 +301,7 @@ namespace Gu.Inject
         /// <typeparam name="TConcrete">The mapped type.</typeparam>
         /// <param name="create">The instance to bind.</param>
         /// <returns>The same instance.</returns>
-        public Kernel Bind<TInterface, TConcrete>(Func<IGetter, TConcrete> create)
+        public Kernel Bind<TInterface, TConcrete>(Func<IReadOnlyKernel, TConcrete> create)
             where TConcrete : TInterface
         {
             if (create is null)
@@ -324,7 +324,7 @@ namespace Gu.Inject
         /// <typeparam name="TConcrete">The mapped type.</typeparam>
         /// <param name="create">The instance to bind.</param>
         /// <returns>The same instance.</returns>
-        public Kernel Bind<TInterface1, TInterface2, TConcrete>(Func<IGetter, TConcrete> create)
+        public Kernel Bind<TInterface1, TInterface2, TConcrete>(Func<IReadOnlyKernel, TConcrete> create)
             where TConcrete : TInterface1, TInterface2
         {
             if (create is null)
@@ -349,7 +349,7 @@ namespace Gu.Inject
         /// <typeparam name="TConcrete">The mapped type.</typeparam>
         /// <param name="create">The instance to bind.</param>
         /// <returns>The same instance.</returns>
-        public Kernel Bind<TInterface1, TInterface2, TInterface3, TConcrete>(Func<IGetter, TConcrete> create)
+        public Kernel Bind<TInterface1, TInterface2, TInterface3, TConcrete>(Func<IReadOnlyKernel, TConcrete> create)
             where TConcrete : TInterface1, TInterface2
         {
             if (create is null)

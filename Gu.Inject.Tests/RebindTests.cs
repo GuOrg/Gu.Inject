@@ -358,7 +358,7 @@ namespace Gu.Inject.Tests
                     "This can happen by doing:\r\n" +
                     "1. Bind<I>(x => new C(...))\r\n" +
                     "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
-                    "3. Get<I>() this creates an instance of C using the bound Func<IGetter, C> and then detects the instance created in 2.\r\n" +
+                    "3. Get<I>() this creates an instance of C using the bound Func<IReadOnlyKernel, C> and then detects the instance created in 2.\r\n" +
                     "\r\n" +
                     "Specify explicit binding for the concrete type.\r\n" +
                     "For example by:\r\n" +
@@ -414,7 +414,7 @@ namespace Gu.Inject.Tests
                     "This can happen by doing:\r\n" +
                     "1. Bind<I>(x => new C(...))\r\n" +
                     "2. Get<C>() this creates an instance of C using the constructor.\r\n" +
-                    "3. Get<I>() this creates an instance of C using the bound Func<IGetter, C> and then detects the instance created in 2.\r\n" +
+                    "3. Get<I>() this creates an instance of C using the bound Func<IReadOnlyKernel, C> and then detects the instance created in 2.\r\n" +
                     "\r\n" +
                     "Specify explicit binding for the concrete type.\r\n" +
                     "For example by:\r\n" +

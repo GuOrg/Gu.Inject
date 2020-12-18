@@ -9,7 +9,7 @@ namespace Gu.Inject.Tests
 
     public static class KernelTests
     {
-        [TestCase(typeof(IGetter))]
+        [TestCase(typeof(IReadOnlyKernel))]
         [TestCase(typeof(DefaultCtor))]
         [TestCase(typeof(Graph2.Node1))]
         [TestCase(typeof(Graph50.Node1))]

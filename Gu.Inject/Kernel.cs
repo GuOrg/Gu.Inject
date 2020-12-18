@@ -8,7 +8,7 @@ namespace Gu.Inject
     /// <summary>
     /// A factory for resolving object graphs.
     /// </summary>
-    public sealed partial class Kernel : IDisposable, IGetter
+    public sealed partial class Kernel : IDisposable, IReadOnlyKernel
     {
         private ConcurrentDictionary<Type, Binding>? map = new ConcurrentDictionary<Type, Binding>();
         private bool hasResolved;
@@ -18,38 +18,22 @@ namespace Gu.Inject
         /// </summary>
         public Kernel()
         {
-            this.BindCore(typeof(IGetter), Binding.Mapped(this));
+            this.BindCore(typeof(IReadOnlyKernel), Binding.Mapped(this));
         }
 
-        /// <summary>
-        /// This notifies before creating an instance of a type.
-        /// </summary>
+        /// <inheritdoc />
         public event EventHandler<CreatingEventArgs>? Creating;
 
-        /// <summary>
-        /// This notifies after creating an instance of a type.
-        /// </summary>
+        /// <inheritdoc />
         public event EventHandler<CreatedEventArgs>? Created;
 
-        /// <summary>
-        /// This notifies before an instance is removed when calling <see cref="Dispose"/>.
-        /// Note that the event notifies for all instances not only types that implement <see cref="IDisposable"/>.
-        /// It is called before the call to instance.Dispose() if it was created by the kernel.
-        /// </summary>
+        /// <inheritdoc />
         public event EventHandler<DisposingEventArgs>? Disposing;
 
-        /// <summary>
-        /// Get the singleton instance of <typeparamref name="T"/>.
-        /// </summary>
-        /// <typeparam name="T">The type to resolve.</typeparam>
-        /// <returns>The singleton instance of <typeparamref name="T"/>.</returns>
+        /// <inheritdoc />
         public T Get<T>() => (T)this.GetCore(typeof(T))!;
 
-        /// <summary>
-        /// Get the singleton instance of <paramref name="type"/>.
-        /// </summary>
-        /// <param name="type">The type to resolve.</param>
-        /// <returns>The singleton instance of <paramref name="type"/>.</returns>
+        /// <inheritdoc />
         public object? Get(Type type)
         {
             if (type is null)
@@ -211,7 +195,7 @@ namespace Gu.Inject
                     { Kind: BindingKind.Mapped } => b,
                     { Kind: BindingKind.Uninitialized } => Initialize(b.Value!),
                     { Kind: BindingKind.Func, Value: Func<object?> func } => Create(func),
-                    { Kind: BindingKind.ResolverFunc, Value: Func<IGetter, object?> func } => Resolve(func),
+                    { Kind: BindingKind.ResolverFunc, Value: Func<IReadOnlyKernel, object?> func } => Resolve(func),
                     { Kind: BindingKind.Map, Value: Type mappedType } => Map(mappedType),
                     _ => throw new InvalidOperationException($"Not handling resolve Kind: {b.Kind}, Value: {b.Value ?? "null"} "),
                 }).Value;
@@ -290,7 +274,7 @@ namespace Gu.Inject
                 }
             }
 
-            Binding Resolve(Func<IGetter, object?> resolve)
+            Binding Resolve(Func<IReadOnlyKernel, object?> resolve)
             {
                 this.Creating?.Invoke(this, new CreatingEventArgs(type));
                 try
@@ -350,21 +334,21 @@ namespace Gu.Inject
                 string Lambda() => func switch
                 {
                     Func<object?> => "() => new C()",
-                    Func<IGetter, object?> => "x => new C(...)",
+                    Func<IReadOnlyKernel, object?> => "x => new C(...)",
                     _ => func.ToString() ?? "null",
                 };
 
                 string CreatedVia() => duplicate.Kind switch
                 {
                     BindingKind.Func => "Func<C>",
-                    BindingKind.ResolverFunc => "Func<IGetter, C>",
+                    BindingKind.ResolverFunc => "Func<IReadOnlyKernel, C>",
                     BindingKind.Map => "map type",
                     BindingKind.Instance => "bound instance",
                     BindingKind.Uninitialized => "bound uninitialized",
                     BindingKind.Initialized => "initialized",
                     BindingKind.AutoResolved => "constructor",
                     BindingKind.Created => "bound Func<C>",
-                    BindingKind.Resolved => "bound Func<IGetter, C>",
+                    BindingKind.Resolved => "bound Func<IReadOnlyKernel, C>",
                     BindingKind.Mapped => "mapped type",
                     _ => "unknown",
                 };
@@ -372,7 +356,7 @@ namespace Gu.Inject
                 string Func() => func switch
                 {
                     Func<object?> => "Func<C>",
-                    Func<IGetter, object?> => "Func<IGetter, C>",
+                    Func<IReadOnlyKernel, object?> => "Func<IReadOnlyKernel, C>",
                     _ => func.ToString() ?? "null",
                 };
             }
