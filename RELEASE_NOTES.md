@@ -1,3 +1,6 @@
+#### 0.3.6
+* [Obsolete] IGetter, prefer IReadOnlyKernel
+
 #### 0.3.5
 * Notify created after resolving arguments.
 

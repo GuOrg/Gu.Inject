@@ -18,6 +18,9 @@ namespace Gu.Inject
         /// </summary>
         public Kernel()
         {
+#pragma warning disable 618
+            this.BindCore(typeof(IGetter), Binding.Mapped(this));
+#pragma warning restore 618
             this.BindCore(typeof(IReadOnlyKernel), Binding.Mapped(this));
         }
 
