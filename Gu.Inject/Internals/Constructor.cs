@@ -12,15 +12,16 @@ namespace Gu.Inject
         internal readonly ConstructorInfo Info;
 
         private static readonly ConcurrentDictionary<Type, Constructor> Cache = new();
+        private static readonly ConcurrentDictionary<int, ConcurrentQueue<object?[]>> ArrayPool = new();
 
         private readonly ParameterInfo[]? parameters;
-        private readonly object?[]? arguments;
+        private readonly ConcurrentQueue<object?[]>? pool;
 
-        private Constructor(ConstructorInfo info, ParameterInfo[]? parameters)
+        private Constructor(ConstructorInfo info, ParameterInfo[]? parameters, ConcurrentQueue<object?[]>? pool)
         {
             this.Info = info;
             this.parameters = parameters;
-            this.arguments = parameters is null ? null : new object?[parameters.Length];
+            this.pool = pool;
         }
 
         /// <summary>
@@ -59,15 +60,18 @@ namespace Gu.Inject
                 return null;
             }
 
+            var args = this.pool!.TryDequeue(out var cached)
+                ? cached
+                : new object[this.parameters.Length];
             lock (this.parameters)
             {
-                for (var i = 0; i < this.arguments!.Length; i++)
+                for (var i = 0; i < args.Length; i++)
                 {
-                    this.arguments[i] = resolve(this.parameters[i]);
+                    args[i] = resolve(this.parameters[i]);
                 }
             }
 
-            return this.arguments;
+            return args;
         }
 
         internal void Return(object?[]? args)
@@ -75,6 +79,7 @@ namespace Gu.Inject
             if (args is { })
             {
                 Array.Clear(args, 0, args.Length);
+                this.pool!.Enqueue(args);
             }
         }
 
@@ -92,7 +97,7 @@ namespace Gu.Inject
             var parameters = ctor.GetParameters();
             if (parameters.Length == 0)
             {
-                return new Constructor(ctor, null);
+                return new Constructor(ctor, null, null);
             }
 
             if (parameters.Last() is { CustomAttributes: { } attributes } &&
@@ -103,7 +108,10 @@ namespace Gu.Inject
                 throw new ResolveException(type, message);
             }
 
-            return new Constructor(ctor, parameters);
+            return new Constructor(
+                ctor,
+                parameters,
+                ArrayPool.GetOrAdd(parameters.Length, _ => new ConcurrentQueue<object?[]>()));
         }
     }
 }
