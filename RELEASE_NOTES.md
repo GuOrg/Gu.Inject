@@ -1,3 +1,6 @@
+#### 0.3.8
+* Use ArrayPool internally.
+
 #### 0.3.6
 * [Obsolete] IGetter, prefer IReadOnlyKernel
 

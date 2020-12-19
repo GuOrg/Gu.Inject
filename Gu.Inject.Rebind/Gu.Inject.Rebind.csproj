@@ -19,11 +19,13 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.3.7</Version>
+    <Version>0.3.8</Version>
     <Authors>Johan Larsson;milleniumbug</Authors>
     <Description>Adds Rebind capability to Gu.Inject.Kernel for use in test projects.</Description>
     <PackageTags>IoC DI</PackageTags>
     <PackageReleaseNotes>
+      0.3.8
+      Use ArrayPool internally.
       0.3.6
       [Obsolete] IGetter, prefer IReadOnlyKernel
       0.3.5
