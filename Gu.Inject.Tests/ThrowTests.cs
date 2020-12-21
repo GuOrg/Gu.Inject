@@ -27,6 +27,7 @@ namespace Gu.Inject.Tests
         }
 
         [TestCase(typeof(Circular1.A), "new Circular1.A(\r\n  new Circular1.B(\r\n    new Circular1.A(... Circular dependency detected.\r\n")]
+        [TestCase(typeof(With<Circular1.A>), "new Circular1.A(\r\n  new Circular1.B(\r\n    new Circular1.A(... Circular dependency detected.\r\n")]
         [TestCase(typeof(Circular2.A), "new Circular2.A(\r\n  new Circular2.E(\r\n    new Circular2.G(\r\n      new Circular2.A(... Circular dependency detected.\r\n")]
         public static void GetWhenCircular(Type type, string message)
         {
