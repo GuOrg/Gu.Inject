@@ -2,7 +2,6 @@ namespace Gu.Inject
 {
     using System;
     using System.Collections.Concurrent;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using System.Threading;
@@ -12,75 +11,48 @@ namespace Gu.Inject
         internal readonly ConstructorInfo Info;
 
         private static readonly ConcurrentDictionary<Type, Constructor> Cache = new();
-        private static readonly ConcurrentDictionary<int, ConcurrentQueue<object?[]>> ArrayPool = new();
 
-        private readonly ParameterInfo[]? parameters;
-        private readonly ConcurrentQueue<object?[]>? pool;
+        private readonly Parameters? parameters;
 
-        private Constructor(ConstructorInfo info, ParameterInfo[]? parameters, ConcurrentQueue<object?[]>? pool)
+        private Constructor(ConstructorInfo info, Parameters? parameters)
         {
             this.Info = info;
             this.parameters = parameters;
-            this.pool = pool;
         }
-
-        /// <summary>
-        /// Setting this.arguments[last] = this.arguments; when resolving.
-        /// Reason for this hack is silly optimization.
-        /// </summary>
-        private bool IsBusy => this.parameters is { } gate && Monitor.IsEntered(gate);
 
         internal static Constructor? Get(Type type)
         {
             var ctor = Cache.GetOrAdd(type, t => Create(t));
-            return ctor.IsBusy ? null : ctor;
-        }
-
-        internal static IEnumerable<ParameterInfo> Cycle(Type candidate)
-        {
-            var parameter = Find(candidate);
-            while (parameter.ParameterType != candidate)
-            {
-                yield return parameter;
-                parameter = Find(parameter.ParameterType);
-            }
-
-            yield break;
-
-            static ParameterInfo Find(Type current)
-            {
-                return Cache[current].parameters!.First(p => Cache[p.ParameterType].IsBusy);
-            }
-        }
-
-        internal object?[]? ResolveArguments(Func<ParameterInfo, object?> resolve)
-        {
-            if (this.parameters is null)
+            if (ctor.parameters is { Infos: { } gate } &&
+                Monitor.IsEntered(gate))
             {
                 return null;
             }
 
-            var args = this.pool!.TryDequeue(out var cached)
-                ? cached
-                : new object[this.parameters.Length];
-            lock (this.parameters)
+            return ctor;
+        }
+
+        internal object?[]? ResolveArguments(Func<ParameterInfo, object?> resolve)
+        {
+            if (this.parameters is { Infos: { } infos, Arguments: { } args })
             {
-                for (var i = 0; i < args.Length; i++)
+                lock (infos)
                 {
-                    args[i] = resolve(this.parameters[i]);
+                    for (var i = 0; i < args.Length; i++)
+                    {
+                        args[i] = resolve(infos[i]);
+                    }
                 }
+
+                return args;
             }
 
-            return args;
+            return null;
         }
 
         internal void Return(object?[]? args)
         {
-            if (args is { })
-            {
-                Array.Clear(args, 0, args.Length);
-                this.pool!.Enqueue(args);
-            }
+            this.parameters?.Return(args!);
         }
 
         private static Constructor Create(Type type)
@@ -97,7 +69,7 @@ namespace Gu.Inject
             var parameters = ctor.GetParameters();
             if (parameters.Length == 0)
             {
-                return new Constructor(ctor, null, null);
+                return new Constructor(ctor, null);
             }
 
             if (parameters.Last() is { CustomAttributes: { } attributes } &&
@@ -108,10 +80,7 @@ namespace Gu.Inject
                 throw new ResolveException(type, message);
             }
 
-            return new Constructor(
-                ctor,
-                parameters,
-                ArrayPool.GetOrAdd(parameters.Length, _ => new ConcurrentQueue<object?[]>()));
+            return new Constructor(ctor, new Parameters(parameters));
         }
     }
 }

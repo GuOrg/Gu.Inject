@@ -26,15 +26,60 @@ namespace Gu.Inject.Tests
                 Assert.Throws<NoBindingException>(() => kernel.Get(type)).Message);
         }
 
-        [TestCase(typeof(Circular1.A), "new Circular1.A(\r\n  new Circular1.B(\r\n    new Circular1.A(... Circular dependency detected.\r\n")]
-        [TestCase(typeof(With<Circular1.A>), "new Circular1.A(\r\n  new Circular1.B(\r\n    new Circular1.A(... Circular dependency detected.\r\n")]
-        [TestCase(typeof(Circular2.A), "new Circular2.A(\r\n  new Circular2.E(\r\n    new Circular2.G(\r\n      new Circular2.A(... Circular dependency detected.\r\n")]
-        public static void GetWhenCircular(Type type, string message)
+        [Test]
+        public static void GetSimpleCircular()
         {
             using var kernel = new Kernel();
             Assert.AreEqual(
-                message,
-                Assert.Throws<CircularDependencyException>(() => kernel.Get(type)).Message);
+                "Circular dependency when resolving SimpleCircular.A.\r\n" +
+                "\r\n" +
+                "new SimpleCircular.A(\r\n" +
+                "  new SimpleCircular.B(\r\n" +
+                "    new SimpleCircular.A(... Circular dependency detected.",
+                Assert.Throws<CircularDependencyException>(() => kernel.Get<SimpleCircular.A>()).Message);
+        }
+
+        [Test]
+        public static void GetWithSimpleCircular()
+        {
+            using var kernel = new Kernel();
+            Assert.AreEqual(
+                "Circular dependency when resolving SimpleCircular.A.\r\n" +
+                "\r\n" +
+                "new With<SimpleCircular.A>(\r\n" +
+                "  new SimpleCircular.A(\r\n" +
+                "    new SimpleCircular.B(\r\n" +
+                "      new SimpleCircular.A(... Circular dependency detected.",
+                Assert.Throws<CircularDependencyException>(() => kernel.Get<With<SimpleCircular.A>>()).Message);
+        }
+
+        [Test]
+        public static void GetWithSimpleCircularResolver()
+        {
+            using var kernel = new Kernel();
+            kernel.Bind(c => new With<SimpleCircular.A>(c.Get<SimpleCircular.A>()));
+            Assert.AreEqual(
+                "Circular dependency when resolving SimpleCircular.A.\r\n" +
+                "\r\n" +
+                "x.Get<With<SimpleCircular.A>>(\r\n" +
+                "  new SimpleCircular.A(\r\n" +
+                "    new SimpleCircular.B(\r\n" +
+                "      new SimpleCircular.A(... Circular dependency detected.",
+                Assert.Throws<CircularDependencyException>(() => kernel.Get<With<SimpleCircular.A>>()).Message);
+        }
+
+        [Test]
+        public static void GetComplexCircular()
+        {
+            using var kernel = new Kernel();
+            Assert.AreEqual(
+                "Circular dependency when resolving ComplexCircular.A.\r\n" +
+                "\r\n" +
+                "new ComplexCircular.A(\r\n" +
+                "  new ComplexCircular.E(\r\n" +
+                "    new ComplexCircular.G(\r\n" +
+                "      new ComplexCircular.A(... Circular dependency detected.",
+                Assert.Throws<CircularDependencyException>(() => kernel.Get<ComplexCircular.A>()).Message);
         }
 
         [Test]
@@ -204,7 +249,7 @@ namespace Gu.Inject.Tests
             Assert.AreEqual(
                 "Type int has no binding.\r\n" +
                 "\r\n" +
-                "getter.Get<With<int>>(\r\n" +
+                "x.Get<With<int>>(\r\n" +
                 "  could not resolve int here.",
                 Assert.Throws<NoBindingException>(() => kernel.Get<With<int>>()).Message);
         }

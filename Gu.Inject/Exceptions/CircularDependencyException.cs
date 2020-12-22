@@ -19,6 +19,17 @@ namespace Gu.Inject
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CircularDependencyException"/> class.
+        /// </summary>
+        /// <param name="type">The type that has no binding.</param>
+        /// <param name="message">The exception message.</param>
+        /// <param name="inner">The inner exception.</param>
+        public CircularDependencyException(Type type, string message, CircularDependencyException inner)
+            : base(type, message, inner)
+        {
+        }
+
         /// <summary>Initializes a new instance of the <see cref="CircularDependencyException" /> class with serialized data.</summary>
         /// <param name="info">The object that holds the serialized object data.</param>
         /// <param name="context">The contextual information about the source or destination.</param>

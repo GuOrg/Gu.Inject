@@ -220,9 +220,19 @@ namespace Gu.Inject
                     {
                         throw new NoBindingException(candidate, NoBindingMessage($"new {type.PrettyName()}(", e), e);
                     }
+                    catch (CircularDependencyException e)
+                    {
+                        throw new CircularDependencyException(candidate, CircularDependencyMessage($"new {type.PrettyName()}(", e), e);
+                    }
                 }
 
-                throw new CircularDependencyException(candidate, CircularDependencyMessage(candidate));
+                throw new CircularDependencyException(
+                    candidate,
+                    new StringBuilder()
+                        .AppendLine($"Circular dependency when resolving {candidate.PrettyName()}.")
+                        .AppendLine()
+                        .Append($"new {candidate.PrettyName()}(... Circular dependency detected.")
+                        .ToString());
             }
 
             Binding Initialize(object obj)
@@ -271,6 +281,10 @@ namespace Gu.Inject
                 {
                     throw new NoBindingException(type, NoBindingMessage($"Func<{type.PrettyName()}>.Invoke(", e), e);
                 }
+                catch (CircularDependencyException e)
+                {
+                    throw new CircularDependencyException(type, CircularDependencyMessage($"Func<{type.PrettyName()}>.Invoke(", e), e);
+                }
             }
 
             Binding Resolve(Func<IReadOnlyKernel, object?> resolve)
@@ -303,7 +317,11 @@ namespace Gu.Inject
                 }
                 catch (NoBindingException e)
                 {
-                    throw new NoBindingException(type, NoBindingMessage($"getter.Get<{type.PrettyName()}>(", e), e);
+                    throw new NoBindingException(type, NoBindingMessage($"x.Get<{type.PrettyName()}>(", e), e);
+                }
+                catch (CircularDependencyException e)
+                {
+                    throw new CircularDependencyException(type, CircularDependencyMessage($"x.Get<{type.PrettyName()}>(", e), e);
                 }
             }
 
@@ -360,19 +378,21 @@ namespace Gu.Inject
                 };
             }
 
-            string CircularDependencyMessage(Type root)
+            string CircularDependencyMessage(string line, CircularDependencyException inner)
             {
-                var messageBuilder = new StringBuilder();
-                var padding = "  ";
-                messageBuilder.AppendLine($"new {root.PrettyName()}(");
-                foreach (var parameter in Constructor.Cycle(root))
+                var message = new StringBuilder();
+                using var reader = new StringReader(inner.Message);
+                message.AppendLine(reader.ReadLine());
+                message.AppendLine(reader.ReadLine());
+                message.Append(line);
+                while (reader.Peek() > 0)
                 {
-                    messageBuilder.AppendLine($"{padding}new {parameter.ParameterType.PrettyName()}(");
-                    padding += "  ";
+                    message.AppendLine();
+                    message.Append("  ");
+                    message.Append(reader.ReadLine());
                 }
 
-                messageBuilder.AppendLine($"{padding}new {root.PrettyName()}(... Circular dependency detected.");
-                return messageBuilder.ToString();
+                return message.ToString();
             }
 
             string NoBindingMessage(string line, NoBindingException inner)

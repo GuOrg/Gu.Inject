@@ -262,12 +262,12 @@ namespace Gu.Inject.Tests
                 Assert.AreSame(kernel, sender);
                 actual.Add(e.Type);
             };
-            kernel.BindUninitialized<Circular1.A>();
-            var a = kernel.Get<Circular1.A>();
-            var b = kernel.Get<Circular1.B>();
+            kernel.BindUninitialized<SimpleCircular.A>();
+            var a = kernel.Get<SimpleCircular.A>();
+            var b = kernel.Get<SimpleCircular.B>();
             Assert.AreSame(a.B, b);
             Assert.AreSame(a, b.A);
-            CollectionAssert.AreEqual(new[] { typeof(Circular1.B), typeof(Circular1.A) }, actual);
+            CollectionAssert.AreEqual(new[] { typeof(SimpleCircular.B), typeof(SimpleCircular.A) }, actual);
         }
 
         [Test]
@@ -281,9 +281,9 @@ namespace Gu.Inject.Tests
                 Assert.AreSame(kernel, sender);
                 actual.Add(e.Instance);
             };
-            kernel.BindUninitialized<Circular1.A>();
-            var a = kernel.Get<Circular1.A>();
-            var b = kernel.Get<Circular1.B>();
+            kernel.BindUninitialized<SimpleCircular.A>();
+            var a = kernel.Get<SimpleCircular.A>();
+            var b = kernel.Get<SimpleCircular.B>();
             Assert.AreSame(a.B, b);
             Assert.AreSame(a, b.A);
             CollectionAssert.AreEqual(new object[] { b, a }, actual);

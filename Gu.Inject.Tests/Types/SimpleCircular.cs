@@ -1,7 +1,7 @@
 // ReSharper disable All
 namespace Gu.Inject.Tests.Types
 {
-    public static class Circular1
+    public static class SimpleCircular
     {
         public class A
         {

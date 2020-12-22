@@ -439,9 +439,9 @@ namespace Gu.Inject.Tests
         public static void BindUninitializedThenGetCircularSimple()
         {
             using var kernel = new Kernel();
-            kernel.BindUninitialized<Circular1.A>();
-            var a = kernel.Get<Circular1.A>();
-            var b = kernel.Get<Circular1.B>();
+            kernel.BindUninitialized<SimpleCircular.A>();
+            var a = kernel.Get<SimpleCircular.A>();
+            var b = kernel.Get<SimpleCircular.B>();
             Assert.AreSame(a.B, b);
             Assert.AreSame(a, b.A);
         }
@@ -450,20 +450,20 @@ namespace Gu.Inject.Tests
         public static void BindUninitializedTheGetCircularComplex()
         {
             using var kernel = new Kernel();
-            kernel.BindUninitialized<Circular2.A>();
-            var a = kernel.Get<Circular2.A>();
-            var b = kernel.Get<Circular2.B>();
-            var c = kernel.Get<Circular2.C>();
-            var d = kernel.Get<Circular2.D>();
-            var e = kernel.Get<Circular2.E>();
-            var f = kernel.Get<Circular2.F>();
-            var g = kernel.Get<Circular2.G>();
+            kernel.BindUninitialized<ComplexCircular.A>();
+            var a = kernel.Get<ComplexCircular.A>();
+            var b = kernel.Get<ComplexCircular.B>();
+            var c = kernel.Get<ComplexCircular.C>();
+            var d = kernel.Get<ComplexCircular.D>();
+            var e = kernel.Get<ComplexCircular.E>();
+            var f = kernel.Get<ComplexCircular.F>();
+            var g = kernel.Get<ComplexCircular.G>();
             Assert.AreSame(a.B, b);
             Assert.AreSame(a.E, e);
             Assert.AreSame(b.C, c);
             Assert.AreSame(b.D, d);
-            Assert.AreSame(c, kernel.Get<Circular2.C>());
-            Assert.AreSame(d, kernel.Get<Circular2.D>());
+            Assert.AreSame(c, kernel.Get<ComplexCircular.C>());
+            Assert.AreSame(d, kernel.Get<ComplexCircular.D>());
             Assert.AreSame(e.F, f);
             Assert.AreSame(e.G, g);
         }
