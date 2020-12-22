@@ -1,3 +1,6 @@
+#### 0.3.9
+* Better exception message when circular.
+
 #### 0.3.8
 * Use ArrayPool internally.
 

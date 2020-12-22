@@ -2,6 +2,7 @@
 Gu.Inject.CircularDependencyException
 Gu.Inject.CircularDependencyException.CircularDependencyException(System.Runtime.Serialization.SerializationInfo! info, System.Runtime.Serialization.StreamingContext context) -> void
 Gu.Inject.CircularDependencyException.CircularDependencyException(System.Type! type, string! message) -> void
+Gu.Inject.CircularDependencyException.CircularDependencyException(System.Type! type, string! message, Gu.Inject.CircularDependencyException! inner) -> void
 Gu.Inject.CreatedEventArgs
 Gu.Inject.CreatedEventArgs.CreatedEventArgs(object? instance) -> void
 Gu.Inject.CreatedEventArgs.Instance.get -> object?

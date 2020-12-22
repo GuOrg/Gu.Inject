@@ -19,11 +19,13 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Version>0.3.8</Version>
+    <Version>0.3.9</Version>
     <Authors>Johan Larsson;milleniumbug</Authors>
     <Description>Adds Rebind capability to Gu.Inject.Kernel for use in test projects.</Description>
     <PackageTags>IoC DI</PackageTags>
     <PackageReleaseNotes>
+      0.3.9
+      Better exception message when circular.
       0.3.8
       Use ArrayPool internally.
       0.3.6
