@@ -23,7 +23,7 @@ namespace Gu.Inject.Tests
             using var kernel = new Kernel();
             Assert.AreEqual(
                 expected,
-                Assert.Throws<NoBindingException>(() => kernel.Get(type)).Message);
+                Assert.Throws<NoBindingException>(() => kernel.Get(type))?.Message);
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace Gu.Inject.Tests
                 "new SimpleCircular.A(\r\n" +
                 "  new SimpleCircular.B(\r\n" +
                 "    new SimpleCircular.A(... Circular dependency detected.",
-                Assert.Throws<CircularDependencyException>(() => kernel.Get<SimpleCircular.A>()).Message);
+                Assert.Throws<CircularDependencyException>(() => kernel.Get<SimpleCircular.A>())?.Message);
         }
 
         [Test]
@@ -50,7 +50,7 @@ namespace Gu.Inject.Tests
                 "  new SimpleCircular.A(\r\n" +
                 "    new SimpleCircular.B(\r\n" +
                 "      new SimpleCircular.A(... Circular dependency detected.",
-                Assert.Throws<CircularDependencyException>(() => kernel.Get<With<SimpleCircular.A>>()).Message);
+                Assert.Throws<CircularDependencyException>(() => kernel.Get<With<SimpleCircular.A>>())?.Message);
         }
 
         [Test]
@@ -65,7 +65,7 @@ namespace Gu.Inject.Tests
                 "  new SimpleCircular.A(\r\n" +
                 "    new SimpleCircular.B(\r\n" +
                 "      new SimpleCircular.A(... Circular dependency detected.",
-                Assert.Throws<CircularDependencyException>(() => kernel.Get<With<SimpleCircular.A>>()).Message);
+                Assert.Throws<CircularDependencyException>(() => kernel.Get<With<SimpleCircular.A>>())?.Message);
         }
 
         [Test]
@@ -79,7 +79,7 @@ namespace Gu.Inject.Tests
                 "  new ComplexCircular.E(\r\n" +
                 "    new ComplexCircular.G(\r\n" +
                 "      new ComplexCircular.A(... Circular dependency detected.",
-                Assert.Throws<CircularDependencyException>(() => kernel.Get<ComplexCircular.A>()).Message);
+                Assert.Throws<CircularDependencyException>(() => kernel.Get<ComplexCircular.A>())?.Message);
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace Gu.Inject.Tests
             Assert.AreEqual(
                 "Type Error.TwoCtors has more than one constructor.\r\n" +
                 "Add a binding specifying which constructor to use.",
-                Assert.Throws<ResolveException>(() => kernel.Get<Error.TwoCtors>()).Message);
+                Assert.Throws<ResolveException>(() => kernel.Get<Error.TwoCtors>())?.Message);
         }
 
         [Test]
@@ -99,7 +99,7 @@ namespace Gu.Inject.Tests
             Assert.AreEqual(
                 "Type Error.ParamsCtor has params parameter which is not supported.\r\n" +
                 "Add a binding specifying how to create an instance.",
-                Assert.Throws<ResolveException>(() => kernel.Get<Error.ParamsCtor>()).Message);
+                Assert.Throws<ResolveException>(() => kernel.Get<Error.ParamsCtor>())?.Message);
         }
 
         [Test]
@@ -110,7 +110,7 @@ namespace Gu.Inject.Tests
             Assert.AreEqual(
                 "Bind not allowed after Get<T>().\r\n" +
                 "This could create hard to track down graph bugs.",
-                Assert.Throws<InvalidOperationException>(() => kernel.Bind<IWith, With<DefaultCtor>>()).Message);
+                Assert.Throws<InvalidOperationException>(() => kernel.Bind<IWith, With<DefaultCtor>>())?.Message);
         }
 
         [Test]
@@ -121,7 +121,7 @@ namespace Gu.Inject.Tests
                 "Trying to bind to the same type.\r\n" +
                 "This is the equivalent of kernel.Bind<C, C>().\r\n" +
                 "It is not strictly wrong but redundant and could indicate a mistake and hence disallowed.",
-                Assert.Throws<InvalidOperationException>(() => kernel.Bind<C, C>()).Message);
+                Assert.Throws<InvalidOperationException>(() => kernel.Bind<C, C>())?.Message);
         }
 
         [Test]
@@ -129,8 +129,9 @@ namespace Gu.Inject.Tests
         {
             using var kernel = new Kernel();
             kernel.Bind<I1, C>();
-            var exception = Assert.Throws<InvalidOperationException>(() => kernel.Bind<I1, C>());
-            Assert.AreEqual("I1 already has a binding. It is mapped to the type C", exception.Message);
+            Assert.AreEqual(
+                "I1 already has a binding. It is mapped to the type C",
+                Assert.Throws<InvalidOperationException>(() => kernel.Bind<I1, C>())?.Message);
         }
 
         [Test]
@@ -141,7 +142,7 @@ namespace Gu.Inject.Tests
             kernel.Bind<I1>(instance);
             Assert.AreEqual(
                 "I1 already has a binding. It is mapped to C",
-                Assert.Throws<InvalidOperationException>(() => kernel.Bind<I1, C>()).Message);
+                Assert.Throws<InvalidOperationException>(() => kernel.Bind<I1, C>())?.Message);
         }
 
         [Test]
@@ -152,7 +153,7 @@ namespace Gu.Inject.Tests
             var instance = new With<DefaultCtor>(new DefaultCtor());
             Assert.AreEqual(
                 "IWith already has a binding. It is mapped to the type With<DefaultCtor>",
-                Assert.Throws<InvalidOperationException>(() => kernel.Bind<IWith>(instance)).Message);
+                Assert.Throws<InvalidOperationException>(() => kernel.Bind<IWith>(instance))?.Message);
         }
 
         [Test]
@@ -178,7 +179,7 @@ namespace Gu.Inject.Tests
                 "or\r\n" +
                 "Bind<I, C>()\r\n" +
                 "Bind<C>(() => new C())",
-                Assert.Throws<ResolveException>(() => kernel.Get<I1>()).Message);
+                Assert.Throws<ResolveException>(() => kernel.Get<I1>())?.Message);
         }
 
         [Test]
@@ -204,7 +205,7 @@ namespace Gu.Inject.Tests
                 "or\r\n" +
                 "Bind<I, C>()\r\n" +
                 "Bind<C>(x => new C(...))",
-                Assert.Throws<ResolveException>(() => kernel.Get<I1>()).Message);
+                Assert.Throws<ResolveException>(() => kernel.Get<I1>())?.Message);
         }
 
         [Test]
@@ -213,7 +214,7 @@ namespace Gu.Inject.Tests
             using var kernel = new Kernel();
             Assert.AreEqual(
                 "Type int has no binding.",
-                Assert.Throws<NoBindingException>(() => kernel.Get<int>()).Message);
+                Assert.Throws<NoBindingException>(() => kernel.Get<int>())?.Message);
         }
 
         [Test]
@@ -225,7 +226,7 @@ namespace Gu.Inject.Tests
                 "\r\n" +
                 "new With<int>(\r\n" +
                 "  could not resolve int here.",
-                Assert.Throws<NoBindingException>(() => kernel.Get<With<int>>()).Message);
+                Assert.Throws<NoBindingException>(() => kernel.Get<With<int>>())?.Message);
         }
 
         [Test]
@@ -238,7 +239,7 @@ namespace Gu.Inject.Tests
                 "new With<With<int>>(\r\n" +
                 "  new With<int>(\r\n" +
                 "    could not resolve int here.",
-                Assert.Throws<NoBindingException>(() => kernel.Get<With<With<int>>>()).Message);
+                Assert.Throws<NoBindingException>(() => kernel.Get<With<With<int>>>())?.Message);
         }
 
         [Test]
@@ -251,7 +252,7 @@ namespace Gu.Inject.Tests
                 "\r\n" +
                 "x.Get<With<int>>(\r\n" +
                 "  could not resolve int here.",
-                Assert.Throws<NoBindingException>(() => kernel.Get<With<int>>()).Message);
+                Assert.Throws<NoBindingException>(() => kernel.Get<With<int>>())?.Message);
         }
 
         [Test]
@@ -265,7 +266,7 @@ namespace Gu.Inject.Tests
                 "\r\n" +
                 "Func<With<int>>.Invoke(\r\n" +
                 "  could not resolve int here.",
-                Assert.Throws<NoBindingException>(() => kernel.Get<With<int>>()).Message);
+                Assert.Throws<NoBindingException>(() => kernel.Get<With<int>>())?.Message);
         }
     }
 }

@@ -259,7 +259,7 @@ namespace Gu.Inject.Tests
                     "or\r\n" +
                     "Bind<I, C>()\r\n" +
                     "Bind<C>(() => new C())",
-                    Assert.Throws<ResolveException>(() => kernel.Get(type2)).Message);
+                    Assert.Throws<ResolveException>(() => kernel.Get(type2))?.Message);
             }
             else
             {
@@ -301,7 +301,7 @@ namespace Gu.Inject.Tests
                     "or\r\n" +
                     "Bind<I, C>()\r\n" +
                     "Bind<C>(() => new C())",
-                    Assert.Throws<ResolveException>(() => kernel.Get(type2)).Message);
+                    Assert.Throws<ResolveException>(() => kernel.Get(type2))?.Message);
             }
             else
             {
@@ -366,7 +366,7 @@ namespace Gu.Inject.Tests
                     "or\r\n" +
                     "Bind<I, C>()\r\n" +
                     "Bind<C>(x => new C(...))",
-                    Assert.Throws<ResolveException>(() => kernel.Get(type2)).Message);
+                    Assert.Throws<ResolveException>(() => kernel.Get(type2))?.Message);
             }
             else
             {
@@ -422,7 +422,7 @@ namespace Gu.Inject.Tests
                     "or\r\n" +
                     "Bind<I, C>()\r\n" +
                     "Bind<C>(x => new C(...))",
-                    Assert.Throws<ResolveException>(() => kernel.Get(type2)).Message);
+                    Assert.Throws<ResolveException>(() => kernel.Get(type2))?.Message);
             }
             else
             {
