@@ -26,7 +26,7 @@
     <PackageReference Include="DryIoc.Dll" Version="4.8.4" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="6.0.0" />
     <PackageReference Include="Ninject" Version="3.3.4" />
-    <PackageReference Include="ReflectionAnalyzers" Version="0.1.22-dev" PrivateAssets="all" />
+    <PackageReference Include="ReflectionAnalyzers" Version="0.3.0" PrivateAssets="all" />
     <PackageReference Include="SimpleInjector" Version="5.3.2" />
   </ItemGroup>
 
