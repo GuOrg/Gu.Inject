@@ -75,7 +75,9 @@ namespace Gu.Inject.Benchmarks
             {
                 var ctor = type.GetConstructors(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
                                .Single();
+#pragma warning disable CA1305 // Specify IFormatProvider
                 builder.AppendLine($".Bind(c => new {type.Name}({string.Join(", ", ctor.GetParameters().Select(x => $"c.Get<{x.ParameterType.Name}>()"))}))");
+#pragma warning restore CA1305 // Specify IFormatProvider
             }
 
             // ReSharper disable once UnusedVariable
