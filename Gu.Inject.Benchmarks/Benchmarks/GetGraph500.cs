@@ -640,7 +640,7 @@ namespace Gu.Inject.Benchmarks
             return BoundKernel.Get<Node1>();
         }
 
-        private class Module : NinjectModule
+        private sealed class Module : NinjectModule
         {
             public override void Load()
             {

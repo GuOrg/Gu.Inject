@@ -58,7 +58,7 @@ namespace Gu.Inject.Benchmarks
             return BoundKernel.Get<Simple>();
         }
 
-        private class Module : Ninject.Modules.NinjectModule
+        private sealed class Module : Ninject.Modules.NinjectModule
         {
             public override void Load()
             {
