@@ -9,9 +9,9 @@ namespace Gu.Inject.Benchmarks
     [MemoryDiagnoser]
     public class GetSimple
     {
-        private static readonly Ninject.StandardKernel StandardKernel = new Ninject.StandardKernel(new Module());
+        private static readonly Ninject.StandardKernel StandardKernel = new(new Module());
 
-        private static readonly SimpleInjector.Container SimpleInjectorContainer = new SimpleInjector.Container
+        private static readonly SimpleInjector.Container SimpleInjectorContainer = new()
         {
             Options =
             {
@@ -20,10 +20,10 @@ namespace Gu.Inject.Benchmarks
             },
         };
 
-        private static readonly DryIoc.Container DryIocContainer = new DryIoc.Container(x => x.WithConcreteTypeDynamicRegistrations()
+        private static readonly DryIoc.Container DryIocContainer = new(x => x.WithConcreteTypeDynamicRegistrations()
             .WithDefaultReuse(Reuse.Singleton));
 
-        private static readonly Kernel Kernel = new Kernel();
+        private static readonly Kernel Kernel = new();
 
         private static readonly Kernel BoundKernel = new Kernel()
             .Bind(c => new Simple());

@@ -10,9 +10,9 @@ namespace Gu.Inject.Benchmarks
     [MemoryDiagnoser]
     public class GetGraph500
     {
-        private static readonly Ninject.StandardKernel StandardKernel = new Ninject.StandardKernel(new Module());
+        private static readonly Ninject.StandardKernel StandardKernel = new(new Module());
 
-        private static readonly SimpleInjector.Container SimpleInjectorContainer = new SimpleInjector.Container
+        private static readonly SimpleInjector.Container SimpleInjectorContainer = new()
         {
             Options =
             {
@@ -21,10 +21,10 @@ namespace Gu.Inject.Benchmarks
             },
         };
 
-        private static readonly DryIoc.Container DryIocContainer = new DryIoc.Container(x => x.WithConcreteTypeDynamicRegistrations()
+        private static readonly DryIoc.Container DryIocContainer = new(x => x.WithConcreteTypeDynamicRegistrations()
             .WithDefaultReuse(Reuse.Singleton));
 
-        private static readonly Kernel Kernel = new Kernel();
+        private static readonly Kernel Kernel = new();
 
         private static readonly Kernel BoundKernel = new Kernel()
                                .Bind(c => new Node1(c.Get<Node7>(), c.Get<Node8>(), c.Get<Node20>(), c.Get<Node26>(), c.Get<Node29>(), c.Get<Node34>(), c.Get<Node37>(), c.Get<Node49>(), c.Get<Node50>(), c.Get<Node57>(), c.Get<Node60>(), c.Get<Node63>(), c.Get<Node72>(), c.Get<Node79>(), c.Get<Node83>(), c.Get<Node93>(), c.Get<Node96>(), c.Get<Node101>(),

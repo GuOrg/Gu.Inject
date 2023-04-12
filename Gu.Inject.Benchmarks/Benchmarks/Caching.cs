@@ -35,7 +35,7 @@ namespace Gu.Inject.Benchmarks
             throw new InvalidOperationException();
         }
 
-        private class Node
+        private sealed class Node
         {
             private readonly Type type;
             private readonly Node? previous;

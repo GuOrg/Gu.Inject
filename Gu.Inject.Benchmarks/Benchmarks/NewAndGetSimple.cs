@@ -53,7 +53,7 @@ namespace Gu.Inject.Benchmarks
             return kernel.Get<Simple>();
         }
 
-        private class Module : NinjectModule
+        private sealed class Module : NinjectModule
         {
             public override void Load()
             {
